@@ -259,7 +259,7 @@ PY
 mkdir -p .factory
 
 # Download fresh FACTORY.md from GitHub
-curl -fsSL "https://raw.githubusercontent.com/lukeaus/oh-my-droid/main/docs/FACTORY.md" -o .factory/FACTORY.md && \
+curl -fsSL "https://raw.githubusercontent.com/MeroZemory/oh-my-droid/main/docs/FACTORY.md" -o .factory/FACTORY.md && \
 echo "Downloaded FACTORY.md to .factory/FACTORY.md"
 ```
 
@@ -267,7 +267,7 @@ echo "Downloaded FACTORY.md to .factory/FACTORY.md"
 
 ```bash
 # Download fresh FACTORY.md to global config
-curl -fsSL "https://raw.githubusercontent.com/lukeaus/oh-my-droid/main/docs/FACTORY.md" -o ~/.factory/FACTORY.md && \
+curl -fsSL "https://raw.githubusercontent.com/MeroZemory/oh-my-droid/main/docs/FACTORY.md" -o ~/.factory/FACTORY.md && \
 echo "Downloaded FACTORY.md to ~/.factory/FACTORY.md"
 ```
 
@@ -601,7 +601,7 @@ Use `AskUser` to prompt:
 If user chooses "Yes, star it!":
 
 ```bash
-gh api -X PUT /user/starred/lukeaus/oh-my-droid 2>/dev/null && echo "Thanks for starring! ⭐" || echo "Could not star - you can star manually at https://github.com/lukeaus/oh-my-droid"
+gh api -X PUT /user/starred/MeroZemory/oh-my-droid 2>/dev/null && echo "Thanks for starring! ⭐" || echo "Could not star - you can star manually at https://github.com/MeroZemory/oh-my-droid"
 ```
 
 **Note:** Fail gracefully if the API call doesn't work - never block setup completion.
@@ -613,11 +613,11 @@ Skip the AskUser prompt and just display:
 ```bash
 echo ""
 echo "If you enjoy oh-my-droid, consider starring the repo:"
-echo "  https://github.com/lukeaus/oh-my-droid"
+echo "  https://github.com/MeroZemory/oh-my-droid"
 echo ""
 ```
 
 ## Fallback
 
 If curl fails, tell user to manually download from:
-https://raw.githubusercontent.com/lukeaus/oh-my-droid/main/docs/FACTORY.md
+https://raw.githubusercontent.com/MeroZemory/oh-my-droid/main/docs/FACTORY.md

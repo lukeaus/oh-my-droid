@@ -17,7 +17,7 @@ psm_init() {
 {
   "aliases": {
     "omd": {
-      "repo": "lukeaus/oh-my-droid",
+      "repo": "MeroZemory/oh-my-droid",
       "local": "~/Workspace/oh-my-droid",
       "default_base": "main"
     }

@@ -81,11 +81,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lukeaus/oh-my-droid.git"
+    "url": "git+https://github.com/MeroZemory/oh-my-droid.git"
   },
-  "homepage": "https://github.com/lukeaus/oh-my-droid#readme",
+  "homepage": "https://github.com/MeroZemory/oh-my-droid#readme",
   "bugs": {
-    "url": "https://github.com/lukeaus/oh-my-droid/issues"
+    "url": "https://github.com/MeroZemory/oh-my-droid/issues"
   },
   "author": "Jio Kim",
   "license": "MIT",

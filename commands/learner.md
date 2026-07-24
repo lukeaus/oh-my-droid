@@ -61,8 +61,8 @@ The system REJECTS skills that are:
 
 **Step 3: Save Location**
 
-- **User-level**: ~/.agents/skills/droid-learned/ - Rare. Only for truly portable insights. (legacy read: ~/.factory/skills/omc-learned/)
-- **Project-level**: .agents/skills/droid-learned/ - Default. Version-controlled with repo. (legacy read: .omd/skills/)
+- **User-level**: ~/.factory/skills/omc-learned/ - Rare. Only for truly portable insights.
+- **Project-level**: .omd/skills/ - Default. Version-controlled with repo.
 
 ### What Makes a USEFUL Skill
 
