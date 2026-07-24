@@ -161,7 +161,7 @@ ls | sort -V | head -n -1 | xargs rm -rf
 ### Fix: Missing/Outdated FACTORY.md
 Fetch latest from GitHub and write to `~/.factory/FACTORY.md`:
 ```
-WebFetch(url: "https://raw.githubusercontent.com/MeroZemory/oh-my-droid/main/docs/FACTORY.md", prompt: "Return the complete raw markdown content exactly as-is")
+WebFetch(url: "https://raw.githubusercontent.com/lukeaus/oh-my-droid/main/docs/FACTORY.md", prompt: "Return the complete raw markdown content exactly as-is")
 ```
 
 ### Fix: Legacy Curl-Installed Content

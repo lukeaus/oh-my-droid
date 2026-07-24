@@ -3,8 +3,7 @@
   "name": "oh-my-droid",
   "description": "Factory Droid native multi-agent orchestration - intelligent model routing, 28 agents, 31 skills",
   "owner": {
-    "name": "Jio Kim",
-    "email": "hurrc04@gmail.com"
+    "name": "lukeaus"
   },
   "plugins": [
     {
@@ -17,7 +16,7 @@
       },
       "source": "./",
       "category": "productivity",
-      "homepage": "https://github.com/MeroZemory/oh-my-droid",
+      "homepage": "https://github.com/lukeaus/oh-my-droid",
       "tags": ["multi-agent", "orchestration", "delegation", "todo-management", "ultrawork"]
     }
   ]

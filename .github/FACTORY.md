@@ -15,7 +15,7 @@ oh-my-droid is a Factory Droid plugin that provides multi-agent orchestration ca
 
 ### Installation
 ```bash
-/plugin marketplace add MeroZemory/oh-my-droid
+/plugin marketplace add lukeaus/oh-my-droid
 ```
 
 ## Code Structure
@@ -36,7 +36,7 @@ tests/                   # Test files
 
 ### Installation Issues
 - Recommend running `/oh-my-droid:doctor` to diagnose problems
-- Check if user installed via correct method: `/plugin marketplace add MeroZemory/oh-my-droid`
+- Check if user installed via correct method: `/plugin marketplace add lukeaus/oh-my-droid`
 - Common issues: outdated Factory Droid version, missing dependencies
 
 ### Bug Reports

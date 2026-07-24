@@ -57,7 +57,7 @@ gh release create v<version> --title "v<version> - <title>" --notes "<release no
 
 ### 7. Verify
 - [ ] npm: https://www.npmjs.com/package/oh-my-droid
-- [ ] GitHub: https://github.com/MeroZemory/oh-my-droid/releases
+- [ ] GitHub: https://github.com/lukeaus/oh-my-droid/releases
 
 ## Version Files Reference
 

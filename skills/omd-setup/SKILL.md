@@ -327,7 +327,7 @@ if [ -f ".factory/FACTORY.md" ]; then
 fi
 
 # Download fresh FACTORY.md from GitHub
-curl -fsSL "https://raw.githubusercontent.com/MeroZemory/oh-my-droid/main/docs/FACTORY.md" -o .factory/FACTORY.md && \
+curl -fsSL "https://raw.githubusercontent.com/lukeaus/oh-my-droid/main/docs/FACTORY.md" -o .factory/FACTORY.md && \
 echo "Downloaded FACTORY.md to .factory/FACTORY.md"
 
 # Extract new version and report
@@ -349,7 +349,7 @@ fi
 
 **FALLBACK** if curl fails:
 Tell user to manually download from:
-https://raw.githubusercontent.com/MeroZemory/oh-my-droid/main/docs/FACTORY.md
+https://raw.githubusercontent.com/lukeaus/oh-my-droid/main/docs/FACTORY.md
 
 ### Verify Plugin Installation
 
@@ -408,7 +408,7 @@ if [ -f "$HOME/.factory/FACTORY.md" ]; then
 fi
 
 # Download fresh FACTORY.md to global config
-curl -fsSL "https://raw.githubusercontent.com/MeroZemory/oh-my-droid/main/docs/FACTORY.md" -o ~/.factory/FACTORY.md && \
+curl -fsSL "https://raw.githubusercontent.com/lukeaus/oh-my-droid/main/docs/FACTORY.md" -o ~/.factory/FACTORY.md && \
 echo "Downloaded FACTORY.md to ~/.factory/FACTORY.md"
 
 # Extract new version and report
@@ -819,7 +819,7 @@ Use `AskUser` to prompt:
 If user chooses "Yes, star it!":
 
 ```bash
-gh api -X PUT /user/starred/MeroZemory/oh-my-droid 2>/dev/null && echo "Thanks for starring! ⭐" || true
+gh api -X PUT /user/starred/lukeaus/oh-my-droid 2>/dev/null && echo "Thanks for starring! ⭐" || true
 ```
 
 **Note:** Fail silently if the API call doesn't work - never block setup completion.
@@ -829,7 +829,7 @@ gh api -X PUT /user/starred/MeroZemory/oh-my-droid 2>/dev/null && echo "Thanks f
 ```bash
 echo ""
 echo "If you enjoy oh-my-droid, consider starring the repo:"
-echo "  https://github.com/MeroZemory/oh-my-droid"
+echo "  https://github.com/lukeaus/oh-my-droid"
 echo ""
 ```
 
@@ -890,5 +890,5 @@ EXAMPLES:
   /omd-setup --local   # Update this project
   /omd-setup --global  # Update all projects
 
-For more info: https://github.com/MeroZemory/oh-my-droid
+For more info: https://github.com/lukeaus/oh-my-droid
 ```

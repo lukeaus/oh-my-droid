@@ -16,7 +16,7 @@ import { homedir, tmpdir } from 'os';
 import { execSync } from 'child_process';
 
 /** GitHub repository information */
-export const REPO_OWNER = 'Yeachan-Heo';
+export const REPO_OWNER = 'lukeaus';
 export const REPO_NAME = 'oh-my-droid';
 export const GITHUB_API_URL = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}`;
 export const GITHUB_RAW_URL = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}`;
@@ -401,7 +401,7 @@ export function formatUpdateNotification(checkResult: UpdateCheckResult): string
     `  Latest version:  ${checkResult.latestVersion}`,
     '',
     '  To update, run: /update',
-    '  Or run: curl -fsSL https://raw.githubusercontent.com/MeroZemory/oh-my-droid/main/scripts/install.sh | bash',
+    '  Or run: curl -fsSL https://raw.githubusercontent.com/lukeaus/oh-my-droid/main/scripts/install.sh | bash',
     ''
   ];
 
