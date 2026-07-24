@@ -32,6 +32,7 @@ jobs:
           cache: npm
       - run: npm ci --ignore-scripts
       - run: npm run build
+      - run: test -z "$(git status --porcelain -- bridge/mcp-server.cjs bridge/hud.cjs)"
       - run: npm run lint
       # Temporary main-branch baseline exclusions are tracked in Issue #14.
       # Remove each exclusion when its underlying failure is fixed.
