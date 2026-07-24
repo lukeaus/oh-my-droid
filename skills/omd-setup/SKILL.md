@@ -506,42 +506,54 @@ cat > ".omd/state/setup-state.json" << EOF
 EOF
 ```
 
-## Step 3.5: Resolve Active Plugin Install
+## Step 3.5: Verify Plugin HUD Bundle
 
-Use Factory's installation metadata rather than sorting cache directory names,
-which are content hashes rather than semantic versions:
+Check that the user-scoped plugin install contains the tracked HUD bundle:
 
 ```bash
 PLUGIN_DIR=$(node --input-type=module - <<'NODE'
-import { readFileSync } from "node:fs";
+import { lstatSync, readFileSync, realpathSync } from "node:fs";
 import { homedir } from "node:os";
-import { join } from "node:path";
+import { isAbsolute, join, relative } from "node:path";
 
-const registries = [
-  { path: join(process.cwd(), ".factory/plugins/installed_plugins.json"), scope: "project" },
-  { path: join(homedir(), ".factory/plugins/installed_plugins.json"), scope: "user" },
-];
-for (const registry of registries) {
-  try {
-    const metadata = JSON.parse(readFileSync(registry.path, "utf-8"));
-    const installs = metadata.plugins?.["oh-my-droid@oh-my-droid"] ?? [];
-    const install = installs.find((item) => item.scope === registry.scope) ?? installs[0];
-    if (install?.installPath) {
-      console.log(install.installPath);
-      process.exit(0);
+try {
+  const home = homedir();
+  const cacheRoot = realpathSync(join(home, ".factory/plugins/cache/oh-my-droid/oh-my-droid"));
+  const metadata = JSON.parse(readFileSync(
+    join(home, ".factory/plugins/installed_plugins.json"),
+    "utf-8",
+  ));
+  const installs = metadata.plugins?.["oh-my-droid@oh-my-droid"] ?? [];
+  const install = installs.find((item) => item.scope === "user");
+  const installPath = realpathSync(install?.installPath);
+  const installRelative = relative(cacheRoot, installPath);
+  if (installRelative && !installRelative.startsWith("..") && !isAbsolute(installRelative)) {
+    const bundlePath = join(installPath, "bridge/hud.cjs");
+    if (!lstatSync(bundlePath).isSymbolicLink()) {
+      const bundleRealPath = realpathSync(bundlePath);
+      const bundleRelative = relative(installPath, bundleRealPath);
+      if (bundleRelative && !bundleRelative.startsWith("..") && !isAbsolute(bundleRelative)) {
+        console.log(installPath);
+        process.exit(0);
+      }
     }
-  } catch {}
-}
+  }
+} catch {}
 console.log("");
 NODE
 )
 
 if [ -n "$PLUGIN_DIR" ]; then
-  echo "Active plugin install: $PLUGIN_DIR"
+  echo "Tracked HUD bundle is ready"
 else
-  echo "No active plugin install found (normal for new installs)"
+  echo "Plugin HUD bundle is missing or unsafe. Reinstall with:"
+  echo "  droid plugin install oh-my-droid@oh-my-droid --scope user"
+  exit 1
 fi
 ```
+
+**Note:** Factory plugin caches are immutable. The tracked `bridge/hud.cjs`
+bundle must be present after installation; do not build the cache in place.
 
 ## Step 3.6: Check for Updates
 
