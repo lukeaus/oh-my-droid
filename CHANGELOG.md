@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Agent Team Mode** — Coordinate named agents as a team with inter-agent messaging, shared context, file ownership, and leader-managed lifecycle. Invoke via `/team` or magic keywords (team, collaborate, together). Includes typed control mailbox, spawn graph persistence, permission broker, per-member transcripts, and HUD statusline integration.
 
+### Fixed
+
+- **Hook Runtime on Tracked-Only Installs** (#27) — Six hook processors (session end, subagent tracker, pre-compact, permission handler, setup init/maintenance) imported from the gitignored `dist/`, so 7 of 13 hook registrations silently did nothing on git-marketplace installs while still recording as `completed`. They now load the tracked `bridge/hooks.cjs` bundle, and a missing runtime exits 1 with a diagnostic instead of exiting 0. `skill-bridge.cjs` moved to `bridge/` as well, restoring the skill injector's persistent cross-process cache. Hot-path `PreToolUse`/`PostToolUse` hooks stay on Node built-ins and out of the bundle.
+
 ---
 
 ## [3.8.17] - 2026-02-01

@@ -4,7 +4,7 @@
  * Skill Injector Hook (UserPromptSubmit)
  * Injects relevant learned skills into context based on prompt triggers.
  *
- * STANDALONE SCRIPT - uses compiled bridge bundle from dist/hooks/skill-bridge.cjs
+ * STANDALONE SCRIPT - uses compiled bridge bundle from bridge/skill-bridge.cjs
  * Falls back to inline implementation if bundle not available (first run before build)
  *
  * Enhancement in v3.5: Now uses RECURSIVE discovery (skills in subdirectories included)
@@ -19,9 +19,9 @@ import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 let bridge = null;
 try {
-  bridge = require('../dist/hooks/skill-bridge.cjs');
+  bridge = require('../bridge/skill-bridge.cjs');
 } catch {
-  // Bridge not available - use fallback (first run before build, or dist/ missing)
+  // Bridge not available - use fallback (first run before build)
 }
 
 // Constants (used by fallback). Canonical paths mirror learner/constants.ts.

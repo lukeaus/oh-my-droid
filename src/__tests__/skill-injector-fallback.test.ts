@@ -7,7 +7,7 @@ import { spawnSync } from 'child_process';
 /**
  * Integration tests for the skill-injector.mjs fallback path.
  *
- * The script is copied to a temp directory without dist/hooks/skill-bridge.cjs
+ * The script is copied to a temp directory without bridge/skill-bridge.cjs
  * so the inline fallback implementation is exercised. Project-level skills are
  * placed under the temp directory's .agents/skills/droid-learned tree.
  */
