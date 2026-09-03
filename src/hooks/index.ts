@@ -266,16 +266,6 @@ export {
   detectSessionErrorType,
   isRecoverableError,
   isSessionRecoverable,
-  // Storage utilities
-  readMessages as readRecoveryMessages,
-  readParts as readRecoveryParts,
-  findEmptyMessages as findRecoveryEmptyMessages,
-  findMessagesWithThinkingBlocks as findRecoveryThinkingBlocks,
-  findMessagesWithOrphanThinking as findRecoveryOrphanThinking,
-  injectTextPart as injectRecoveryTextPart,
-  prependThinkingPart as prependRecoveryThinkingPart,
-  stripThinkingParts as stripRecoveryThinkingParts,
-  replaceEmptyTextParts as replaceRecoveryEmptyTextParts,
   // Constants
   TOKEN_LIMIT_PATTERNS,
   TOKEN_LIMIT_KEYWORDS,
@@ -289,20 +279,13 @@ export {
   RETRY_CONFIG,
   TRUNCATE_CONFIG,
   RECOVERY_MESSAGES,
-  PLACEHOLDER_TEXT as RECOVERY_PLACEHOLDER_TEXT,
   // Types
   type ParsedTokenLimitError,
   type RetryState,
   type TruncateState,
   type RecoveryResult,
   type RecoveryConfig,
-  type RecoveryErrorType,
-  type MessageData as RecoveryMessageData,
-  type StoredMessageMeta as RecoveryStoredMessageMeta,
-  type StoredPart as RecoveryStoredPart,
-  type StoredTextPart as RecoveryStoredTextPart,
-  type StoredToolPart as RecoveryStoredToolPart,
-  type StoredReasoningPart as RecoveryStoredReasoningPart
+  type RecoveryErrorType
 } from './recovery/index.js';
 
 export {

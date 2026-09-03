@@ -64,6 +64,10 @@ import {
   handleSessionEnd,
   type SessionEndInput
 } from './session-end/index.js';
+import {
+  handleRecovery,
+  handleEditErrorRecovery
+} from './recovery/index.js';
 
 /**
  * Input format from Factory Droid hooks (via stdin)
@@ -88,6 +92,8 @@ export interface HookInput {
   toolInput?: unknown;
   /** Tool output (for post-tool hooks) */
   toolOutput?: unknown;
+  /** Error raised by the session or an API call (for the recovery hook) */
+  error?: unknown;
   /** Working directory */
   directory?: string;
 }
@@ -124,7 +130,8 @@ export type HookType =
   | 'pre-compact'          // NEW: Save state before compaction
   | 'setup-init'           // NEW: One-time initialization
   | 'setup-maintenance'    // NEW: Periodic maintenance
-  | 'permission-request';  // NEW: Smart auto-approval
+  | 'permission-request'   // NEW: Smart auto-approval
+  | 'recovery';            // NEW: Context limit / session / edit error recovery
 
 /**
  * Extract prompt text from various input formats
@@ -480,21 +487,73 @@ function processPreToolUse(input: HookInput): HookOutput {
 }
 
 /**
+ * Read a tool name from either the SDK's snake_case payload or the legacy
+ * camelCase shape used by callers of this module.
+ */
+function getToolName(input: HookInput): string {
+  const raw = (input as Record<string, unknown>).tool_name ?? input.toolName;
+  return typeof raw === 'string' ? raw : '';
+}
+
+/**
+ * Normalise tool output to a string. The SDK sends `tool_response`, which may
+ * be either a string or a structured object.
+ */
+function getToolOutput(input: HookInput): string {
+  const raw =
+    (input as Record<string, unknown>).tool_response ?? input.toolOutput ?? '';
+  if (typeof raw === 'string') return raw;
+  try {
+    return JSON.stringify(raw);
+  } catch {
+    return '';
+  }
+}
+
+/**
  * Process post-tool-use hook
- * Marks background tasks as completed
+ * Injects a corrective reminder when the Edit tool failed on a stale assumption
  */
 function processPostToolUse(input: HookInput): HookOutput {
-  const directory = input.directory || process.cwd();
+  const toolName = getToolName(input);
+  const toolOutput = getToolOutput(input);
 
-  // Track Task tool completion for HUD
-  if (input.toolName === 'Task') {
-    const toolInput = input.toolInput as {
-      description?: string;
-    } | undefined;
+  // Edit error recovery: surface a corrective reminder when the Edit tool
+  // failed because the model's assumption about the file was wrong.
+  if (toolName && toolOutput) {
+    const editResult = handleEditErrorRecovery(toolName, toolOutput);
+    if (editResult.attempted && editResult.success) {
+      return {
+        continue: true,
+        message: editResult.message
+      };
+    }
+  }
 
-    // We don't have the exact task ID, but the HUD state cleanup handles this
-    // For now, this is a placeholder - proper tracking would need tool_use_id
-    // which isn't reliably available in all hook scenarios
+  return { continue: true };
+}
+
+/**
+ * Process recovery hook
+ * Routes a session or API error through the unified recovery module and
+ * injects the corrective guidance for the next turn.
+ */
+async function processRecovery(input: HookInput): Promise<HookOutput> {
+  const toolName = getToolName(input);
+  const toolOutput = getToolOutput(input);
+
+  const result = await handleRecovery({
+    sessionId: input.sessionId || 'cli-session',
+    error: input.error,
+    toolName: toolName || undefined,
+    toolOutput: toolOutput || undefined
+  });
+
+  if (result.attempted && result.success && result.message) {
+    return {
+      continue: true,
+      message: result.message
+    };
   }
 
   return { continue: true };
@@ -595,6 +654,9 @@ export async function processHook(
 
       case 'permission-request':
         return await handlePermissionRequest(input as unknown as PermissionRequestInput);
+
+      case 'recovery':
+        return await processRecovery(input);
 
       default:
         return { continue: true };

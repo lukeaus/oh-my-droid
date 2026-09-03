@@ -5,26 +5,7 @@
  */
 
 import { join } from 'node:path';
-import { homedir, tmpdir } from 'node:os';
-
-/**
- * Get the data directory for Factory Droid storage
- * Follows XDG Base Directory specification
- */
-function getDataDir(): string {
-  return process.env.XDG_DATA_HOME ?? join(homedir(), '.local', 'share');
-}
-
-/**
- * Get the Factory Droid storage directory
- */
-function getClaudeCodeStorageDir(): string {
-  return join(getDataDir(), 'factory-droid', 'storage');
-}
-
-export const CLAUDE_CODE_STORAGE = getClaudeCodeStorageDir();
-export const MESSAGE_STORAGE = join(CLAUDE_CODE_STORAGE, 'message');
-export const PART_STORAGE = join(CLAUDE_CODE_STORAGE, 'part');
+import { tmpdir } from 'node:os';
 
 /**
  * Debug logging configuration
@@ -35,18 +16,6 @@ export const DEBUG =
   process.env.SESSION_RECOVERY_DEBUG === '1';
 
 export const DEBUG_FILE = join(tmpdir(), 'recovery-debug.log');
-
-/**
- * Part type sets for categorization
- */
-export const THINKING_TYPES = new Set(['thinking', 'redacted_thinking', 'reasoning']);
-export const META_TYPES = new Set(['step-start', 'step-finish']);
-export const CONTENT_TYPES = new Set(['text', 'tool', 'tool_use', 'tool_result']);
-
-/**
- * Placeholder text for empty content
- */
-export const PLACEHOLDER_TEXT = '[user interrupted]';
 
 /**
  * ============================================================================
@@ -202,24 +171,31 @@ DO NOT attempt another edit until you've read and verified the file state.
  */
 
 /**
- * Recovery messages for different error types
+ * Recovery guidance for different error types.
+ *
+ * Session recovery is advisory: it classifies the API error and tells the
+ * model how to correct itself on the next turn. It never rewrites history.
  */
 export const RECOVERY_MESSAGES = {
   tool_result_missing: {
     title: 'Tool Crash Recovery',
-    message: 'Injecting cancelled tool results...',
+    message:
+      'A tool call was left without a result. Re-run the tool or state that it was cancelled before continuing.',
   },
   thinking_block_order: {
     title: 'Thinking Block Recovery',
-    message: 'Fixing message structure...',
+    message:
+      'The last turn ordered its thinking blocks incorrectly. Start the next reply with a thinking block, then continue.',
   },
   thinking_disabled_violation: {
     title: 'Thinking Strip Recovery',
-    message: 'Stripping thinking blocks...',
+    message:
+      'Thinking is disabled for this session. Reply with visible content only and no thinking blocks.',
   },
   empty_content: {
     title: 'Empty Content Recovery',
-    message: 'Adding placeholder content...',
+    message:
+      'The last turn produced no content. Send a short non-empty reply before continuing the task.',
   },
   context_window_limit: {
     title: 'Context Window Limit',

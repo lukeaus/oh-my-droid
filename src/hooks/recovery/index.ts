@@ -35,12 +35,6 @@ export type {
   ParsedTokenLimitError,
   RetryState,
   TruncateState,
-  MessageData,
-  StoredMessageMeta,
-  StoredPart,
-  StoredTextPart,
-  StoredToolPart,
-  StoredReasoningPart,
 } from './types.js';
 
 export { RETRY_CONFIG, TRUNCATE_CONFIG } from './types.js';
@@ -57,21 +51,7 @@ export {
   EDIT_ERROR_PATTERNS,
   EDIT_ERROR_REMINDER,
   RECOVERY_MESSAGES,
-  PLACEHOLDER_TEXT,
 } from './constants.js';
-
-// Re-export storage utilities
-export {
-  readMessages,
-  readParts,
-  findEmptyMessages,
-  findMessagesWithThinkingBlocks,
-  findMessagesWithOrphanThinking,
-  injectTextPart,
-  prependThinkingPart,
-  stripThinkingParts,
-  replaceEmptyTextParts,
-} from './storage.js';
 
 // Re-export individual recovery functions
 export {
@@ -93,7 +73,7 @@ export {
   isRecoverableError,
 } from './session-recovery.js';
 
-import type { RecoveryResult, RecoveryConfig, MessageData } from './types.js';
+import type { RecoveryResult, RecoveryConfig } from './types.js';
 
 /**
  * Unified recovery handler
@@ -111,10 +91,9 @@ export async function handleRecovery(input: {
   error?: unknown;
   toolName?: string;
   toolOutput?: string;
-  message?: MessageData;
   config?: RecoveryConfig;
 }): Promise<RecoveryResult> {
-  const { sessionId, error, toolName, toolOutput, message, config } = input;
+  const { sessionId, error, toolName, toolOutput, config } = input;
 
   // Priority 1: Context Window Limit
   if (error) {
@@ -126,7 +105,7 @@ export async function handleRecovery(input: {
 
   // Priority 2: Session Recovery
   if (error) {
-    const sessionResult = await handleSessionRecovery(sessionId, error, message, config);
+    const sessionResult = await handleSessionRecovery(sessionId, error, config);
     if (sessionResult.attempted && sessionResult.success) {
       return sessionResult;
     }
@@ -198,12 +177,10 @@ export function createRecoveryHook(config?: RecoveryConfig) {
     onError: async (input: {
       session_id: string;
       error: unknown;
-      message?: MessageData;
     }): Promise<RecoveryResult> => {
       return handleRecovery({
         sessionId: input.session_id,
         error: input.error,
-        message: input.message,
         config,
       });
     },
