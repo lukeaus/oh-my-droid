@@ -1,12 +1,11 @@
 /**
  * Subagent Tracker Hook Module
  *
- * Tracks SubagentStart and SubagentStop events for comprehensive agent monitoring.
+ * Tracks SubagentStop events for comprehensive agent monitoring.
  * Features:
- * - Track all spawned agents with parent mode context
- * - Detect stuck/stale agents (>5 min without progress)
- * - HUD integration for agent status display
- * - Automatic cleanup of orphaned agent state
+ * - Records subagent task completion / failure
+ * - Truncates output summaries
+ * - Manages ring buffer of completed subagent history
  */
 
 import { existsSync, readFileSync, writeFileSync, mkdirSync, unlinkSync } from 'fs';
@@ -20,7 +19,7 @@ export interface SubagentInfo {
   agent_id: string;
   agent_type: string;
   started_at: string;
-  parent_mode: string; // 'autopilot' | 'ultrapilot' | 'ultrawork' | 'swarm' | 'none'
+  parent_mode: string;
   task_description?: string;
   file_ownership?: string[];
   status: 'running' | 'completed' | 'failed';
@@ -37,28 +36,16 @@ export interface SubagentTrackingState {
   last_updated: string;
 }
 
-export interface SubagentStartInput {
-  session_id: string;
-  transcript_path: string;
-  cwd: string;
-  permission_mode: string;
-  hook_event_name: 'SubagentStart';
-  agent_id: string;
-  agent_type: string;
-  prompt?: string;
-  model?: string;
-}
-
 export interface SubagentStopInput {
   session_id: string;
-  transcript_path: string;
+  transcript_path?: string;
   cwd: string;
-  permission_mode: string;
-  hook_event_name: 'SubagentStop';
-  agent_id: string;
-  agent_type: string;
-  output?: string;
-  success: boolean;
+  permission_mode?: string;
+  hook_event_name?: 'SubagentStop';
+  task_name: string;
+  task_result?: string;
+  task_error?: string;
+  stop_hook_active?: boolean;
 }
 
 export interface HookOutput {
@@ -67,7 +54,6 @@ export interface HookOutput {
     hookEventName: string;
     additionalContext?: string;
     agent_count?: number;
-    stale_agents?: string[];
   };
 }
 
@@ -76,7 +62,6 @@ export interface HookOutput {
 // ============================================================================
 
 const STATE_FILE = 'subagent-tracking.json';
-const STALE_THRESHOLD_MS = 5 * 60 * 1000; // 5 minutes
 const MAX_COMPLETED_AGENTS = 100;
 const LOCK_TIMEOUT_MS = 5000; // 5 second lock timeout
 const LOCK_RETRY_MS = 50; // Retry every 50ms
@@ -249,73 +234,9 @@ function detectParentMode(directory: string): string {
   return 'none';
 }
 
-/**
- * Get list of stale agents (running for too long)
- */
-export function getStaleAgents(state: SubagentTrackingState): SubagentInfo[] {
-  const now = Date.now();
-
-  return state.agents.filter((agent) => {
-    if (agent.status !== 'running') {
-      return false;
-    }
-
-    const startTime = new Date(agent.started_at).getTime();
-    const elapsed = now - startTime;
-
-    return elapsed > STALE_THRESHOLD_MS;
-  });
-}
-
 // ============================================================================
 // Hook Processors
 // ============================================================================
-
-/**
- * Process SubagentStart event
- */
-export function processSubagentStart(input: SubagentStartInput): HookOutput {
-  if (!acquireLock(input.cwd)) {
-    return { continue: true }; // Fail gracefully
-  }
-
-  try {
-    const state = readTrackingState(input.cwd);
-    const parentMode = detectParentMode(input.cwd);
-
-    // Create new agent entry
-    const agentInfo: SubagentInfo = {
-      agent_id: input.agent_id,
-      agent_type: input.agent_type,
-      started_at: new Date().toISOString(),
-      parent_mode: parentMode,
-      task_description: input.prompt?.substring(0, 200), // Truncate for storage
-      status: 'running',
-    };
-
-    // Add to state
-    state.agents.push(agentInfo);
-    state.total_spawned++;
-
-    // Write updated state
-    writeTrackingState(input.cwd, state);
-
-    // Check for stale agents
-    const staleAgents = getStaleAgents(state);
-
-    return {
-      continue: true,
-      hookSpecificOutput: {
-        hookEventName: 'SubagentStart',
-        additionalContext: `Agent ${input.agent_type} started (${input.agent_id})`,
-        agent_count: state.agents.filter((a) => a.status === 'running').length,
-        stale_agents: staleAgents.map((a) => a.agent_id),
-      },
-    };
-  } finally {
-    releaseLock(input.cwd);
-  }
-}
 
 /**
  * Process SubagentStop event
@@ -327,39 +248,55 @@ export function processSubagentStop(input: SubagentStopInput): HookOutput {
 
   try {
     const state = readTrackingState(input.cwd);
+    const agentKey = `${input.session_id}:${input.task_name}`;
+    const now = new Date().toISOString();
+    const isFailed = Boolean(input.task_error);
+    const status = isFailed ? 'failed' : 'completed';
 
-    // Find the agent
-    const agentIndex = state.agents.findIndex((a) => a.agent_id === input.agent_id);
+    const outputSummary = input.task_result
+      ? input.task_result.substring(0, 500)
+      : input.task_error
+      ? input.task_error.substring(0, 500)
+      : undefined;
+
+    const agentIndex = state.agents.findIndex((a) => a.agent_id === agentKey);
 
     if (agentIndex !== -1) {
       const agent = state.agents[agentIndex];
-
-      // Update agent status
-      agent.status = input.success ? 'completed' : 'failed';
-      agent.completed_at = new Date().toISOString();
-
-      // Calculate duration
-      const startTime = new Date(agent.started_at).getTime();
-      const endTime = new Date(agent.completed_at).getTime();
-      agent.duration_ms = endTime - startTime;
-
-      // Store output summary (truncated)
-      if (input.output) {
-        agent.output_summary = input.output.substring(0, 500);
+      agent.status = status;
+      agent.completed_at = now;
+      if (outputSummary) {
+        agent.output_summary = outputSummary;
       }
+      // Counter was already incremented on the insert path; do not re-increment
+      // on duplicate stops or total_completed/total_failed would exceed total_spawned.
+    } else {
+      const parentMode = detectParentMode(input.cwd);
 
-      // Update counters
-      if (input.success) {
-        state.total_completed++;
-      } else {
+      const agentInfo: SubagentInfo = {
+        agent_id: agentKey,
+        agent_type: 'Task',
+        started_at: now,
+        parent_mode: parentMode,
+        task_description: input.task_name ? input.task_name.substring(0, 200) : undefined,
+        status,
+        completed_at: now,
+        output_summary: outputSummary,
+      };
+
+      state.agents.push(agentInfo);
+      state.total_spawned++;
+
+      if (isFailed) {
         state.total_failed++;
+      } else {
+        state.total_completed++;
       }
     }
 
     // Evict oldest completed agents if over limit
     const completedAgents = state.agents.filter(a => a.status === 'completed' || a.status === 'failed');
     if (completedAgents.length > MAX_COMPLETED_AGENTS) {
-      // Sort by completed_at and keep only the most recent
       completedAgents.sort((a, b) => {
         const timeA = a.completed_at ? new Date(a.completed_at).getTime() : 0;
         const timeB = b.completed_at ? new Date(b.completed_at).getTime() : 0;
@@ -373,56 +310,16 @@ export function processSubagentStop(input: SubagentStopInput): HookOutput {
     // Write updated state
     writeTrackingState(input.cwd, state);
 
-    const runningCount = state.agents.filter((a) => a.status === 'running').length;
-
     return {
       continue: true,
       hookSpecificOutput: {
         hookEventName: 'SubagentStop',
-        additionalContext: `Agent ${input.agent_type} ${input.success ? 'completed' : 'failed'} (${input.agent_id})`,
-        agent_count: runningCount,
+        additionalContext: `Subagent ${input.task_name} ${status}`,
+        agent_count: state.agents.filter((a) => a.status === 'running').length,
       },
     };
   } finally {
     releaseLock(input.cwd);
-  }
-}
-
-// ============================================================================
-// Cleanup Functions
-// ============================================================================
-
-/**
- * Cleanup stale agents (mark as failed)
- */
-export function cleanupStaleAgents(directory: string): number {
-  if (!acquireLock(directory)) {
-    return 0; // Could not acquire lock
-  }
-
-  try {
-    const state = readTrackingState(directory);
-    const staleAgents = getStaleAgents(state);
-
-    if (staleAgents.length === 0) {
-      return 0;
-    }
-
-    for (const stale of staleAgents) {
-      const agentIndex = state.agents.findIndex((a) => a.agent_id === stale.agent_id);
-      if (agentIndex !== -1) {
-        state.agents[agentIndex].status = 'failed';
-        state.agents[agentIndex].completed_at = new Date().toISOString();
-        state.agents[agentIndex].output_summary = 'Marked as stale - exceeded timeout';
-        state.total_failed++;
-      }
-    }
-
-    writeTrackingState(directory, state);
-
-    return staleAgents.length;
-  } finally {
-    releaseLock(directory);
   }
 }
 
@@ -477,13 +374,6 @@ export function getTrackingStats(directory: string): {
 // ============================================================================
 
 /**
- * Handle SubagentStart hook
- */
-export async function handleSubagentStart(input: SubagentStartInput): Promise<HookOutput> {
-  return processSubagentStart(input);
-}
-
-/**
  * Handle SubagentStop hook
  */
 export async function handleSubagentStop(input: SubagentStopInput): Promise<HookOutput> {
@@ -497,7 +387,6 @@ export function clearTrackingState(directory: string): void {
   const statePath = getStateFilePath(directory);
   if (existsSync(statePath)) {
     try {
-      const { unlinkSync } = require('fs');
       unlinkSync(statePath);
     } catch (error) {
       console.error('[SubagentTracker] Error clearing state:', error);

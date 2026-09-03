@@ -12,6 +12,7 @@ const __dirname = dirname(__filename);
 
 // Dynamic import for the shared stdin module (pathToFileURL required on Windows)
 const { readStdin } = await import(pathToFileURL(join(__dirname, 'lib', 'stdin.mjs')).href);
+const { normalizeHookInput } = await import(pathToFileURL(join(__dirname, 'lib', 'hook-input.mjs')).href);
 
 // Constants
 const NOTEPAD_TEMPLATE = '# Notepad\n' +
@@ -100,14 +101,12 @@ function processRememberTags(output, notepadPath) {
 async function main() {
   try {
     const input = await readStdin();
-    const data = JSON.parse(input);
+    const data = normalizeHookInput(input);
 
-    // Official SDK fields (snake_case) with legacy fallback
-    const toolName = data.tool_name || data.toolName || '';
-    // tool_response may be string or object — normalize to string for .includes() check
-    const rawResponse = data.tool_response || data.toolOutput || '';
-    const toolOutput = typeof rawResponse === 'string' ? rawResponse : JSON.stringify(rawResponse);
-    const directory = data.directory || process.cwd();
+    // Official SDK fields (snake_case)
+    const toolName = data.tool_name || '';
+    const toolOutput = data.tool_response_text || '';
+    const directory = data.cwd;
 
     // Only process Task tool output
     if (toolName !== 'Task' && toolName !== 'task') {
@@ -117,6 +116,11 @@ async function main() {
 
     // Check for remember tags
     if (!toolOutput.includes('<remember')) {
+      console.log(JSON.stringify({ continue: true }));
+      return;
+    }
+
+    if (!directory) {
       console.log(JSON.stringify({ continue: true }));
       return;
     }

@@ -726,32 +726,18 @@ export {
 } from './swarm/index.js';
 
 export {
-  // Setup Hook
-  ensureDirectoryStructure,
-  validateConfigFiles,
-  setEnvironmentVariables,
-  processSetupInit,
+  // Setup maintenance helpers (consumed by the SessionEnd hook)
   pruneOldStateFiles,
-  cleanupOrphanedState,
-  vacuumSwarmDb,
-  processSetupMaintenance,
-  processSetup,
-  type SetupInput,
-  type SetupResult,
-  type HookOutput as SetupHookOutput
+  vacuumSwarmDb
 } from './setup/index.js';
 
 export {
   // Subagent Tracker Hook
-  processSubagentStart,
   processSubagentStop,
-  handleSubagentStart,
   handleSubagentStop,
   readTrackingState,
   writeTrackingState,
   getStateFilePath as getSubagentStateFilePath,
-  getStaleAgents,
-  cleanupStaleAgents,
   getActiveAgentCount,
   getAgentsByType,
   getRunningAgents,
@@ -759,7 +745,6 @@ export {
   clearTrackingState,
   type SubagentInfo,
   type SubagentTrackingState,
-  type SubagentStartInput,
   type SubagentStopInput,
   type HookOutput as SubagentHookOutput
 } from './subagent-tracker/index.js';
@@ -782,7 +767,9 @@ export {
   processPermissionRequest,
   handlePermissionRequest,
   isSafeCommand,
-  isActiveModeRunning,
+  isAutoApproveEnabled,
+  createPermissionDecision,
+  type PreToolUsePermissionInput,
   type PermissionRequestInput,
   type HookOutput as PermissionHookOutput
 } from './permission-handler/index.js';

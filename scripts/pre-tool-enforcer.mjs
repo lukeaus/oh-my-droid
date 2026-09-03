@@ -9,6 +9,7 @@
 import { existsSync, readFileSync, readdirSync } from 'fs';
 import { join } from 'path';
 import { homedir } from 'os';
+import { normalizeHookInput } from './lib/hook-input.mjs';
 
 // Read all stdin
 async function readStdin() {
@@ -19,20 +20,10 @@ async function readStdin() {
   return Buffer.concat(chunks).toString('utf-8');
 }
 
-// Simple JSON field extraction
-function extractJsonField(input, field, defaultValue = '') {
-  try {
-    const data = JSON.parse(input);
-    return data[field] ?? defaultValue;
-  } catch {
-    // Fallback regex extraction
-    const match = input.match(new RegExp(`"${field}"\\s*:\\s*"([^"]*)"`, 'i'));
-    return match ? match[1] : defaultValue;
-  }
-}
-
 // Get todo status from project and global todos
 function getTodoStatus(directory) {
+  if (!directory) return '';
+
   let pending = 0;
   let inProgress = 0;
 
@@ -91,10 +82,10 @@ function getTodoStatus(directory) {
 function generateMessage(toolName, todoStatus) {
   const messages = {
     TodoWrite: `${todoStatus}Mark todos in_progress BEFORE starting, completed IMMEDIATELY after finishing.`,
-    Bash: `${todoStatus}Use parallel execution for independent tasks. Use run_in_background for long operations (npm install, builds, tests).`,
+    Execute: `${todoStatus}Use parallel execution for independent tasks. Use run_in_background for long operations (npm install, builds, tests).`,
     Task: `${todoStatus}Launch multiple agents in parallel when tasks are independent. Use run_in_background for long operations.`,
     Edit: `${todoStatus}Verify changes work after editing. Test functionality before marking complete.`,
-    Write: `${todoStatus}Verify changes work after editing. Test functionality before marking complete.`,
+    Create: `${todoStatus}Verify changes work after editing. Test functionality before marking complete.`,
     Read: `${todoStatus}Read multiple files in parallel when possible for faster analysis.`,
     Grep: `${todoStatus}Combine searches in parallel when investigating multiple patterns.`,
     Glob: `${todoStatus}Combine searches in parallel when investigating multiple patterns.`,
@@ -106,9 +97,10 @@ function generateMessage(toolName, todoStatus) {
 async function main() {
   try {
     const input = await readStdin();
+    const data = normalizeHookInput(input);
 
-    const toolName = extractJsonField(input, 'toolName', 'unknown');
-    const directory = extractJsonField(input, 'directory', process.cwd());
+    const toolName = data.tool_name || 'unknown';
+    const directory = data.cwd;
 
     const todoStatus = getTodoStatus(directory);
     const message = generateMessage(toolName, todoStatus);
@@ -119,7 +111,7 @@ async function main() {
         hookEventName: 'PreToolUse',
         additionalContext: message
       }
-    }, null, 2));
+    }));
   } catch (error) {
     // On error, always continue
     console.log(JSON.stringify({ continue: true }));

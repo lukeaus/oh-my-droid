@@ -1,13 +1,14 @@
 import * as fs from 'fs';
 import * as path from 'path';
+import { pruneOldStateFiles, vacuumSwarmDb } from '../setup/index.js';
 
 export interface SessionEndInput {
   session_id: string;
-  transcript_path: string;
+  transcript_path?: string;
   cwd: string;
-  permission_mode: string;
-  hook_event_name: 'SessionEnd';
-  reason: 'clear' | 'logout' | 'prompt_input_exit' | 'other';
+  permission_mode?: string;
+  hook_event_name?: 'SessionEnd';
+  reason?: 'clear' | 'logout' | 'prompt_input_exit' | 'other' | string;
 }
 
 export interface SessionMetrics {
@@ -121,7 +122,7 @@ export function recordSessionMetrics(directory: string, input: SessionEndInput):
     session_id: input.session_id,
     started_at: startedAt,
     ended_at: endedAt,
-    reason: input.reason,
+    reason: input.reason || 'other',
     agents_spawned: spawned,
     agents_completed: completed,
     modes_used: modesUsed,
@@ -316,6 +317,12 @@ export function processSessionEnd(input: SessionEndInput): HookOutput {
   // Clean up mode state files to prevent stale state issues
   // This ensures the stop hook won't malfunction in subsequent sessions
   cleanupModeStates(input.cwd);
+
+  // Prune state files older than 7 days
+  pruneOldStateFiles(input.cwd);
+
+  // Vacuum swarm database if present
+  vacuumSwarmDb(input.cwd);
 
   // Return simple response - metrics are persisted to .omd/sessions/
   return { continue: true };

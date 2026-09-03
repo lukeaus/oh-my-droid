@@ -10,6 +10,7 @@ import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'fs';
 import { join, dirname } from 'path';
 import { homedir } from 'os';
 import { fileURLToPath } from 'url';
+import { normalizeHookInput } from './lib/hook-input.mjs';
 
 // Get the directory of this script to resolve the dist module
 const __filename = fileURLToPath(import.meta.url);
@@ -66,6 +67,7 @@ function saveStats(stats) {
 
 // Update stats for this session
 function updateStats(toolName, sessionId) {
+  if (!sessionId || sessionId === 'unknown') return 1;
   const stats = loadStats();
 
   if (!stats.sessions[sessionId]) {
@@ -87,8 +89,8 @@ function updateStats(toolName, sessionId) {
   return session.tool_counts[toolName];
 }
 
-// Detect failures in Bash output
-function detectBashFailure(output) {
+// Detect failures in Execute output
+function detectExecuteFailure(output) {
   const errorPatterns = [
     /error:/i,
     /failed/i,
@@ -157,7 +159,7 @@ function processRememberTags(output, directory) {
   }
 }
 
-// Detect write failure
+// Detect write/create failure
 function detectWriteFailure(output) {
   const errorPatterns = [
     /error/i,
@@ -175,8 +177,9 @@ function generateMessage(toolName, toolOutput, sessionId, toolCount) {
   let message = '';
 
   switch (toolName) {
+    case 'Execute':
     case 'Bash':
-      if (detectBashFailure(toolOutput)) {
+      if (detectExecuteFailure(toolOutput)) {
         message = 'Command failed. Please investigate the error and fix before continuing.';
       } else if (detectBackgroundOperation(toolOutput)) {
         message = 'Background operation detected. Remember to verify results before proceeding.';
@@ -201,6 +204,7 @@ function generateMessage(toolName, toolOutput, sessionId, toolCount) {
       }
       break;
 
+    case 'Create':
     case 'Write':
       if (detectWriteFailure(toolOutput)) {
         message = 'Write operation failed. Check file permissions and directory existence.';
@@ -244,12 +248,12 @@ function generateMessage(toolName, toolOutput, sessionId, toolCount) {
 async function main() {
   try {
     const input = await readStdin();
-    const data = JSON.parse(input);
+    const data = normalizeHookInput(input);
 
-    const toolName = data.toolName || '';
-    const toolOutput = data.toolOutput || '';
-    const sessionId = data.sessionId || 'unknown';
-    const directory = data.directory || process.cwd();
+    const toolName = data.tool_name || '';
+    const toolOutput = data.tool_response_text || '';
+    const sessionId = data.session_id || 'unknown';
+    const directory = data.cwd;
 
     // Update session statistics
     const toolCount = updateStats(toolName, sessionId);
@@ -272,7 +276,7 @@ async function main() {
       };
     }
 
-    console.log(JSON.stringify(response, null, 2));
+    console.log(JSON.stringify(response));
   } catch (error) {
     // On error, always continue
     console.log(JSON.stringify({ continue: true }));

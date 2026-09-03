@@ -10,7 +10,6 @@
  */
 
 export { processSessionEnd } from './session-end/index.js';
-export { processSubagentStart, processSubagentStop } from './subagent-tracker/index.js';
+export { processSubagentStop } from './subagent-tracker/index.js';
 export { processPreCompact } from './pre-compact/index.js';
 export { processPermissionRequest } from './permission-handler/index.js';
-export { processSetupInit, processSetupMaintenance } from './setup/index.js';

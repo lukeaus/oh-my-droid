@@ -30,28 +30,6 @@
         ]
       }
     ],
-    "Setup": [
-      {
-        "matcher": "init",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node ${DROID_PLUGIN_ROOT}/scripts/setup-init.mjs",
-            "timeout": 30
-          }
-        ]
-      },
-      {
-        "matcher": "maintenance",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node ${DROID_PLUGIN_ROOT}/scripts/setup-maintenance.mjs",
-            "timeout": 60
-          }
-        ]
-      }
-    ],
     "PreToolUse": [
       {
         "matcher": "*",
@@ -62,11 +40,9 @@
             "timeout": 3
           }
         ]
-      }
-    ],
-    "PermissionRequest": [
+      },
       {
-        "matcher": "Bash",
+        "matcher": "Execute",
         "hooks": [
           {
             "type": "command",
@@ -88,25 +64,13 @@
         ]
       }
     ],
-    "SubagentStart": [
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node ${DROID_PLUGIN_ROOT}/scripts/subagent-tracker.mjs start",
-            "timeout": 3
-          }
-        ]
-      }
-    ],
     "SubagentStop": [
       {
         "matcher": "*",
         "hooks": [
           {
             "type": "command",
-            "command": "node ${DROID_PLUGIN_ROOT}/scripts/subagent-tracker.mjs stop",
+            "command": "node ${DROID_PLUGIN_ROOT}/scripts/subagent-tracker.mjs",
             "timeout": 5
           }
         ]

@@ -16,6 +16,7 @@ const __dirname = dirname(__filename);
 
 // Dynamic import for the shared stdin module (pathToFileURL required on Windows)
 const { readStdin } = await import(pathToFileURL(path.join(__dirname, 'lib', 'stdin.mjs')).href);
+const { normalizeHookInput } = await import(pathToFileURL(path.join(__dirname, 'lib', 'hook-input.mjs')).href);
 
 // Allowed path patterns (no warning)
 const ALLOWED_PATH_PATTERNS = [
@@ -90,6 +91,7 @@ function safeReadJson(filePath) {
 }
 
 function isModeActive(directory, modeName) {
+  if (!directory) return false;
   const localPath = path.join(directory, '.omd', 'state', `${modeName}-state.json`);
   const globalPath = path.join(process.env.HOME || homedir(), '.omd', 'state', `${modeName}-state.json`);
 
@@ -146,22 +148,15 @@ function createPreToolUseOutput({ additionalContext, updatedInput } = {}) {
 
 async function main() {
   const input = await readStdin();
+  const data = normalizeHookInput(input);
 
-  let data;
-  try {
-    data = JSON.parse(input);
-  } catch {
-    console.log(JSON.stringify({ continue: true }));
-    return;
-  }
-
-  // Extract tool name (handle both cases)
-  const toolName = data.tool_name || data.toolName || '';
-  const directory = data.directory || process.cwd();
+  // Extract tool name
+  const toolName = data.tool_name || '';
+  const directory = data.cwd;
+  const toolInput = data.tool_input || {};
 
   // ULTRAWORK: automatically background Task/Agent delegations to enable parallel execution.
-  if (shouldAutoBackgroundDelegation(toolName, data.tool_input || data.toolInput, directory)) {
-    const toolInput = data.tool_input || data.toolInput || {};
+  if (shouldAutoBackgroundDelegation(toolName, toolInput, directory)) {
     console.log(
       JSON.stringify(
         createPreToolUseOutput({
@@ -175,9 +170,8 @@ async function main() {
     return;
   }
 
-  // Handle Bash tool separately - check for file modification patterns
-  if (toolName === 'Bash' || toolName === 'bash') {
-    const toolInput = data.tool_input || data.toolInput || {};
+  // Handle Execute/Bash tool separately - check for file modification patterns
+  if (toolName === 'Execute' || toolName === 'Bash' || toolName === 'bash') {
     const command = toolInput.command || '';
     const warning = checkBashCommand(command);
     if (warning) {
@@ -188,14 +182,13 @@ async function main() {
     return;
   }
 
-  // Only check Edit and Write tools
-  if (!['Edit', 'Write', 'edit', 'write'].includes(toolName)) {
+  // Only check Edit, Create, and Write tools
+  if (!['Edit', 'Create', 'Write', 'edit', 'create', 'write'].includes(toolName)) {
     console.log(JSON.stringify(createPreToolUseOutput()));
     return;
   }
 
   // Extract file path (handle nested structures)
-  const toolInput = data.tool_input || data.toolInput || {};
   const filePath = toolInput.file_path || toolInput.filePath || '';
 
   // No file path? Allow

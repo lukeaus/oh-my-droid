@@ -15,6 +15,27 @@ import { join, relative } from 'path';
 import { homedir } from 'os';
 import { createRequire } from 'module';
 
+// Dynamic normalizer import with inline fallback for standalone usage
+let normalizeHookInput = (data) => {
+  let parsed = data;
+  if (typeof data === 'string') {
+    try { parsed = JSON.parse(data); } catch { parsed = {}; }
+  }
+  return {
+    session_id: parsed?.session_id ?? parsed?.sessionId,
+    cwd: parsed?.cwd ?? parsed?.directory,
+    prompt: parsed?.prompt ?? parsed?.user_prompt,
+    raw: parsed || {},
+  };
+};
+
+try {
+  const normModule = await import('./lib/hook-input.mjs');
+  normalizeHookInput = normModule.normalizeHookInput;
+} catch {
+  // Use inline fallback
+}
+
 // Try to load the compiled bridge bundle
 const require = createRequire(import.meta.url);
 let bridge = null;
@@ -135,10 +156,12 @@ function findSkillFilesFallback(directory) {
   };
 
   // Project-level skills: new then legacy
-  scanDirs([
-    join(directory, PROJECT_SKILLS_SUBDIR),
-    join(directory, LEGACY_PROJECT_SKILLS_SUBDIR),
-  ], 'project');
+  if (directory) {
+    scanDirs([
+      join(directory, PROJECT_SKILLS_SUBDIR),
+      join(directory, LEGACY_PROJECT_SKILLS_SUBDIR),
+    ], 'project');
+  }
 
   // User-level skills: new then legacy dirs
   scanDirs([USER_SKILLS_DIR, ...LEGACY_USER_SKILLS_DIRS], 'user');
@@ -217,7 +240,10 @@ async function readStdin() {
 
 // Find matching skills - delegates to bridge or fallback
 function findMatchingSkills(prompt, directory, sessionId) {
-  if (bridge) {
+  // The bridge joins paths against the project root and persists its session
+  // cache there, so it requires a directory. Without one, only user-scope
+  // skills are discoverable, which the fallback handles.
+  if (bridge && directory) {
     // Use bridge (RECURSIVE discovery, persistent session cache)
     const matches = bridge.matchSkillsForInjection(prompt, directory, sessionId, {
       maxResults: MAX_SKILLS_PER_SESSION
@@ -278,12 +304,10 @@ async function main() {
       return;
     }
 
-    let data = {};
-    try { data = JSON.parse(input); } catch { /* ignore parse errors */ }
-
+    const data = normalizeHookInput(input);
     const prompt = data.prompt || '';
-    const sessionId = data.sessionId || 'unknown';
-    const directory = data.cwd || process.cwd();
+    const sessionId = data.session_id || 'unknown';
+    const directory = data.cwd;
 
     // Skip if no prompt
     if (!prompt) {

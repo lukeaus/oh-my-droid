@@ -1,172 +1,22 @@
 /**
- * Setup Hook Module
+ * Setup Utilities Module
  *
- * Handles OMC initialization and maintenance tasks.
- * Triggers:
- * - init: Create directory structure, validate configs, set environment
- * - maintenance: Prune old state files, cleanup orphaned state, vacuum SQLite
+ * State maintenance helpers consumed by the SessionEnd hook
+ * (see src/hooks/session-end/index.ts).
+ * Functions:
+ * - pruneOldStateFiles: Prune old state files
+ * - vacuumSwarmDb: Vacuum swarm SQLite database
  */
 
-import { existsSync, mkdirSync, readdirSync, statSync, unlinkSync, readFileSync } from 'fs';
-import { join, dirname } from 'path';
+import { existsSync, readdirSync, statSync, unlinkSync } from 'fs';
+import { join } from 'path';
 import { execSync } from 'child_process';
-
-// ============================================================================
-// Types
-// ============================================================================
-
-export interface SetupInput {
-  session_id: string;
-  transcript_path: string;
-  cwd: string;
-  permission_mode: string;
-  hook_event_name: 'Setup';
-  trigger: 'init' | 'maintenance';
-}
-
-export interface SetupResult {
-  directories_created: string[];
-  configs_validated: string[];
-  errors: string[];
-  env_vars_set: string[];
-}
-
-export interface HookOutput {
-  continue: boolean;
-  hookSpecificOutput: {
-    hookEventName: 'Setup';
-    additionalContext: string;
-  };
-}
 
 // ============================================================================
 // Constants
 // ============================================================================
 
-const REQUIRED_DIRECTORIES = [
-  '.omd/state',
-  '.omd/logs',
-  '.omd/notepads',
-  '.omd/state/checkpoints',
-  '.omd/plans',
-];
-
-const CONFIG_FILES = [
-  '.omd-config.json',
-];
-
 const DEFAULT_STATE_MAX_AGE_DAYS = 7;
-
-// ============================================================================
-// Init Functions
-// ============================================================================
-
-/**
- * Ensure all required directories exist
- */
-export function ensureDirectoryStructure(directory: string): string[] {
-  const created: string[] = [];
-
-  for (const dir of REQUIRED_DIRECTORIES) {
-    const fullPath = join(directory, dir);
-    if (!existsSync(fullPath)) {
-      try {
-        mkdirSync(fullPath, { recursive: true });
-        created.push(fullPath);
-      } catch (err) {
-        // Will be reported in errors
-      }
-    }
-  }
-
-  return created;
-}
-
-/**
- * Validate that config files exist and are readable
- */
-export function validateConfigFiles(directory: string): string[] {
-  const validated: string[] = [];
-
-  for (const configFile of CONFIG_FILES) {
-    const fullPath = join(directory, configFile);
-    if (existsSync(fullPath)) {
-      try {
-        // Try to read to ensure it's valid
-        readFileSync(fullPath, 'utf-8');
-        validated.push(fullPath);
-      } catch {
-        // Silently skip if unreadable
-      }
-    }
-  }
-
-  return validated;
-}
-
-/**
- * Set environment variables for OMC initialization
- */
-export function setEnvironmentVariables(): string[] {
-  const envVars: string[] = [];
-
-  // Check if CLAUDE_ENV_FILE is available
-  if (process.env.CLAUDE_ENV_FILE) {
-    try {
-      const envContent = `export OMC_INITIALIZED=true\n`;
-      const { appendFileSync } = require('fs');
-      appendFileSync(process.env.CLAUDE_ENV_FILE, envContent);
-      envVars.push('OMC_INITIALIZED');
-    } catch {
-      // Silently fail if can't write
-    }
-  }
-
-  return envVars;
-}
-
-/**
- * Process setup init trigger
- */
-export async function processSetupInit(input: SetupInput): Promise<HookOutput> {
-  const result: SetupResult = {
-    directories_created: [],
-    configs_validated: [],
-    errors: [],
-    env_vars_set: [],
-  };
-
-  try {
-    // Create directory structure
-    result.directories_created = ensureDirectoryStructure(input.cwd);
-
-    // Validate config files
-    result.configs_validated = validateConfigFiles(input.cwd);
-
-    // Set environment variables
-    result.env_vars_set = setEnvironmentVariables();
-  } catch (err) {
-    result.errors.push(err instanceof Error ? err.message : String(err));
-  }
-
-  const context = [
-    `OMC initialized:`,
-    `- ${result.directories_created.length} directories created`,
-    `- ${result.configs_validated.length} configs validated`,
-    result.env_vars_set.length > 0 ? `- Environment variables set: ${result.env_vars_set.join(', ')}` : null,
-    result.errors.length > 0 ? `- Errors: ${result.errors.length}` : null,
-  ]
-    .filter(Boolean)
-    .join('\n');
-
-  return {
-    continue: true,
-    hookSpecificOutput: {
-      hookEventName: 'Setup',
-      additionalContext: context,
-    },
-  };
-}
 
 // ============================================================================
 // Maintenance Functions
@@ -226,49 +76,6 @@ export function pruneOldStateFiles(directory: string, maxAgeDays: number = DEFAU
 }
 
 /**
- * Clean up orphaned state files (state files without corresponding active sessions)
- */
-export function cleanupOrphanedState(directory: string): number {
-  const stateDir = join(directory, '.omd/state');
-  if (!existsSync(stateDir)) {
-    return 0;
-  }
-
-  let cleanedCount = 0;
-
-  try {
-    const files = readdirSync(stateDir);
-
-    // Look for session-specific state files (pattern: *-session-*.json)
-    const sessionFilePattern = /-session-[a-f0-9-]+\.json$/;
-
-    for (const file of files) {
-      if (sessionFilePattern.test(file)) {
-        const filePath = join(stateDir, file);
-
-        try {
-          // Check if file is older than 24 hours (likely orphaned)
-          const stats = statSync(filePath);
-          const fileAge = Date.now() - stats.mtimeMs;
-          const oneDayMs = 24 * 60 * 60 * 1000;
-
-          if (fileAge > oneDayMs) {
-            unlinkSync(filePath);
-            cleanedCount++;
-          }
-        } catch {
-          // Skip files we can't access
-        }
-      }
-    }
-  } catch {
-    // Directory doesn't exist or can't be read
-  }
-
-  return cleanedCount;
-}
-
-/**
  * Run VACUUM on swarm SQLite database if it exists
  */
 export function vacuumSwarmDb(directory: string): boolean {
@@ -292,78 +99,5 @@ export function vacuumSwarmDb(directory: string): boolean {
   } catch {
     // sqlite3 not available or vacuum failed
     return false;
-  }
-}
-
-/**
- * Process setup maintenance trigger
- */
-export async function processSetupMaintenance(input: SetupInput): Promise<HookOutput> {
-  const result: SetupResult = {
-    directories_created: [],
-    configs_validated: [],
-    errors: [],
-    env_vars_set: [],
-  };
-
-  let prunedFiles = 0;
-  let orphanedCleaned = 0;
-  let dbVacuumed = false;
-
-  try {
-    // Prune old state files
-    prunedFiles = pruneOldStateFiles(input.cwd, DEFAULT_STATE_MAX_AGE_DAYS);
-
-    // Cleanup orphaned state
-    orphanedCleaned = cleanupOrphanedState(input.cwd);
-
-    // Vacuum swarm database
-    dbVacuumed = vacuumSwarmDb(input.cwd);
-  } catch (err) {
-    result.errors.push(err instanceof Error ? err.message : String(err));
-  }
-
-  const context = [
-    `OMC maintenance completed:`,
-    prunedFiles > 0 ? `- ${prunedFiles} old state files pruned` : null,
-    orphanedCleaned > 0 ? `- ${orphanedCleaned} orphaned state files cleaned` : null,
-    dbVacuumed ? `- Swarm database vacuumed` : null,
-    result.errors.length > 0 ? `- Errors: ${result.errors.length}` : null,
-    prunedFiles === 0 && orphanedCleaned === 0 && !dbVacuumed && result.errors.length === 0
-      ? '- No maintenance needed'
-      : null,
-  ]
-    .filter(Boolean)
-    .join('\n');
-
-  return {
-    continue: true,
-    hookSpecificOutput: {
-      hookEventName: 'Setup',
-      additionalContext: context,
-    },
-  };
-}
-
-// ============================================================================
-// Main Entry Point
-// ============================================================================
-
-/**
- * Process setup hook based on trigger type
- */
-export async function processSetup(input: SetupInput): Promise<HookOutput> {
-  if (input.trigger === 'init') {
-    return processSetupInit(input);
-  } else if (input.trigger === 'maintenance') {
-    return processSetupMaintenance(input);
-  } else {
-    return {
-      continue: true,
-      hookSpecificOutput: {
-        hookEventName: 'Setup',
-        additionalContext: `Unknown trigger: ${input.trigger}`,
-      },
-    };
   }
 }

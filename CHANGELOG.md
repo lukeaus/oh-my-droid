@@ -13,7 +13,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- **Hook Runtime on Tracked-Only Installs** (#27) — Six hook processors (session end, subagent tracker, pre-compact, permission handler, setup init/maintenance) imported from the gitignored `dist/`, so 7 of 13 hook registrations silently did nothing on git-marketplace installs while still recording as `completed`. They now load the tracked `bridge/hooks.cjs` bundle, and a missing runtime exits 1 with a diagnostic instead of exiting 0. `skill-bridge.cjs` moved to `bridge/` as well, restoring the skill injector's persistent cross-process cache. Hot-path `PreToolUse`/`PostToolUse` hooks stay on Node built-ins and out of the bundle.
+- **Hook Registrations and Payload Handling Alignment** (#28) — Aligned all hook registrations, payload normalizers, and handler contracts with official Factory Droid hook documentation:
+  - Created centralized hook input normalizer (`normalizeHookInput` / `extractResponseText`) to robustly handle both camelCase and snake_case schemas and normalize object/string tool responses without overriding caller cwd.
+  - Remapped legacy tool names (`Bash` → `Execute`, `Write` → `Create`) across all script and template hooks.
+  - Pruned undocumented and dead event registrations (`Setup`, `PermissionRequest`, `SubagentStart`) from `hooks/hooks.json`.
+  - Refactored `permission-handler` to `PreToolUse` on `Execute` with opt-in `autoApproveSafeCommands` in `~/.factory/.omd-config.json` and tightened read-only command safeguards.
+  - Refactored `subagent-tracker` to documented `SubagentStop` payload structure.
+  - Fixed `Stop` hook response in `persistent-mode.mjs` to emit `{ decision: 'block', reason }`.
+  - Folded state maintenance and SQLite vacuum routines into `SessionEnd` handler.
+  - Stopped defaulting a missing `cwd` to `process.cwd()`. Hooks now skip project-scoped state I/O when Factory Droid omits `cwd`, while user- and global-scoped work still runs: the skill injector keeps injecting user-scope learned skills, and the keyword detector keeps writing and clearing global mode state.
+  - Restored plugin/template parity in `persistent-mode.mjs`: incomplete Tasks are counted with a `pending`/`in_progress` allowlist (so `cancelled`, `failed`, and `deleted` no longer block a stop), and session-scoped todo files are accepted as either a bare array or a `{ todos: [...] }` wrapper.
+- **Hook Runtime on Tracked-Only Installs** (#27) — Hook processors (session end, subagent tracker, pre-compact, permission handler) imported from the gitignored `dist/`, so most hook registrations silently did nothing on git-marketplace installs while still recording as `completed`. They now load the tracked `bridge/hooks.cjs` bundle, and a missing runtime exits 1 with a diagnostic instead of exiting 0. `skill-bridge.cjs` moved to `bridge/` as well, restoring the skill injector's persistent cross-process cache. Hot-path `PreToolUse`/`PostToolUse` hooks stay on Node built-ins and out of the bundle. (#28 later removed the setup init/maintenance processors entirely; their maintenance work moved into `SessionEnd`.)
 
 ---
 

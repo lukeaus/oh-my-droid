@@ -18,6 +18,7 @@ const __dirname = dirname(__filename);
 
 // Dynamic import for the shared stdin module
 const { readStdin } = await import(pathToFileURL(join(__dirname, 'lib', 'stdin.mjs')).href);
+const { normalizeHookInput } = await import(pathToFileURL(join(__dirname, 'lib', 'hook-input.mjs')).href);
 
 function readJsonFile(path) {
   try {
@@ -145,8 +146,11 @@ function countIncompleteTodos(sessionId, projectDir) {
  */
 function isContextLimitStop(data) {
   const reason = (data.stop_reason || data.stopReason || '').toLowerCase();
+  const endTurnReason = (data.end_turn_reason || data.endTurnReason || '').toLowerCase();
 
-  const contextPatterns = [
+  // Exact #213 tokens. Do not add short substrings like "length" — they match
+  // incidental reasons (content_length, max_length) and release ralph/ultrawork.
+  const contextLimitPatterns = [
     'context_limit',
     'context_window',
     'context_exceeded',
@@ -158,16 +162,7 @@ function isContextLimitStop(data) {
     'input_too_long',
   ];
 
-  if (contextPatterns.some(p => reason.includes(p))) {
-    return true;
-  }
-
-  const endTurnReason = (data.end_turn_reason || data.endTurnReason || '').toLowerCase();
-  if (endTurnReason && contextPatterns.some(p => endTurnReason.includes(p))) {
-    return true;
-  }
-
-  return false;
+  return contextLimitPatterns.some(p => reason.includes(p) || endTurnReason.includes(p));
 }
 
 /**
@@ -200,24 +195,30 @@ function isUserAbort(data) {
 async function main() {
   try {
     const input = await readStdin();
-    let data = {};
-    try { data = JSON.parse(input); } catch {}
+    const data = normalizeHookInput(input);
 
-    const directory = data.directory || process.cwd();
-    const sessionId = data.sessionId || data.session_id || '';
+    const directory = data.cwd;
+    const sessionId = data.session_id || '';
+
+    // Factory omitted cwd — skip state I/O rather than writing under process.cwd().
+    if (!directory) {
+      console.log(JSON.stringify({ continue: true }));
+      return;
+    }
+
     const stateDir = join(directory, '.omd', 'state');
     const globalStateDir = join(homedir(), '.omd', 'state');
 
     // CRITICAL: Never block context-limit stops.
     // Blocking these causes a deadlock where Factory Droid cannot compact.
     // See: https://github.com/MeroZemory/oh-my-droid/issues/213
-    if (isContextLimitStop(data)) {
+    if (isContextLimitStop(data.raw)) {
       console.log(JSON.stringify({ continue: true }));
       return;
     }
 
     // Respect user abort (Ctrl+C, cancel)
-    if (isUserAbort(data)) {
+    if (isUserAbort(data.raw)) {
       console.log(JSON.stringify({ continue: true }));
       return;
     }
@@ -252,8 +253,8 @@ async function main() {
         writeJsonFile(ralph.path, ralph.state);
 
         console.log(JSON.stringify({
-          continue: true,
-          message: `[RALPH LOOP - ITERATION ${iteration + 1}/${maxIter}] Work is NOT done. Continue working.\nWhen FULLY complete (after Architect verification), run /omd-cancel (or /cancel) to cleanly exit ralph mode and clean up all state files. If cancel fails, retry with /omd-cancel --force.\n${ralph.state.prompt ? `Task: ${ralph.state.prompt}` : ''}`
+          decision: 'block',
+          reason: `[RALPH LOOP - ITERATION ${iteration + 1}/${maxIter}] Work is NOT done. Continue working.\nWhen FULLY complete (after Architect verification), run /omd-cancel (or /cancel) to cleanly exit ralph mode and clean up all state files. If cancel fails, retry with /omd-cancel --force.\n${ralph.state.prompt ? `Task: ${ralph.state.prompt}` : ''}`
         }));
         return;
       }
@@ -270,8 +271,8 @@ async function main() {
           writeJsonFile(autopilot.path, autopilot.state);
 
           console.log(JSON.stringify({
-            continue: true,
-            message: `[AUTOPILOT - Phase: ${phase}] Autopilot not complete. Continue working. When all phases are complete, run /omd-cancel (or /cancel) to cleanly exit and clean up state files. If cancel fails, retry with /omd-cancel --force.`
+            decision: 'block',
+            reason: `[AUTOPILOT - Phase: ${phase}] Autopilot not complete. Continue working. When all phases are complete, run /omd-cancel (or /cancel) to cleanly exit and clean up state files. If cancel fails, retry with /omd-cancel --force.`
           }));
           return;
         }
@@ -290,8 +291,8 @@ async function main() {
           writeJsonFile(ultrapilot.path, ultrapilot.state);
 
           console.log(JSON.stringify({
-            continue: true,
-            message: `[ULTRAPILOT] ${incomplete} workers still running. Continue working. When all workers complete, run /omd-cancel (or /cancel) to cleanly exit and clean up state files. If cancel fails, retry with /omd-cancel --force.`
+            decision: 'block',
+            reason: `[ULTRAPILOT] ${incomplete} workers still running. Continue working. When all workers complete, run /omd-cancel (or /cancel) to cleanly exit and clean up state files. If cancel fails, retry with /omd-cancel --force.`
           }));
           return;
         }
@@ -309,8 +310,8 @@ async function main() {
           writeJsonFile(join(stateDir, 'swarm-summary.json'), swarmSummary);
 
           console.log(JSON.stringify({
-            continue: true,
-            message: `[SWARM ACTIVE] ${pending} tasks remain. Continue working. When all tasks are done, run /omd-cancel (or /cancel) to cleanly exit and clean up state files. If cancel fails, retry with /omd-cancel --force.`
+            decision: 'block',
+            reason: `[SWARM ACTIVE] ${pending} tasks remain. Continue working. When all tasks are done, run /omd-cancel (or /cancel) to cleanly exit and clean up state files. If cancel fails, retry with /omd-cancel --force.`
           }));
           return;
         }
@@ -329,8 +330,8 @@ async function main() {
           writeJsonFile(pipeline.path, pipeline.state);
 
           console.log(JSON.stringify({
-            continue: true,
-            message: `[PIPELINE - Stage ${currentStage + 1}/${totalStages}] Pipeline not complete. Continue working. When all stages complete, run /omd-cancel (or /cancel) to cleanly exit and clean up state files. If cancel fails, retry with /omd-cancel --force.`
+            decision: 'block',
+            reason: `[PIPELINE - Stage ${currentStage + 1}/${totalStages}] Pipeline not complete. Continue working. When all stages complete, run /omd-cancel (or /cancel) to cleanly exit and clean up state files. If cancel fails, retry with /omd-cancel --force.`
           }));
           return;
         }
@@ -347,8 +348,8 @@ async function main() {
         writeJsonFile(ultraqa.path, ultraqa.state);
 
         console.log(JSON.stringify({
-          continue: true,
-          message: `[ULTRAQA - Cycle ${cycle + 1}/${maxCycles}] Tests not all passing. Continue fixing. When all tests pass, run /omd-cancel (or /cancel) to cleanly exit and clean up state files. If cancel fails, retry with /omd-cancel --force.`
+          decision: 'block',
+          reason: `[ULTRAQA - Cycle ${cycle + 1}/${maxCycles}] Tests not all passing. Continue fixing. When all tests pass, run /omd-cancel (or /cancel) to cleanly exit and clean up state files. If cancel fails, retry with /omd-cancel --force.`
         }));
         return;
       }
@@ -389,7 +390,7 @@ async function main() {
         reason += `\nTask: ${ultrawork.state.original_prompt}`;
       }
 
-      console.log(JSON.stringify({ continue: true, message: reason }));
+      console.log(JSON.stringify({ decision: 'block', reason }));
       return;
     }
 
@@ -421,7 +422,7 @@ async function main() {
         reason += ` Continue working - create Tasks to track your progress.`;
       }
 
-      console.log(JSON.stringify({ continue: true, message: reason }));
+      console.log(JSON.stringify({ decision: 'block', reason }));
       return;
     }
 

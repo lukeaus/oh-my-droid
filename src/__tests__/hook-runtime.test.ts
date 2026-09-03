@@ -54,20 +54,18 @@ describe('hook registrations on a tracked-only install', () => {
     hook_event_name: 'Fixture',
     prompt: 'fixture prompt',
     reason: 'other',
-    trigger: 'init',
-    agent_id: 'agent-1',
-    agent_type: 'executor',
-    tool_name: 'proxy_Bash',
+    task_name: 'fixture-task',
+    tool_name: 'Execute',
     tool_input: { command: 'git status' },
     tool_use_id: 'use-1',
   });
 
-  it('exits 0 with JSON on stdout for all 13 registrations', () => {
+  it('exits 0 with JSON on stdout for all hook registrations', () => {
     expect(existsSync(join(pluginDir, 'dist'))).toBe(false);
     expect(existsSync(join(pluginDir, 'node_modules'))).toBe(false);
 
     const commands = registeredCommands();
-    expect(commands).toHaveLength(13);
+    expect(commands).toHaveLength(10);
 
     for (const { event, args } of commands) {
       const result = spawnSync('node', args, {
