@@ -21,6 +21,12 @@ function runNodeScript(scriptPath: string, input: unknown, env: NodeJS.ProcessEn
   }
 }
 
+// os.homedir() reads USERPROFILE on Windows and HOME elsewhere, so redirecting
+// the home-scoped lookups in these scripts requires setting both.
+function homeEnv(homeDir: string): NodeJS.ProcessEnv {
+  return { ...process.env, HOME: homeDir, USERPROFILE: homeDir };
+}
+
 describe('post-tool-verifier hook scripts', () => {
   let homeDir: string;
   let projectDir: string;
@@ -48,7 +54,7 @@ describe('post-tool-verifier hook scripts', () => {
           tool_input: { command: 'npm test' },
           tool_response: 'error: test suite failed with exit code 1',
         },
-        { ...process.env, HOME: homeDir }
+        homeEnv(homeDir)
       );
 
       expect(output.continue).toBe(true);
@@ -69,7 +75,7 @@ describe('post-tool-verifier hook scripts', () => {
           tool_input: { command: 'git pull' },
           tool_response: { stdout: '', stderr: 'fatal: repository not found', exit_code: 128 },
         },
-        { ...process.env, HOME: homeDir }
+        homeEnv(homeDir)
       );
 
       expect(output.continue).toBe(true);
@@ -90,7 +96,7 @@ describe('post-tool-verifier hook scripts', () => {
           tool_input: { file_path: 'src/main.ts' },
           tool_response: 'File created successfully',
         },
-        { ...process.env, HOME: homeDir }
+        homeEnv(homeDir)
       );
 
       expect(output.continue).toBe(true);
@@ -111,7 +117,7 @@ describe('post-tool-verifier hook scripts', () => {
           tool_input: { todos: [] },
           tool_response: 'Task completed',
         },
-        { ...process.env, HOME: homeDir }
+        homeEnv(homeDir)
       );
 
       expect(output.continue).toBe(true);
@@ -134,7 +140,7 @@ describe('post-tool-verifier hook scripts', () => {
           tool_input: { prompt: 'research' },
           tool_response: 'Completed task with info <remember>Use port 8080</remember>',
         },
-        { ...process.env, HOME: homeDir }
+        homeEnv(homeDir)
       );
 
       expect(output.continue).toBe(true);
@@ -154,7 +160,7 @@ describe('post-tool-verifier hook scripts', () => {
           tool_input: { prompt: 'research' },
           tool_response: { stdout: '<remember priority>Critical auth key is XYZ</remember>' },
         },
-        { ...process.env, HOME: homeDir }
+        homeEnv(homeDir)
       );
 
       expect(output.continue).toBe(true);

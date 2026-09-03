@@ -12,7 +12,8 @@ import { tmpdir } from 'os';
 function runHook(scriptPath: string, input: unknown, home: string): Record<string, unknown> {
   const stdout = execFileSync('node', [scriptPath], {
     input: JSON.stringify(input),
-    env: { ...process.env, HOME: home },
+    // os.homedir() reads USERPROFILE on Windows and HOME elsewhere.
+    env: { ...process.env, HOME: home, USERPROFILE: home },
     encoding: 'utf8',
   });
 

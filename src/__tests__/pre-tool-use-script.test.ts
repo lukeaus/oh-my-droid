@@ -21,6 +21,12 @@ function runNodeScript(scriptPath: string, input: unknown, env: NodeJS.ProcessEn
   }
 }
 
+// os.homedir() reads USERPROFILE on Windows and HOME elsewhere, so redirecting
+// the home-scoped lookups in these scripts requires setting both.
+function homeEnv(homeDir: string): NodeJS.ProcessEnv {
+  return { ...process.env, HOME: homeDir, USERPROFILE: homeDir };
+}
+
 describe('pre-tool-use hook scripts', () => {
   let homeDir: string;
   let projectDir: string;
@@ -56,7 +62,7 @@ describe('pre-tool-use hook scripts', () => {
             prompt: 'find files',
           },
         },
-        { ...process.env, HOME: homeDir }
+        homeEnv(homeDir)
       );
 
       expect(output.continue).toBe(true);
@@ -86,7 +92,7 @@ describe('pre-tool-use hook scripts', () => {
             run_in_background: false,
           },
         },
-        { ...process.env, HOME: homeDir }
+        homeEnv(homeDir)
       );
 
       expect(output.continue).toBe(true);
@@ -105,7 +111,7 @@ describe('pre-tool-use hook scripts', () => {
             command: 'echo "const x = 1;" > src/index.ts',
           },
         },
-        { ...process.env, HOME: homeDir }
+        homeEnv(homeDir)
       );
 
       expect(output.continue).toBe(true);
@@ -126,7 +132,7 @@ describe('pre-tool-use hook scripts', () => {
           tool_name: 'Execute',
           tool_input: { command: 'npm test' },
         },
-        { ...process.env, HOME: homeDir }
+        homeEnv(homeDir)
       );
 
       expect(output.continue).toBe(true);
@@ -145,7 +151,7 @@ describe('pre-tool-use hook scripts', () => {
           tool_name: 'Create',
           tool_input: { file_path: 'foo.ts' },
         },
-        { ...process.env, HOME: homeDir }
+        homeEnv(homeDir)
       );
 
       expect(output.continue).toBe(true);
@@ -175,7 +181,7 @@ describe('pre-tool-use hook scripts', () => {
           tool_name: 'Edit',
           tool_input: { file_path: 'foo.ts' },
         },
-        { ...process.env, HOME: homeDir }
+        homeEnv(homeDir)
       );
 
       expect(output.continue).toBe(true);
@@ -188,7 +194,7 @@ describe('pre-tool-use hook scripts', () => {
       const output = runNodeScript(
         scriptPath,
         { tool_name: 'Edit', tool_input: { file_path: 'foo.ts' } },
-        { ...process.env, HOME: homeDir }
+        homeEnv(homeDir)
       );
 
       expect(output.continue).toBe(true);

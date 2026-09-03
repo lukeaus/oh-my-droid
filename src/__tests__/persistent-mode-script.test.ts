@@ -16,6 +16,12 @@ function runNodeScript(scriptPath: string, input: unknown, env: NodeJS.ProcessEn
   return JSON.parse(lastLine) as Record<string, unknown>;
 }
 
+// os.homedir() reads USERPROFILE on Windows and HOME elsewhere, so redirecting
+// the home-scoped lookups in these scripts requires setting both.
+function homeEnv(homeDir: string): NodeJS.ProcessEnv {
+  return { ...process.env, HOME: homeDir, USERPROFILE: homeDir };
+}
+
 describe('persistent-mode hook scripts', () => {
   let homeDir: string;
   let projectDir: string;
@@ -52,7 +58,7 @@ describe('persistent-mode hook scripts', () => {
     const output = runNodeScript(
       scriptPath,
       { cwd: projectDir, session_id: 'session_1' },
-      { ...process.env, HOME: homeDir }
+      homeEnv(homeDir)
     );
 
     expect(output.decision).toBe('block');
@@ -66,7 +72,7 @@ describe('persistent-mode hook scripts', () => {
     const output = runNodeScript(
       scriptPath,
       { cwd: projectDir, session_id: 'session_1' },
-      { ...process.env, HOME: homeDir }
+      homeEnv(homeDir)
     );
 
     expect(output.decision).toBe('block');
@@ -82,7 +88,7 @@ describe('persistent-mode hook scripts', () => {
     const output = runNodeScript(
       scriptPath,
       { cwd: projectDir, session_id: 'session_1' },
-      { ...process.env, HOME: homeDir }
+      homeEnv(homeDir)
     );
 
     expect(output.continue).toBe(true);
@@ -104,7 +110,7 @@ describe('persistent-mode hook scripts', () => {
         const output = runNodeScript(
           scriptPath,
           { cwd: projectDir, session_id: 'session_1', ...extra },
-          { ...process.env, HOME: homeDir }
+          homeEnv(homeDir)
         );
         expect(output.continue).toBe(true);
         expect(output.decision).toBeUndefined();
@@ -115,7 +121,7 @@ describe('persistent-mode hook scripts', () => {
         const output = runNodeScript(
           scriptPath,
           { cwd: projectDir, session_id: 'session_1', ...extra },
-          { ...process.env, HOME: homeDir }
+          homeEnv(homeDir)
         );
         expect(output.continue).toBe(true);
         expect(output.decision).toBeUndefined();
@@ -130,7 +136,7 @@ describe('persistent-mode hook scripts', () => {
         const output = runNodeScript(
           scriptPath,
           { cwd: projectDir, session_id: 'session_1', stop_reason: reason },
-          { ...process.env, HOME: homeDir }
+          homeEnv(homeDir)
         );
         expect(output.decision).toBe('block');
       });
@@ -152,7 +158,7 @@ describe('persistent-mode hook scripts', () => {
         const output = runNodeScript(
           join(process.cwd(), 'scripts', 'persistent-mode.mjs'),
           { cwd: projectDir, session_id: 'session_1', stop_reason: reason },
-          { ...process.env, HOME: homeDir }
+          homeEnv(homeDir)
         );
         expect(output.continue).toBe(true);
         expect(output.decision).toBeUndefined();
@@ -162,7 +168,7 @@ describe('persistent-mode hook scripts', () => {
         const output = runNodeScript(
           join(process.cwd(), 'templates', 'hooks', 'persistent-mode.mjs'),
           { cwd: projectDir, session_id: 'session_1', stop_reason: reason },
-          { ...process.env, HOME: homeDir }
+          homeEnv(homeDir)
         );
         expect(output.continue).toBe(true);
         expect(output.decision).toBeUndefined();
@@ -174,7 +180,7 @@ describe('persistent-mode hook scripts', () => {
         const output = runNodeScript(
           join(process.cwd(), 'scripts', 'persistent-mode.mjs'),
           { cwd: projectDir, session_id: 'session_1', stop_reason: reason },
-          { ...process.env, HOME: homeDir }
+          homeEnv(homeDir)
         );
         expect(output.decision).toBe('block');
       });
@@ -183,7 +189,7 @@ describe('persistent-mode hook scripts', () => {
         const output = runNodeScript(
           join(process.cwd(), 'templates', 'hooks', 'persistent-mode.mjs'),
           { cwd: projectDir, session_id: 'session_1', stop_reason: reason },
-          { ...process.env, HOME: homeDir }
+          homeEnv(homeDir)
         );
         expect(output.decision).toBe('block');
       });
@@ -194,7 +200,7 @@ describe('persistent-mode hook scripts', () => {
     const output = runNodeScript(
       join(process.cwd(), 'scripts', 'persistent-mode.mjs'),
       { session_id: 'session_1' },
-      { ...process.env, HOME: homeDir }
+      homeEnv(homeDir)
     );
     expect(output.continue).toBe(true);
     expect(output.decision).toBeUndefined();
@@ -210,7 +216,7 @@ describe('persistent-mode hook scripts', () => {
     const output = runNodeScript(
       scriptPath,
       { cwd: projectDir, session_id: 'session_1' },
-      { ...process.env, HOME: homeDir }
+      homeEnv(homeDir)
     );
 
     expect(output.continue).toBe(true);
@@ -235,7 +241,7 @@ describe('persistent-mode hook scripts', () => {
         const output = runNodeScript(
           join(process.cwd(), ...surface.split('/'), 'persistent-mode.mjs'),
           { cwd: projectDir, session_id: 'session_1' },
-          { ...process.env, HOME: homeDir }
+          homeEnv(homeDir)
         );
 
         expect(output.decision).toBe('block');
@@ -249,7 +255,7 @@ describe('persistent-mode hook scripts', () => {
         const output = runNodeScript(
           join(process.cwd(), ...surface.split('/'), 'persistent-mode.mjs'),
           { cwd: projectDir, session_id: 'session_1' },
-          { ...process.env, HOME: homeDir }
+          homeEnv(homeDir)
         );
 
         expect(output.decision).toBe('block');
@@ -278,7 +284,7 @@ describe('persistent-mode hook scripts', () => {
           const output = runNodeScript(
             join(process.cwd(), ...surface.split('/'), 'persistent-mode.mjs'),
             { cwd: projectDir, session_id: 'session_1' },
-            { ...process.env, HOME: homeDir }
+            homeEnv(homeDir)
           );
 
           expect(output.decision).toBe('block');
