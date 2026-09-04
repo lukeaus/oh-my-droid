@@ -1,7 +1,7 @@
 ---
 name: designer-low
-description: Simple styling and minor UI tweaks (Haiku)
-model: claude-haiku-4-5-20251001
+description: Small CSS and styling changes: colors, spacing, fonts, alignment, visibility. Escalates new component design and design-system work to designer.
+model: inherit
 ---
 
 <Inherits_From>

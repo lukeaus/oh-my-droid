@@ -12,7 +12,7 @@ Multi-agent orchestration system for Factory Droid CLI, providing intelligent de
 
 oh-my-droid enhances Factory Droid with:
 
-- **32 specialized agents** across multiple domains with 3-tier model routing (Haiku/Sonnet/Opus)
+- **32 specialized agents** across multiple domains in three scope tiers (light/medium/heavy)
 - **38 skills** for workflow automation and specialized behaviors
 - **31 hooks** for event-driven execution modes and enhancements
 - **15 custom tools** including 12 LSP, 2 AST, and Python REPL
@@ -51,19 +51,19 @@ oh-my-droid enhances Factory Droid with:
 
 1. **Delegation-First Protocol**: You are a CONDUCTOR, not a performer. Delegate substantive work:
 
-   | Work Type | Delegate To | Model |
-   |-----------|-------------|-------|
-   | Code changes | `executor` / `executor-low` / `executor-high` | sonnet/haiku/opus |
-   | Analysis | `architect` / `architect-medium` / `architect-low` | opus/sonnet/haiku |
-   | Search | `explore` / `explore-medium` / `explore-high` | haiku/sonnet/opus |
-   | UI/UX | `designer` / `designer-low` / `designer-high` | sonnet/haiku/opus |
-   | Docs | `writer` | haiku |
-   | Security | `security-reviewer` / `security-reviewer-low` | opus/haiku |
-   | Build errors | `build-fixer` / `build-fixer-low` | sonnet/haiku |
-   | Testing | `qa-tester` / `qa-tester-high` | sonnet/opus |
-   | Code review | `code-reviewer` / `code-reviewer-low` | opus/haiku |
-   | TDD | `tdd-guide` / `tdd-guide-low` | sonnet/haiku |
-   | Data analysis | `scientist` / `scientist-low` / `scientist-high` | sonnet/haiku/opus |
+   | Work Type | Delegate To | `complexity` |
+   |-----------|-------------|--------------|
+   | Code changes | `executor` / `executor-low` / `executor-high` | medium/light/heavy |
+   | Analysis | `architect` / `architect-medium` / `architect-low` | heavy/medium/light |
+   | Search | `explore` / `explore-medium` / `explore-high` | light/medium/heavy |
+   | UI/UX | `designer` / `designer-low` / `designer-high` | medium/light/heavy |
+   | Docs | `writer` | light |
+   | Security | `security-reviewer` / `security-reviewer-low` | heavy/light |
+   | Build errors | `build-fixer` / `build-fixer-low` | medium/light |
+   | Testing | `qa-tester` / `qa-tester-high` | medium/heavy |
+   | Code review | `code-reviewer` / `code-reviewer-low` | heavy/light |
+   | TDD | `tdd-guide` / `tdd-guide-low` | medium/light |
+   | Data analysis | `scientist` / `scientist-low` / `scientist-high` | medium/light/heavy |
 
 2. **LSP/AST Tools**: Use IDE-like tools for code intelligence:
    - `lsp_hover` - Type info and documentation at position
@@ -79,10 +79,12 @@ oh-my-droid enhances Factory Droid with:
    - `ast_grep_replace` - AST-aware code transformation
    - `python_repl` - Execute Python code for data analysis
 
-3. **Model Routing**: Match model tier to task complexity:
-   - **Haiku** (LOW): Simple lookups, trivial fixes, fast searches
-   - **Sonnet** (MEDIUM): Standard implementation, moderate reasoning
-   - **Opus** (HIGH): Complex reasoning, architecture, debugging
+3. **Complexity Tiers**: Pass `complexity` on the `Task` call to match effort to
+   the work. The model itself comes from the user's `subagentModelSettings`
+   (`/settings` -> Subagents), never from this repo:
+   - **light**: Simple lookups, trivial fixes, fast searches
+   - **medium**: Standard implementation, moderate reasoning
+   - **heavy**: Complex reasoning, architecture, debugging
 
 ### Modification Checklist
 
@@ -194,43 +196,43 @@ import { allCustomTools, lspTools, astTools } from './tools';
 
 ### Base Agents (12)
 
-| Agent | Model | Purpose |
-|-------|-------|---------|
-| architect | opus | Architecture, debugging, root cause analysis |
-| researcher | sonnet | Documentation, external API research |
-| explore | haiku | Fast codebase pattern search |
-| executor | sonnet | Focused task implementation |
-| designer | sonnet | UI/UX, component design |
-| writer | haiku | Technical documentation |
-| vision | sonnet | Image/screenshot analysis |
-| critic | opus | Critical plan review |
-| analyst | opus | Pre-planning requirements analysis |
-| planner | opus | Strategic planning with interviews |
-| qa-tester | sonnet | Interactive CLI/service testing |
-| scientist | sonnet | Data analysis, hypothesis testing |
+| Agent | Purpose |
+|-------|---------|
+| architect | Architecture, debugging, root cause analysis |
+| researcher | Documentation, external API research |
+| explore | Fast codebase pattern search |
+| executor | Focused task implementation |
+| designer | UI/UX, component design |
+| writer | Technical documentation |
+| vision | Image/screenshot analysis |
+| critic | Critical plan review |
+| analyst | Pre-planning requirements analysis |
+| planner | Strategic planning with interviews |
+| qa-tester | Interactive CLI/service testing |
+| scientist | Data analysis, hypothesis testing |
 
 ### Specialized Agents (4)
 
-| Agent | Model | Purpose |
-|-------|-------|---------|
-| security-reviewer | opus | Security vulnerability detection and audits |
-| build-fixer | sonnet | Build/type error resolution (multi-language) |
-| tdd-guide | sonnet | Test-driven development workflow |
-| code-reviewer | opus | Expert code review and quality assessment |
+| Agent | Purpose |
+|-------|---------|
+| security-reviewer | Security vulnerability detection and audits |
+| build-fixer | Build/type error resolution (multi-language) |
+| tdd-guide | Test-driven development workflow |
+| code-reviewer | Expert code review and quality assessment |
 
 ### Tiered Variants (16)
 
 | Tier | Agents |
 |------|--------|
-| **LOW** (Haiku) | `architect-low`, `executor-low`, `researcher-low`, `designer-low`, `scientist-low`, `security-reviewer-low`, `build-fixer-low`, `tdd-guide-low`, `code-reviewer-low` (9) |
-| **MEDIUM** (Sonnet) | `architect-medium`, `explore-medium` (2) |
-| **HIGH** (Opus) | `executor-high`, `designer-high`, `explore-high`, `qa-tester-high`, `scientist-high` (5) |
+| **light** scope | `architect-low`, `executor-low`, `researcher-low`, `designer-low`, `scientist-low`, `security-reviewer-low`, `build-fixer-low`, `tdd-guide-low`, `code-reviewer-low` (9) |
+| **medium** scope | `architect-medium`, `explore-medium` (2) |
+| **heavy** scope | `executor-high`, `designer-high`, `explore-high`, `qa-tester-high`, `scientist-high` (5) |
 
 ### Coordination Agents (1)
 
-| Agent | Model | Purpose |
-|-------|-------|---------|
-| team-orchestrator | opus | Coordinates a team of agents with messaging and shared context |
+| Agent | Purpose |
+|-------|---------|
+| team-orchestrator | Coordinates a team of agents with messaging and shared context |
 
 ## Execution Modes
 

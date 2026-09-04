@@ -1,7 +1,7 @@
 ---
 name: code-reviewer-low
-description: Quick code quality checker (Haiku). Use for fast review of small changes.
-model: claude-haiku-4-5-20251001
+description: Single-file review: obvious code smells, hardcoded values, style violations. Escalates multi-file review, deep security analysis, and architecture review to code-reviewer.
+model: inherit
 disallowedTools: Write, Edit
 ---
 

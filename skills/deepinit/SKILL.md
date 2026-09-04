@@ -84,7 +84,7 @@ This creates a navigable hierarchy:
 ### Step 1: Map Directory Structure
 
 ```
-Task(subagent_type="explore", model="claude-haiku-4-5-20251001",
+Task(subagent_type="explore",
   prompt="List all directories recursively. Exclude: node_modules, .git, dist, build, __pycache__, .venv, coverage, .next, .nuxt")
 ```
 

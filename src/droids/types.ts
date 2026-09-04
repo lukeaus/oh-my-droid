@@ -5,7 +5,9 @@
  * Ported from oh-my-opencode's agent type system.
  */
 
-export type ModelType = 'sonnet' | 'opus' | 'haiku' | 'inherit';
+import type { ModelIdentifier, ModelType } from '../shared/types.js';
+
+export type { ModelIdentifier, ModelType };
 
 /**
  * Cost tier for agent usage
@@ -70,10 +72,10 @@ export interface AgentConfig {
   prompt: string;
   /** Tools the agent can use */
   tools: string[];
-  /** Model to use (defaults to sonnet) */
-  model?: ModelType;
+  /** Model to use (defaults to inherit) */
+  model?: ModelIdentifier;
   /** Default model for this agent (explicit tier mapping) */
-  defaultModel?: ModelType;
+  defaultModel?: ModelIdentifier;
   /** Optional metadata for dynamic prompt generation */
   metadata?: AgentPromptMetadata;
 }
@@ -143,21 +145,12 @@ export function isClaudeModel(modelId: string): boolean {
 }
 
 /**
- * Get default model for a category
+ * Get default model for a category.
+ *
+ * All categories default to 'inherit' so that model resolution comes from
+ * the user's subagentModelSettings (/settings -> Subagents).
  */
-export function getDefaultModelForCategory(category: AgentCategory): ModelType {
-  switch (category) {
-    case 'exploration':
-      return 'haiku'; // Fast, cheap
-    case 'specialist':
-      return 'sonnet'; // Balanced
-    case 'advisor':
-      return 'opus'; // High quality reasoning
-    case 'utility':
-      return 'haiku'; // Fast, cheap
-    case 'orchestration':
-      return 'sonnet'; // Balanced
-    default:
-      return 'sonnet';
-  }
+export function getDefaultModelForCategory(_category: AgentCategory): ModelIdentifier {
+  // ponytail: all categories inherit model from user settings
+  return 'inherit';
 }

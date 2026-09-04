@@ -1,7 +1,7 @@
 ---
 name: build-fixer-low
-description: Simple build error fixer (Haiku). Use for trivial type errors and single-line fixes.
-model: claude-haiku-4-5-20251001
+description: Single-line build fixes: missing type annotations, null checks, imports, syntax errors. Escalates multi-file breakage and type-inference problems to build-fixer.
+model: inherit
 ---
 
 <Inherits_From>

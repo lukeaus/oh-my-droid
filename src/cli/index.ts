@@ -341,31 +341,31 @@ program
   "agents": {
     "omd": {
       // Main orchestrator - uses the most capable model
-      "model": "claude-opus-4-5-20251101"
+      "model": "inherit"
     },
     "architect": {
       // Architecture and debugging expert
-      "model": "claude-opus-4-5-20251101",
+      "model": "inherit",
       "enabled": true
     },
     "researcher": {
       // Documentation and codebase analysis
-      "model": "claude-sonnet-4-5-20250929"
+      "model": "inherit"
     },
     "explore": {
       // Fast pattern matching - uses fastest model
-      "model": "claude-haiku-4-5-20251001"
+      "model": "inherit"
     },
     "frontendEngineer": {
-      "model": "claude-sonnet-4-5-20250929",
+      "model": "inherit",
       "enabled": true
     },
     "documentWriter": {
-      "model": "claude-haiku-4-5-20251001",
+      "model": "inherit",
       "enabled": true
     },
     "multimodalLooker": {
-      "model": "claude-sonnet-4-5-20250929",
+      "model": "inherit",
       "enabled": true
     }
   },
@@ -746,27 +746,27 @@ program
         console.log('');
         console.log(chalk.yellow('Available Agents (via Task tool):'));
         console.log(chalk.gray('  Base Agents:'));
-        console.log('    architect              - Architecture & debugging (Opus)');
-        console.log('    researcher           - Documentation & research (Sonnet)');
-        console.log('    explore             - Fast pattern matching (Haiku)');
-        console.log('    designer            - UI/UX specialist (Sonnet)');
-        console.log('    writer              - Technical writing (Haiku)');
-        console.log('    vision              - Visual analysis (Sonnet)');
-        console.log('    critic               - Plan review (Opus)');
-        console.log('    analyst               - Pre-planning analysis (Opus)');
-        console.log('    orchestrator         - Todo coordination (Opus)');
-        console.log('    executor            - Focused execution (Sonnet)');
-        console.log('    planner          - Strategic planning (Opus)');
-        console.log('    qa-tester           - Interactive CLI testing (Sonnet)');
+        console.log('    architect              - Architecture & debugging');
+        console.log('    researcher           - Documentation & research');
+        console.log('    explore             - Fast pattern matching');
+        console.log('    designer            - UI/UX specialist');
+        console.log('    writer              - Technical writing');
+        console.log('    vision              - Visual analysis');
+        console.log('    critic               - Plan review');
+        console.log('    analyst               - Pre-planning analysis');
+        console.log('    orchestrator         - Todo coordination');
+        console.log('    executor            - Focused execution');
+        console.log('    planner          - Strategic planning');
+        console.log('    qa-tester           - Interactive CLI testing');
         console.log(chalk.gray('  Tiered Variants (for smart routing):'));
-        console.log('    architect-medium       - Simpler analysis (Sonnet)');
-        console.log('    architect-low          - Quick questions (Haiku)');
-        console.log('    executor-high       - Complex tasks (Opus)');
-        console.log('    executor-low        - Trivial tasks (Haiku)');
-        console.log('    researcher-low       - Quick lookups (Haiku)');
-        console.log('    explore-medium      - Thorough search (Sonnet)');
-        console.log('    designer-high       - Design systems (Opus)');
-        console.log('    designer-low        - Simple styling (Haiku)');
+        console.log('    architect-medium       - Simpler analysis');
+        console.log('    architect-low          - Quick questions');
+        console.log('    executor-high       - Complex tasks');
+        console.log('    executor-low        - Trivial tasks');
+        console.log('    researcher-low       - Quick lookups');
+        console.log('    explore-medium      - Thorough search');
+        console.log('    designer-high       - Design systems');
+        console.log('    designer-low        - Simple styling');
         console.log('');
         console.log(chalk.yellow('After Updates:'));
         console.log('  Run \'/omd-setup\' (project) or \'/omd-setup --global\' (global)');

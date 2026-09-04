@@ -98,7 +98,7 @@ backend frontend database api-docs tests
 
 **Goal:** Break task into parallel-safe subtasks
 
-**Agent:** Architect (Opus)
+**Agent:** Architect (heavy)
 
 **Method:** AI-Powered Task Decomposition
 
@@ -115,13 +115,12 @@ import {
 // 1. Generate prompt for Architect
 const prompt = generateDecompositionPrompt(task, codebaseContext, {
   maxSubtasks: 5,
-  preferredModel: 'sonnet'
+  preferredModel: 'medium'
 });
 
 // 2. Call Architect agent
 const response = await Task({
   subagent_type: 'oh-my-droid:architect',
-  model: 'opus',
   prompt
 });
 
@@ -154,7 +153,7 @@ const finalResult = extractSharedFiles(result);
       "files": ["src/api/routes.ts", "src/api/handlers.ts"],
       "blockedBy": [],
       "agentType": "executor",
-      "model": "sonnet"
+      "complexity": "medium"
     },
     {
       "id": "2",
@@ -162,7 +161,7 @@ const finalResult = extractSharedFiles(result);
       "files": ["src/ui/App.tsx", "src/ui/TodoList.tsx"],
       "blockedBy": [],
       "agentType": "executor",
-      "model": "sonnet"
+      "complexity": "medium"
     },
     {
       "id": "3",
@@ -170,7 +169,7 @@ const finalResult = extractSharedFiles(result);
       "files": ["src/client/api.ts"],
       "blockedBy": ["1", "2"],
       "agentType": "executor-low",
-      "model": "haiku"
+      "complexity": "light"
     }
   ],
   "sharedFiles": [
@@ -233,7 +232,6 @@ for (subtask in decomposition.subtasks) {
   workers.push(
     Task(
       subagent_type: "oh-my-droid:executor",
-      model: "claude-sonnet-4-5-20250929",
       prompt: `ULTRAPILOT WORKER ${subtask.id}
 
 Your exclusive file ownership: ${subtask.files}
@@ -272,7 +270,7 @@ Deliver: Code changes + list of boundary dependencies`,
 4. **Integrate boundary files** - Merge type definitions, shared utilities
 5. **Resolve imports** - Ensure cross-boundary imports are valid
 
-**Agent:** Executor (Sonnet) - sequential processing
+**Agent:** Executor (medium) - sequential processing
 
 **Conflict Resolution:**
 - If workers unexpectedly touched same file → manual merge
@@ -291,9 +289,9 @@ Deliver: Code changes + list of boundary dependencies`,
 5. **Integration tests** - Cross-component tests
 
 **Agents (parallel):**
-- Build-fixer (Sonnet) - Fix build errors
-- Architect (Opus) - Functional completeness
-- Security-reviewer (Opus) - Cross-component vulnerabilities
+- Build-fixer (medium) - Fix build errors
+- Architect (heavy) - Functional completeness
+- Security-reviewer (heavy) - Cross-component vulnerabilities
 
 **Retry Policy:** Up to 3 validation rounds. If failures persist, detailed error report to user.
 

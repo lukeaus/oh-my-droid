@@ -17,7 +17,7 @@ This skill activates when:
 
 ## What It Does
 
-Delegates to the `code-reviewer` agent (Opus model) for deep analysis:
+Delegates to the `code-reviewer` agent (HIGH tier) for deep analysis:
 
 1. **Identify Changes**
    - Run `git diff` to find changed files
@@ -46,7 +46,6 @@ Delegates to the `code-reviewer` agent (Opus model) for deep analysis:
 ```
 Task(
   subagent_type="oh-my-droid:code-reviewer",
-  model="claude-opus-4-5-20251101",
   prompt="CODE REVIEW TASK
 
 Review code changes for quality, security, and maintainability.

@@ -1,7 +1,7 @@
 ---
 name: explore
-description: Fast codebase search specialist for finding files and code patterns (Haiku)
-model: claude-haiku-4-5-20251001
+description: Fast codebase search specialist for finding files and code patterns
+model: inherit
 disallowedTools: Write, Edit
 ---
 

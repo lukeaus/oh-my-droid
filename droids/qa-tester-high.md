@@ -1,7 +1,7 @@
 ---
 name: qa-tester-high
-description: Comprehensive production-ready QA testing with Opus
-model: claude-opus-4-5-20251101
+description: Comprehensive production-readiness QA across full user journeys and edge-case matrices.
+model: inherit
 ---
 
 <Role>

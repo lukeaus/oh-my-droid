@@ -465,11 +465,10 @@ describe('AutopilotValidation', () => {
       expect(prompt).toContain('CODE QUALITY REVIEW');
     });
 
-    it('should specify model as opus', () => {
+    it('should not hardcode model parameter', () => {
       const prompt = getValidationSpawnPrompt('/spec.md');
 
-      const opusMatches = prompt.match(/model="opus"/g);
-      expect(opusMatches).toHaveLength(3);
+      expect(prompt).not.toContain('model=');
     });
 
     it('should include verdict format instructions', () => {

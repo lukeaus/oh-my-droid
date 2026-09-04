@@ -87,13 +87,13 @@ Ralph automatically activates Ultrawork for maximum parallel execution. You MUST
 
 | Task Complexity | Tier | Examples |
 |-----------------|------|----------|
-| Simple lookups | LOW (haiku) | "What does this function return?", "Find where X is defined" |
-| Standard work | MEDIUM (sonnet) | "Add error handling", "Implement this feature" |
-| Complex analysis | HIGH (opus) | "Debug this race condition", "Refactor auth module" |
+| Simple lookups | light | "What does this function return?", "Find where X is defined" |
+| Standard work | medium | "Add error handling", "Implement this feature" |
+| Complex analysis | heavy | "Debug this race condition", "Refactor auth module" |
 
 ### Available Agents by Tier
 
-| Domain | LOW (Haiku) | MEDIUM (Sonnet) | HIGH (Opus) |
+| Domain | light | medium | heavy |
 |--------|-------------|-----------------|-------------|
 | **Analysis** | `architect-low` | `architect-medium` | `architect` |
 | **Execution** | `executor-low` | `executor` | `executor-high` |
@@ -111,11 +111,11 @@ Ralph automatically activates Ultrawork for maximum parallel execution. You MUST
 | **TDD** | `tdd-guide-low` | `tdd-guide` | - |
 | **Code Review** | `code-reviewer-low` | - | `code-reviewer` |
 
-**CRITICAL: Always pass `model` parameter explicitly!**
+**Pick the droid variant that matches the scope; the model comes from `subagentModelSettings` in `/settings` -> Subagents.**
 ```
-Task(subagent_type="oh-my-droid:architect-low", model="claude-haiku-4-5-20251001", prompt="...")
-Task(subagent_type="oh-my-droid:executor", model="claude-sonnet-4-5-20250929", prompt="...")
-Task(subagent_type="oh-my-droid:architect", model="claude-opus-4-5-20251101", prompt="...")
+Task(subagent_type="oh-my-droid:architect-low", prompt="...")
+Task(subagent_type="oh-my-droid:executor", prompt="...")
+Task(subagent_type="oh-my-droid:architect", prompt="...")
 ```
 
 ### Background Execution Rules
@@ -169,9 +169,9 @@ Before outputting the completion promise:
 ## ARCHITECT VERIFICATION (MANDATORY)
 
 When you believe the task is complete:
-1. **First**, spawn Architect to verify your work (ALWAYS pass model explicitly!):
+1. **First**, spawn Architect to verify your work:
    ```
-   Task(subagent_type="oh-my-droid:architect", model="claude-opus-4-5-20251101", prompt="Verify this implementation is complete: [describe what you did]")
+   Task(subagent_type="oh-my-droid:architect", prompt="Verify this implementation is complete: [describe what you did]")
    ```
 
 2. **Wait for Architect's assessment**

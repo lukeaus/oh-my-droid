@@ -162,7 +162,6 @@ Spawn all three validation architects in parallel to review the implementation:
 // 1. Functional Completeness Review
 Task(
   subagent_type="oh-my-droid:architect",
-  model="opus",
   prompt="FUNCTIONAL COMPLETENESS REVIEW
 
 Read the original spec at: ${specPath}
@@ -179,7 +178,6 @@ Output: APPROVED or REJECTED with specific gaps"
 // 2. Security Review
 Task(
   subagent_type="oh-my-droid:security-reviewer",
-  model="opus",
   prompt="SECURITY REVIEW
 
 Review the codebase for security vulnerabilities:
@@ -196,7 +194,6 @@ Output: APPROVED or REJECTED with specific issues"
 // 3. Code Quality Review
 Task(
   subagent_type="oh-my-droid:code-reviewer",
-  model="opus",
   prompt="CODE QUALITY REVIEW
 
 Review code quality and maintainability:

@@ -1,7 +1,7 @@
 ---
 name: scientist-low
-description: Quick data inspection and simple statistics (Haiku)
-model: claude-haiku-4-5-20251001
+description: Quick dataframe inspection and summary statistics: shape, head, describe, value counts, null counts. Escalates transformations, hypothesis testing, and data cleaning to scientist.
+model: inherit
 disallowedTools: Write, Edit
 ---
 

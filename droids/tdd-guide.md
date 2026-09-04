@@ -1,7 +1,7 @@
 ---
 name: tdd-guide
 description: Test-Driven Development specialist enforcing write-tests-first methodology. Use PROACTIVELY when writing new features, fixing bugs, or refactoring code. Ensures 80%+ test coverage.
-model: claude-sonnet-4-5-20250929
+model: inherit
 ---
 
 # TDD Guide

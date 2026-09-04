@@ -1,9 +1,16 @@
 import { describe, it, expect } from 'vitest';
-import type { ModelType, AgentConfig, PluginConfig } from '../shared/types.js';
+import type { ModelIdentifier, ModelType, AgentConfig, PluginConfig } from '../shared/types.js';
 
 describe('Type Tests', () => {
-  describe('ModelType', () => {
-    it('should accept valid model types', () => {
+  describe('ModelIdentifier', () => {
+    it('should accept inherit or custom model strings', () => {
+      const validIdentifiers: ModelIdentifier[] = ['inherit', 'custom:gpt-4o', 'claude-sonnet-4-5-20250929'];
+      expect(validIdentifiers).toHaveLength(3);
+    });
+  });
+
+  describe('ModelType (deprecated)', () => {
+    it('should accept legacy model types for backwards compatibility', () => {
       const validTypes: ModelType[] = ['sonnet', 'opus', 'haiku', 'inherit'];
       expect(validTypes).toHaveLength(4);
     });
@@ -16,12 +23,12 @@ describe('Type Tests', () => {
         description: 'A test agent',
         prompt: 'Test prompt',
         tools: ['tool1', 'tool2'],
-        model: 'sonnet',
+        model: 'inherit',
       };
 
       expect(config.name).toBe('test-agent');
       expect(config.tools).toHaveLength(2);
-      expect(config.model).toBe('sonnet');
+      expect(config.model).toBe('inherit');
     });
 
     it('should allow optional model field', () => {
@@ -72,17 +79,15 @@ describe('Type Tests', () => {
           defaultTier: 'MEDIUM',
           escalationEnabled: true,
           maxEscalations: 2,
-          tierModels: {
-            LOW: 'claude-haiku-4',
-            MEDIUM: 'claude-sonnet-4-5',
-            HIGH: 'claude-opus-4-5',
+          agentOverrides: {
+            architect: { tier: 'HIGH', reason: 'Advisory agent requires deep reasoning' },
           },
         },
       };
 
       expect(config.routing?.enabled).toBe(true);
       expect(config.routing?.defaultTier).toBe('MEDIUM');
-      expect(config.routing?.tierModels?.HIGH).toBe('claude-opus-4-5');
+      expect(config.routing?.agentOverrides?.architect.tier).toBe('HIGH');
     });
   });
 });

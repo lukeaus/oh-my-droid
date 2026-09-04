@@ -59,7 +59,6 @@ export interface ResumeSessionOutput {
  *   // Use result.context.continuationPrompt in your next Task delegation
  *   Task({
  *     subagent_type: "oh-my-droid:executor",
- *     model: "sonnet",
  *     prompt: result.context.continuationPrompt
  *   });
  * }

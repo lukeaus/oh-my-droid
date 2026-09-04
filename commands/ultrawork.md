@@ -36,11 +36,11 @@ The PreToolUse hook will warn you if you attempt direct code changes.
 
 ## Smart Model Routing (CRITICAL - SAVE TOKENS)
 
-**Choose tier based on task complexity: LOW (haiku) → MEDIUM (sonnet) → HIGH (opus)**
+**Choose tier based on task complexity: light → medium → heavy**
 
 ### Available Agents by Tier
 
-| Domain | LOW (Haiku) | MEDIUM (Sonnet) | HIGH (Opus) |
+| Domain | light | medium | heavy |
 |--------|-------------|-----------------|-------------|
 | **Analysis** | `architect-low` | `architect-medium` | `architect` |
 | **Execution** | `executor-low` | `executor` | `executor-high` |
@@ -62,23 +62,23 @@ The PreToolUse hook will warn you if you attempt direct code changes.
 
 ### Routing Examples
 
-**CRITICAL: Always pass `model` parameter explicitly - Factory Droid does NOT auto-apply models from agent definitions!**
+**Pass `complexity` explicitly when a tier matters; it resolves through `subagentModelSettings` in `/settings` -> Subagents.**
 
 ```
 // Simple question → LOW tier (saves tokens!)
-Task(subagent_type="architect-low", model="claude-haiku-4-5-20251001", prompt="What does this function return?")
+Task(subagent_type="architect-low", prompt="What does this function return?")
 
 // Standard implementation → MEDIUM tier
-Task(subagent_type="executor", model="claude-sonnet-4-5-20250929", prompt="Add error handling to login")
+Task(subagent_type="executor", prompt="Add error handling to login")
 
 // Complex refactoring → HIGH tier
-Task(subagent_type="executor-high", model="claude-opus-4-5-20251101", prompt="Refactor auth module using JWT across 5 files")
+Task(subagent_type="executor-high", prompt="Refactor auth module using JWT across 5 files")
 
 // Quick file lookup → LOW tier
-Task(subagent_type="explore", model="claude-haiku-4-5-20251001", prompt="Find where UserService is defined")
+Task(subagent_type="explore", prompt="Find where UserService is defined")
 
 // Thorough search → MEDIUM tier
-Task(subagent_type="explore-medium", model="claude-sonnet-4-5-20250929", prompt="Find all authentication patterns in the codebase")
+Task(subagent_type="explore-medium", prompt="Find all authentication patterns in the codebase")
 ```
 
 ## Background Execution Rules

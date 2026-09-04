@@ -8,7 +8,7 @@
  * 4. omcSystemPrompt for the main orchestrator
  */
 
-import type { AgentConfig, ModelType } from '../shared/types.js';
+import type { AgentConfig, ModelIdentifier } from '../shared/types.js';
 import { loadAgentPrompt } from './utils.js';
 
 // Re-export base agents from individual files (rebranded names)
@@ -63,154 +63,156 @@ function normalizeTools(tools: string[]): string[] {
 
 // ============================================================
 // TIERED AGENT VARIANTS
-// Use these for smart model routing based on task complexity:
-// - HIGH tier (opus): Complex analysis, architecture, debugging
-// - MEDIUM tier (sonnet): Standard tasks, moderate complexity
-// - LOW tier (haiku): Simple lookups, trivial operations
+// Variants differ by scope and tool envelope, not by model: every droid is
+// `inherit`, so the model comes from the user's subagentModelSettings. The
+// suffix describes how much of a problem the variant takes on.
+// - `-high` / base: broad scope, full tool set
+// - `-medium`: cross-module scope
+// - `-low`: single-file scope, escalates beyond it
 // ============================================================
 
 /**
- * Architect-Medium Agent - Standard Analysis (Sonnet)
+ * Architect-Medium Agent - Standard Analysis
  */
 export const architectMediumAgent: AgentConfig = {
   name: 'architect-medium',
-  description: 'Architecture & Debugging Advisor - Medium complexity (Sonnet). Use for moderate analysis.',
+  description: 'Standard debugging, root cause identification, and dependency tracing across modules, read-only. Escalates system-wide architectural change and security-critical analysis to architect.',
   prompt: loadAgentPrompt('architect-medium'),
   tools: ['Read', 'Glob', 'Grep', 'WebSearch', 'WebFetch', 'lsp_diagnostics', 'lsp_diagnostics_directory', 'ast_grep_search'],
-  model: 'sonnet',
-  defaultModel: 'sonnet'
+  model: 'inherit',
+  defaultModel: 'inherit'
 };
 
 /**
- * Architect-Low Agent - Quick Analysis (Haiku)
+ * Architect-Low Agent - Quick Analysis
  */
 export const architectLowAgent: AgentConfig = {
   name: 'architect-low',
-  description: 'Quick code questions & simple lookups (Haiku). Use for simple questions that need fast answers.',
+  description: 'Single-file code questions and symbol lookups, read-only. Escalates cross-file dependency tracing, architecture questions, and root cause analysis to architect.',
   prompt: loadAgentPrompt('architect-low'),
   tools: ['Read', 'Glob', 'Grep', 'lsp_diagnostics'],
-  model: 'haiku',
-  defaultModel: 'haiku'
+  model: 'inherit',
+  defaultModel: 'inherit'
 };
 
 /**
- * Executor-High Agent - Complex Execution (Opus)
+ * Executor-High Agent - Complex Execution
  */
 export const executorHighAgent: AgentConfig = {
   name: 'executor-high',
-  description: 'Complex task executor for multi-file changes (Opus). Use for tasks requiring deep reasoning.',
+  description: 'Multi-file refactoring, cross-cutting bug fixes, and system-wide modifications spanning modules.',
   prompt: loadAgentPrompt('executor-high'),
   tools: ['Read', 'Glob', 'Grep', 'Edit', 'Write', 'Bash', 'TodoWrite', 'lsp_diagnostics', 'lsp_diagnostics_directory', 'ast_grep_search', 'ast_grep_replace', 'mcp__t__swarm'],
-  model: 'opus',
-  defaultModel: 'opus'
+  model: 'inherit',
+  defaultModel: 'inherit'
 };
 
 /**
- * Executor-Low Agent - Simple Execution (Haiku)
+ * Executor-Low Agent - Simple Execution
  */
 export const executorLowAgent: AgentConfig = {
   name: 'executor-low',
-  description: 'Simple single-file task executor (Haiku). Use for trivial tasks.',
+  description: 'Single-file edits with clear scope: imports, small functions, typos, syntax fixes. Escalates multi-file changes, complex logic, and architectural decisions to executor.',
   prompt: loadAgentPrompt('executor-low'),
   tools: ['Read', 'Glob', 'Grep', 'Edit', 'Write', 'Bash', 'TodoWrite', 'lsp_diagnostics', 'mcp__t__swarm'],
-  model: 'haiku',
-  defaultModel: 'haiku'
+  model: 'inherit',
+  defaultModel: 'inherit'
 };
 
 /**
- * Researcher-Low Agent - Quick Lookups (Haiku)
+ * Researcher-Low Agent - Quick Lookups
  */
 export const researcherLowAgent: AgentConfig = {
   name: 'researcher-low',
-  description: 'Quick documentation lookups (Haiku). Use for simple documentation queries.',
+  description: 'Quick documentation and API lookups: signatures, parameters, version compatibility. Escalates multi-source research and conflicting-information synthesis to researcher.',
   prompt: loadAgentPrompt('researcher-low'),
   tools: ['Read', 'Glob', 'Grep', 'WebSearch', 'WebFetch'],
-  model: 'haiku',
-  defaultModel: 'haiku'
+  model: 'inherit',
+  defaultModel: 'inherit'
 };
 
 /**
- * Explore-Medium Agent - Thorough Search (Sonnet)
+ * Explore-Medium Agent - Thorough Search
  */
 export const exploreMediumAgent: AgentConfig = {
   name: 'explore-medium',
-  description: 'Thorough codebase search with reasoning (Sonnet). Use when search requires more reasoning.',
+  description: 'Cross-module pattern discovery, dependency tracing, and multi-file relationship mapping, read-only.',
   prompt: loadAgentPrompt('explore-medium'),
   tools: ['Read', 'Glob', 'Grep', 'ast_grep_search', 'lsp_document_symbols', 'lsp_workspace_symbols'],
-  model: 'sonnet',
-  defaultModel: 'sonnet'
+  model: 'inherit',
+  defaultModel: 'inherit'
 };
 
 /**
- * Explore-High Agent - Complex Architectural Search (Opus)
+ * Explore-High Agent - Complex Architectural Search
  */
 export const exploreHighAgent: AgentConfig = {
   name: 'explore-high',
-  description: 'Complex architectural search for deep system understanding (Opus). Use for architectural mapping and design pattern discovery.',
+  description: 'Deep architectural discovery: cross-cutting concerns, system-wide dependency maps, hidden abstraction layers. Read-only.',
   prompt: loadAgentPrompt('explore-high'),
   tools: ['Read', 'Glob', 'Grep', 'ast_grep_search', 'lsp_document_symbols', 'lsp_workspace_symbols', 'lsp_find_references'],
-  model: 'opus',
-  defaultModel: 'opus'
+  model: 'inherit',
+  defaultModel: 'inherit'
 };
 
 /**
- * Designer-Low Agent - Simple UI Tasks (Haiku)
+ * Designer-Low Agent - Simple UI Tasks
  */
 export const designerLowAgent: AgentConfig = {
   name: 'designer-low',
-  description: 'Simple styling and minor UI tweaks (Haiku). Use for trivial frontend work.',
+  description: 'Small CSS and styling changes: colors, spacing, fonts, alignment, visibility. Escalates new component design and design-system work to designer.',
   prompt: loadAgentPrompt('designer-low'),
   tools: ['Read', 'Glob', 'Grep', 'Edit', 'Write', 'Bash'],
-  model: 'haiku',
-  defaultModel: 'haiku'
+  model: 'inherit',
+  defaultModel: 'inherit'
 };
 
 /**
- * Designer-High Agent - Complex UI Architecture (Opus)
+ * Designer-High Agent - Complex UI Architecture
  */
 export const designerHighAgent: AgentConfig = {
   name: 'designer-high',
-  description: 'Complex UI architecture and design systems (Opus). Use for sophisticated frontend work.',
+  description: 'Design-system and token architecture, component abstraction, advanced state patterns, UI performance strategy.',
   prompt: loadAgentPrompt('designer-high'),
   tools: ['Read', 'Glob', 'Grep', 'Edit', 'Write', 'Bash'],
-  model: 'opus',
-  defaultModel: 'opus'
+  model: 'inherit',
+  defaultModel: 'inherit'
 };
 
 /**
- * QA-Tester-High Agent - Comprehensive Production QA (Opus)
+ * QA-Tester-High Agent - Comprehensive Production QA
  */
 export const qaTesterHighAgent: AgentConfig = {
   name: 'qa-tester-high',
-  description: 'Comprehensive production-ready QA testing with Opus. Use for thorough verification, edge case detection, security testing, and high-stakes releases.',
+  description: 'Comprehensive production-readiness QA across full user journeys and edge-case matrices.',
   prompt: loadAgentPrompt('qa-tester-high'),
   tools: ['Bash', 'Read', 'Grep', 'Glob', 'TodoWrite', 'lsp_diagnostics'],
-  model: 'opus',
-  defaultModel: 'opus'
+  model: 'inherit',
+  defaultModel: 'inherit'
 };
 
 /**
- * Scientist-Low Agent - Quick Data Inspection (Haiku)
+ * Scientist-Low Agent - Quick Data Inspection
  */
 export const scientistLowAgent: AgentConfig = {
   name: 'scientist-low',
-  description: 'Quick data inspection and simple statistics (Haiku). Use for fast, simple queries.',
+  description: 'Quick dataframe inspection and summary statistics: shape, head, describe, value counts, null counts. Escalates transformations, hypothesis testing, and data cleaning to scientist.',
   prompt: loadAgentPrompt('scientist-low'),
   tools: ['Read', 'Glob', 'Grep', 'Bash', 'python_repl'],
-  model: 'haiku',
-  defaultModel: 'haiku'
+  model: 'inherit',
+  defaultModel: 'inherit'
 };
 
 /**
- * Scientist-High Agent - Complex Research (Opus)
+ * Scientist-High Agent - Complex Research
  */
 export const scientistHighAgent: AgentConfig = {
   name: 'scientist-high',
-  description: 'Complex research, hypothesis testing, and ML specialist (Opus). Use for deep analysis.',
+  description: 'Complex research, hypothesis testing, and machine-learning work over multi-step analyses.',
   prompt: loadAgentPrompt('scientist-high'),
   tools: ['Read', 'Glob', 'Grep', 'Bash', 'python_repl'],
-  model: 'opus',
-  defaultModel: 'opus'
+  model: 'inherit',
+  defaultModel: 'inherit'
 };
 
 // ============================================================
@@ -218,111 +220,111 @@ export const scientistHighAgent: AgentConfig = {
 // ============================================================
 
 /**
- * Security-Reviewer Agent - Security Vulnerability Detection (Opus)
+ * Security-Reviewer Agent - Security Vulnerability Detection
  */
 export const securityReviewerAgent: AgentConfig = {
   name: 'security-reviewer',
-  description: 'Security vulnerability detection specialist (Opus). Use for security audits and code review.',
+  description: 'Security vulnerability detection specialist. Use PROACTIVELY after writing code that handles user input, authentication, API endpoints, or sensitive data. Detects OWASP Top 10 vulnerabilities, secrets, and unsafe patterns.',
   prompt: loadAgentPrompt('security-reviewer'),
   tools: ['Read', 'Grep', 'Glob', 'Bash'],
-  model: 'opus',
-  defaultModel: 'opus'
+  model: 'inherit',
+  defaultModel: 'inherit'
 };
 
 /**
- * Security-Reviewer-Low Agent - Quick Security Scan (Haiku)
+ * Security-Reviewer-Low Agent - Quick Security Scan
  */
 export const securityReviewerLowAgent: AgentConfig = {
   name: 'security-reviewer-low',
-  description: 'Quick security scan specialist (Haiku). Use for fast security checks on small code changes.',
+  description: 'Single-file security scan, read-only, no delegation: secrets, input validation, obvious injection and XSS patterns. Escalates multi-file review, OWASP Top 10 audits, and auth-flow analysis to security-reviewer.',
   prompt: loadAgentPrompt('security-reviewer-low'),
   tools: ['Read', 'Grep', 'Glob', 'Bash'],
-  model: 'haiku',
-  defaultModel: 'haiku'
+  model: 'inherit',
+  defaultModel: 'inherit'
 };
 
 /**
- * Build-Fixer Agent - Build Error Resolution (Sonnet)
+ * Build-Fixer Agent - Build Error Resolution
  */
 export const buildFixerAgent: AgentConfig = {
   name: 'build-fixer',
-  description: 'Build and compilation error resolution specialist (Sonnet). Use for fixing build/type errors in any language.',
+  description: 'Build and compilation error resolution specialist. Use PROACTIVELY when build fails or type errors occur. Fixes build/type errors with minimal diffs, no architectural edits. Focuses on getting the build green quickly.',
   prompt: loadAgentPrompt('build-fixer'),
   tools: ['Read', 'Grep', 'Glob', 'Edit', 'Write', 'Bash', 'lsp_diagnostics', 'lsp_diagnostics_directory'],
-  model: 'sonnet',
-  defaultModel: 'sonnet'
+  model: 'inherit',
+  defaultModel: 'inherit'
 };
 
 /**
- * Build-Fixer-Low Agent - Simple Build Fix (Haiku)
+ * Build-Fixer-Low Agent - Simple Build Fix
  */
 export const buildFixerLowAgent: AgentConfig = {
   name: 'build-fixer-low',
-  description: 'Simple build error fixer (Haiku). Use for trivial type errors and single-line fixes.',
+  description: 'Single-line build fixes: missing type annotations, null checks, imports, syntax errors. Escalates multi-file breakage and type-inference problems to build-fixer.',
   prompt: loadAgentPrompt('build-fixer-low'),
   tools: ['Read', 'Grep', 'Glob', 'Edit', 'Write', 'Bash', 'lsp_diagnostics', 'lsp_diagnostics_directory'],
-  model: 'haiku',
-  defaultModel: 'haiku'
+  model: 'inherit',
+  defaultModel: 'inherit'
 };
 
 /**
- * TDD-Guide Agent - Test-Driven Development (Sonnet)
+ * TDD-Guide Agent - Test-Driven Development
  */
 export const tddGuideAgent: AgentConfig = {
   name: 'tdd-guide',
-  description: 'Test-Driven Development specialist (Sonnet). Use for TDD workflows and test coverage.',
+  description: 'Test-Driven Development specialist enforcing write-tests-first methodology. Use PROACTIVELY when writing new features, fixing bugs, or refactoring code. Ensures 80%+ test coverage.',
   prompt: loadAgentPrompt('tdd-guide'),
   tools: ['Read', 'Grep', 'Glob', 'Edit', 'Write', 'Bash', 'lsp_diagnostics'],
-  model: 'sonnet',
-  defaultModel: 'sonnet'
+  model: 'inherit',
+  defaultModel: 'inherit'
 };
 
 /**
- * TDD-Guide-Low Agent - Quick Test Suggestions (Haiku)
+ * TDD-Guide-Low Agent - Quick Test Suggestions
  */
 export const tddGuideLowAgent: AgentConfig = {
   name: 'tdd-guide-low',
-  description: 'Quick test suggestion specialist (Haiku). Use for simple test case ideas.',
+  description: 'Test suggestions for a single function, obvious edge cases, quick coverage checks. Escalates full TDD workflow, integration, and E2E planning to tdd-guide.',
   prompt: loadAgentPrompt('tdd-guide-low'),
   tools: ['Read', 'Grep', 'Glob', 'Bash', 'lsp_diagnostics'],
-  model: 'haiku',
-  defaultModel: 'haiku'
+  model: 'inherit',
+  defaultModel: 'inherit'
 };
 
 /**
- * Code-Reviewer Agent - Expert Code Review (Opus)
+ * Code-Reviewer Agent - Expert Code Review
  */
 export const codeReviewerAgent: AgentConfig = {
   name: 'code-reviewer',
-  description: 'Expert code review specialist (Opus). Use for comprehensive code quality review.',
+  description: 'Expert code review specialist. Proactively reviews code for quality, security, and maintainability. Use immediately after writing or modifying code. Provides severity-rated feedback.',
   prompt: loadAgentPrompt('code-reviewer'),
   tools: ['Read', 'Grep', 'Glob', 'Bash', 'lsp_diagnostics', 'ast_grep_search'],
-  model: 'opus',
-  defaultModel: 'opus'
+  model: 'inherit',
+  defaultModel: 'inherit'
 };
 
 /**
- * Code-Reviewer-Low Agent - Quick Code Check (Haiku)
+ * Code-Reviewer-Low Agent - Quick Code Check
  */
 export const codeReviewerLowAgent: AgentConfig = {
   name: 'code-reviewer-low',
-  description: 'Quick code quality checker (Haiku). Use for fast review of small changes.',
+  description: 'Single-file review: obvious code smells, hardcoded values, style violations. Escalates multi-file review, deep security analysis, and architecture review to code-reviewer.',
   prompt: loadAgentPrompt('code-reviewer-low'),
   tools: ['Read', 'Grep', 'Glob', 'Bash', 'lsp_diagnostics'],
-  model: 'haiku',
-  defaultModel: 'haiku'
+  model: 'inherit',
+  defaultModel: 'inherit'
 };
 
 /**
- * Team-Orchestrator Agent - Team Coordination (Opus)
+ * Team-Orchestrator Agent - Team Coordination
  */
 export const teamOrchestratorAgent: AgentConfig = {
   name: 'team-orchestrator',
-  description: 'Coordinates a team of agents with communication and shared context (Opus). Use for multi-agent collaborative tasks.',
+  description: 'Coordinates a team of agents with communication and shared context. Use for multi-agent collaborative tasks.',
   prompt: loadAgentPrompt('team-orchestrator'),
   tools: ['Agent', 'Bash', 'Read', 'Glob', 'Grep'],
-  model: 'opus',
-  defaultModel: 'opus'
+  model: 'inherit',
+  defaultModel: 'inherit'
 };
 
 // ============================================================
@@ -336,8 +338,8 @@ export function getAgentDefinitions(overrides?: Partial<Record<string, Partial<A
   description: string;
   prompt: string;
   tools: string[];
-  model?: ModelType;
-  defaultModel?: ModelType;
+  model?: ModelIdentifier;
+  defaultModel?: ModelIdentifier;
 }> {
   const agents = {
     // Base agents (from individual files)
@@ -379,7 +381,7 @@ export function getAgentDefinitions(overrides?: Partial<Record<string, Partial<A
     'team-orchestrator': teamOrchestratorAgent
   };
 
-  const result: Record<string, { description: string; prompt: string; tools: string[]; model?: ModelType; defaultModel?: ModelType }> = {};
+  const result: Record<string, { description: string; prompt: string; tools: string[]; model?: ModelIdentifier; defaultModel?: ModelIdentifier }> = {};
 
   for (const [name, config] of Object.entries(agents)) {
     const override = overrides?.[name];
@@ -387,8 +389,8 @@ export function getAgentDefinitions(overrides?: Partial<Record<string, Partial<A
       description: override?.description ?? config.description,
       prompt: override?.prompt ?? config.prompt,
       tools: normalizeTools(override?.tools ?? config.tools),
-      model: (override?.model ?? config.model) as ModelType | undefined,
-      defaultModel: (override?.defaultModel ?? config.defaultModel) as ModelType | undefined
+      model: (override?.model ?? config.model) as ModelIdentifier | undefined,
+      defaultModel: (override?.defaultModel ?? config.defaultModel) as ModelIdentifier | undefined
     };
   }
 

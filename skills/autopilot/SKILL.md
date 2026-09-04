@@ -22,16 +22,16 @@ Also activates on: "autopilot", "auto pilot", "autonomous", "build me", "create 
 
 ### Phase 0: Expansion — Idea to Spec
 
-1. Analyst agent (Opus) extracts functional requirements, user stories, constraints, and acceptance criteria from the user's input
-2. Architect agent (Opus) produces a technical specification with stack choices, data models, API contracts, and component boundaries
+1. Analyst agent (heavy) extracts functional requirements, user stories, constraints, and acceptance criteria from the user's input
+2. Architect agent (heavy) produces a technical specification with stack choices, data models, API contracts, and component boundaries
 3. Write combined spec to `.omd/autopilot/spec.md`
 
 **Checkpoint:** Verify spec contains at least: functional requirements list, technical stack decision, data model outline, and API surface. If any are missing, loop Analyst and Architect until complete. If `pauseAfterExpansion` is true, present the spec to the user and wait for confirmation before proceeding.
 
 ### Phase 1: Planning — Spec to Implementation Plan
 
-1. Architect agent (Opus) reads the spec from `.omd/autopilot/spec.md` and generates a task-level implementation plan with dependency ordering and complexity labels (low/standard/high)
-2. Critic agent (Opus) reviews the plan for gaps, circular dependencies, missing edge cases, and unrealistic task scoping
+1. Architect agent (heavy) reads the spec from `.omd/autopilot/spec.md` and generates a task-level implementation plan with dependency ordering and complexity labels (low/standard/high)
+2. Critic agent (heavy) reviews the plan for gaps, circular dependencies, missing edge cases, and unrealistic task scoping
 3. Architect revises based on Critic feedback
 4. Write final plan to `.omd/plans/autopilot-impl.md`
 
@@ -41,11 +41,11 @@ Also activates on: "autopilot", "auto pilot", "autonomous", "build me", "create 
 
 Route tasks from the plan to agents by complexity using Ralph (persistence) + Ultrawork (parallelism):
 
-| Complexity | Agent | Model |
+| Task size | Agent | Complexity tier |
 |-----------|-------|-------|
-| Low | Executor-low | Haiku |
-| Standard | Executor | Sonnet |
-| High | Executor-high | Opus |
+| Low | Executor-low | light |
+| Standard | Executor | medium |
+| High | Executor-high | heavy |
 
 Each agent implements its assigned tasks, writes files, and marks tasks complete in the plan state.
 

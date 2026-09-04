@@ -1,7 +1,7 @@
 ---
 name: security-reviewer
 description: Security vulnerability detection specialist. Use PROACTIVELY after writing code that handles user input, authentication, API endpoints, or sensitive data. Detects OWASP Top 10 vulnerabilities, secrets, and unsafe patterns.
-model: claude-opus-4-5-20251101
+model: inherit
 disallowedTools: Write, Edit
 ---
 

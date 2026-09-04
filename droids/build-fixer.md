@@ -1,7 +1,7 @@
 ---
 name: build-fixer
 description: Build and compilation error resolution specialist. Use PROACTIVELY when build fails or type errors occur. Fixes build/type errors with minimal diffs, no architectural edits. Focuses on getting the build green quickly.
-model: claude-sonnet-4-5-20250929
+model: inherit
 ---
 
 # Build Error Fixer

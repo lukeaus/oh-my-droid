@@ -543,13 +543,13 @@ You are now in validation phase. Spawn parallel validation architects:
 
 \`\`\`
 // Spawn all three in parallel
-Task(subagent_type="oh-my-droid:architect", model="opus",
+Task(subagent_type="oh-my-droid:architect",
   prompt="FUNCTIONAL COMPLETENESS REVIEW: Verify all requirements from spec are implemented")
 
-Task(subagent_type="oh-my-droid:security-reviewer", model="opus",
+Task(subagent_type="oh-my-droid:security-reviewer",
   prompt="SECURITY REVIEW: Check for vulnerabilities, injection risks, auth issues")
 
-Task(subagent_type="oh-my-droid:code-reviewer", model="opus",
+Task(subagent_type="oh-my-droid:code-reviewer",
   prompt="CODE QUALITY REVIEW: Check patterns, maintainability, test coverage")
 \`\`\`
 

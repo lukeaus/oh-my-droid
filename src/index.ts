@@ -116,6 +116,7 @@ export {
 // Agent module exports (modular agent system)
 export {
   // Types
+  type ModelIdentifier,
   type ModelType,
   type AgentCost,
   type AgentCategory,

@@ -38,7 +38,7 @@ Define your own agent sequence:
 
 ```
 /pipeline explore -> architect -> executor "add authentication"
-/pipeline explore:haiku -> architect:opus -> executor:sonnet "optimize performance"
+/pipeline explore:light -> architect:heavy -> executor:medium "optimize performance"
 ```
 
 ### With Parallel Stages
@@ -203,7 +203,7 @@ Triggers: explore → architect → build-fixer
 
 ### Example 3: Custom Chain
 ```
-/pipeline explore:haiku -> architect:opus -> executor:sonnet -> tdd-guide:sonnet "refactor auth module"
+/pipeline explore:light -> architect:heavy -> executor:medium -> tdd-guide:medium "refactor auth module"
 ```
 
 ### Example 4: Research-Driven Implementation
@@ -215,7 +215,7 @@ Triggers: parallel(researcher, explore) → architect → writer
 ## Best Practices
 
 1. **Start with presets** - Use built-in pipelines before custom ones
-2. **Match model to complexity** - haiku for simple, opus for complex
+2. **Match model to complexity** - light for simple, heavy for complex
 3. **Keep stages focused** - One clear responsibility per agent
 4. **Use parallel stages** - Run independent work simultaneously
 5. **Verify at checkpoints** - Use architect or critic to verify progress

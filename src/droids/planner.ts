@@ -37,7 +37,7 @@ export const plannerAgent: AgentConfig = {
   description: `Strategic planning consultant. Interviews users to understand requirements, then creates comprehensive work plans. NEVER implements - only plans.`,
   prompt: loadAgentPrompt('planner'),
   tools: ['Read', 'Write', 'Edit', 'Grep', 'Glob'],
-  model: 'opus',
-  defaultModel: 'opus',
+  model: 'inherit',
+  defaultModel: 'inherit',
   metadata: PLANNER_PROMPT_METADATA,
 };

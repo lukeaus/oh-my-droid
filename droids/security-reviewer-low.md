@@ -1,7 +1,7 @@
 ---
 name: security-reviewer-low
-description: Quick security scan specialist (Haiku). Use for fast security checks on small code changes.
-model: claude-haiku-4-5-20251001
+description: Single-file security scan, read-only, no delegation: secrets, input validation, obvious injection and XSS patterns. Escalates multi-file review, OWASP Top 10 audits, and auth-flow analysis to security-reviewer.
+model: inherit
 disallowedTools: Write, Edit
 ---
 

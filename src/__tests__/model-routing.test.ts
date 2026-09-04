@@ -644,8 +644,8 @@ describe('Router', () => {
       const decision = routeTask(context);
 
       expect(decision.tier).toBe('LOW');
-      expect(decision.modelType).toBe('haiku');
-      expect(decision.model).toBe('claude-haiku-4-5-20251001');
+      expect(decision.modelType).toBe('inherit');
+      expect(decision.model).toBe('inherit');
     });
 
     it('should route complex task to HIGH tier', () => {
@@ -655,8 +655,8 @@ describe('Router', () => {
       const decision = routeTask(context);
 
       expect(decision.tier).toBe('HIGH');
-      expect(decision.modelType).toBe('opus');
-      expect(decision.model).toBe('claude-opus-4-5-20251101');
+      expect(decision.modelType).toBe('inherit');
+      expect(decision.model).toBe('inherit');
     });
 
     it('should respect explicit model override', () => {
@@ -768,19 +768,19 @@ describe('Router', () => {
   describe('getModelForTask', () => {
     it('should return adaptive model for architect with simple task', () => {
       const result = getModelForTask('architect', 'find the file');
-      expect(result.model).toBe('haiku');
+      expect(result.model).toBe('inherit');
       expect(result.tier).toBe('LOW');
     });
 
     it('should return adaptive model for architect with complex task', () => {
       const result = getModelForTask('architect', 'debug the root cause of this architecture issue');
-      expect(result.model).toBe('opus');
+      expect(result.model).toBe('inherit');
       expect(result.tier).toBe('HIGH');
     });
 
-    it('should return haiku for explore', () => {
+    it('should return the inherited model for explore', () => {
       const result = getModelForTask('explore', 'search for files');
-      expect(result.model).toBe('haiku');
+      expect(result.model).toBe('inherit');
       expect(result.tier).toBe('LOW');
     });
 
@@ -906,7 +906,7 @@ describe('Integration Scenarios', () => {
     const decision = routeTask(context);
 
     expect(decision.tier).toBe('LOW');
-    expect(decision.modelType).toBe('haiku');
+    expect(decision.modelType).toBe('inherit');
   });
 
   it('should handle real-world debugging task', () => {
@@ -917,7 +917,7 @@ describe('Integration Scenarios', () => {
     const decision = routeTask(context);
 
     expect(decision.tier).toBe('HIGH');
-    expect(decision.modelType).toBe('opus');
+    expect(decision.modelType).toBe('inherit');
   });
 
   it('should handle real-world refactoring task', () => {

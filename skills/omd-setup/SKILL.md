@@ -379,7 +379,7 @@ EOF
 - Scope: **PROJECT** - applies only to this project
 - Hooks: Provided by plugin (no manual installation needed)
 - Agents: 28+ available (base + tiered variants)
-- Model routing: Haiku/Sonnet/Opus based on task complexity
+- Model routing: light/medium/heavy based on task complexity
 
 **Note**: This configuration is project-specific and won't affect other projects or global settings.
 
@@ -469,7 +469,7 @@ EOF
 - Scope: **GLOBAL** - applies to all Factory Droid sessions
 - Hooks: Provided by plugin (no manual installation needed)
 - Agents: 28+ available (base + tiered variants)
-- Model routing: Haiku/Sonnet/Opus based on task complexity
+- Model routing: light/medium/heavy based on task complexity
 
 **Note**: Hooks are now managed by the plugin system automatically. No manual hook installation required.
 

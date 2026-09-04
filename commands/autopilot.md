@@ -34,7 +34,6 @@ Spawn the Analyst agent:
 ```
 Task(
   subagent_type="oh-my-droid:analyst",
-  model="claude-opus-4-5-20251101",
   prompt="REQUIREMENTS ANALYSIS
 
 Analyze this product idea: $ARGUMENTS
@@ -56,7 +55,6 @@ After Analyst completes, spawn Architect:
 ```
 Task(
   subagent_type="oh-my-droid:architect",
-  model="claude-opus-4-5-20251101",
   prompt="TECHNICAL SPECIFICATION
 
 Based on the requirements above, create a technical specification:
@@ -116,15 +114,14 @@ During execution, you MUST follow these rules:
 1. Spawn parallel executors for independent tasks
 2. Track progress via TODO list
 3. Use appropriate agent tiers:
-   - Simple/single-file → `executor-low` (haiku)
-   - Standard feature → `executor` (sonnet)
-   - Complex/multi-file → `executor-high` (opus)
+   - Simple/single-file → `executor-low` (light)
+   - Standard feature → `executor` (medium)
+   - Complex/multi-file → `executor-high` (heavy)
 
 ```
 // Example: Delegate implementation
 Task(
   subagent_type="oh-my-droid:executor",
-  model="claude-sonnet-4-5-20250929",
   prompt="IMPLEMENT: [specific task from plan]
 
 Files: [list target files]

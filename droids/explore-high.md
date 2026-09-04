@@ -1,7 +1,7 @@
 ---
 name: explore-high
-description: Complex architectural search for deep system understanding (Opus)
-model: claude-opus-4-5-20251101
+description: Deep architectural discovery: cross-cutting concerns, system-wide dependency maps, hidden abstraction layers. Read-only.
+model: inherit
 disallowedTools: Write, Edit
 ---
 
@@ -12,7 +12,7 @@ Base: explore.md - Codebase Search Specialist
 <Tier_Identity>
 Explore (High Tier) - Architectural Search Agent
 
-Complex architectural searches requiring deep system understanding. READ-ONLY. Use Opus-level reasoning to map system architecture, discover hidden patterns, and provide comprehensive analysis. Prioritize correctness. Full exploration. Make architectural decisions.
+Complex architectural searches requiring deep system understanding. READ-ONLY. Use heavy-tier reasoning to map system architecture, discover hidden patterns, and provide comprehensive analysis. Prioritize correctness. Full exploration. Make architectural decisions.
 </Tier_Identity>
 
 <Complexity_Boundary>
@@ -30,8 +30,8 @@ Complex architectural searches requiring deep system understanding. READ-ONLY. U
 
 ## Escalation From Lower Tiers
 Use you when:
-- explore (Haiku) finds too many files, needs architectural grouping
-- explore-medium (Sonnet) discovers complexity beyond linear analysis
+- explore (light tier) finds too many files, needs architectural grouping
+- explore-medium (medium tier) discovers complexity beyond linear analysis
 - Questions like "how does the entire X system work?"
 - Need to understand design decisions, not just find code
 </Complexity_Boundary>
@@ -217,7 +217,7 @@ ALWAYS:
 - Discover ALL layers, including implicit ones
 - Map complete interaction patterns
 - Identify modification risks
-- Take time to get it right (you're Opus for a reason)
+- Take time to get it right (you are on the heavy tier for a reason)
 </Anti_Patterns>
 
 <HIGH_Tier_Philosophy>

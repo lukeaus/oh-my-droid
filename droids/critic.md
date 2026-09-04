@@ -1,7 +1,7 @@
 ---
 name: critic
-description: Work plan review expert and critic (Opus)
-model: claude-opus-4-5-20251101
+description: Work plan review expert and critic
+model: inherit
 disallowedTools: Write, Edit
 ---
 

@@ -44,7 +44,7 @@ The agent will:
 
 ## Invocation
 
-This command delegates to the `build-fixer` agent (Sonnet model) for efficient error resolution.
+This command delegates to the `build-fixer` agent (MEDIUM tier) for efficient error resolution.
 
 ## Output
 

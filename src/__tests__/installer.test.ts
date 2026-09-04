@@ -78,12 +78,6 @@ function loadClaudeMdContent(): string {
 }
 
 describe('Installer Constants', () => {
-  const MODEL_ID_BY_TIER: Record<'haiku' | 'sonnet' | 'opus', string> = {
-    haiku: 'claude-haiku-4-5-20251001',
-    sonnet: 'claude-sonnet-4-5-20250929',
-    opus: 'claude-opus-4-5-20251101'
-  };
-
   // Load definitions once for all tests
   const AGENT_DEFINITIONS = loadAgentDefinitions();
   const COMMAND_DEFINITIONS = loadCommandDefinitions();
@@ -152,7 +146,9 @@ describe('Installer Constants', () => {
         const modelMatch = frontmatter.match(/^model:\s+(\S+)/m);
         expect(modelMatch, `Missing model in frontmatter for ${filename}`).toBeTruthy();
         const model = modelMatch![1];
-        expect(model).toMatch(/^(haiku|sonnet|opus|inherit|claude-(haiku|sonnet|opus)-.+)$/);
+        // Routing belongs to the user's subagentModelSettings; a pinned model
+        // here would override it and go stale.
+        expect(model).toBe('inherit');
       }
     });
 
@@ -166,40 +162,6 @@ describe('Installer Constants', () => {
         const name = nameMatch![1];
         expect(names.has(name)).toBe(false);
         names.add(name);
-      }
-    });
-
-    it('should have consistent model assignments', () => {
-      const modelExpectations: Record<string, string> = {
-        'architect.md': 'opus',
-        'architect-medium.md': 'sonnet',
-        'architect-low.md': 'haiku',
-        'researcher.md': 'sonnet',
-        'researcher-low.md': 'haiku',
-        'explore.md': 'haiku',
-        'explore-medium.md': 'sonnet',
-        'executor.md': 'sonnet',
-        'executor-high.md': 'opus',
-        'executor-low.md': 'haiku',
-        'designer.md': 'sonnet',
-        'designer-low.md': 'haiku',
-        'designer-high.md': 'opus',
-        'writer.md': 'haiku',
-        'vision.md': 'sonnet',
-        'critic.md': 'opus',
-        'analyst.md': 'opus',
-        'planner.md': 'opus',
-        'qa-tester.md': 'sonnet',
-      };
-
-      for (const [filename, expectedModel] of Object.entries(modelExpectations)) {
-        const content = AGENT_DEFINITIONS[filename];
-        expect(content).toBeTruthy();
-        const expectedTier = expectedModel as keyof typeof MODEL_ID_BY_TIER;
-        const expectedFull = MODEL_ID_BY_TIER[expectedTier];
-        const modelMatch = content.match(/^model:\s+(\S+)/m);
-        expect(modelMatch, `Missing model in ${filename}`).toBeTruthy();
-        expect([expectedModel, expectedFull]).toContain(modelMatch![1]);
       }
     });
 
@@ -296,9 +258,9 @@ describe('Installer Constants', () => {
     it('should include tiered agent routing table', () => {
       // Verify the Smart Model Routing section and agent tiers exist
       expect(CLAUDE_MD_CONTENT).toContain('Smart Model Routing');
-      expect(CLAUDE_MD_CONTENT).toContain('LOW (Haiku)');
-      expect(CLAUDE_MD_CONTENT).toContain('MEDIUM (Sonnet)');
-      expect(CLAUDE_MD_CONTENT).toContain('HIGH (Opus)');
+      expect(CLAUDE_MD_CONTENT).toContain('light');
+      expect(CLAUDE_MD_CONTENT).toContain('medium');
+      expect(CLAUDE_MD_CONTENT).toContain('heavy');
       // Agent names appear in tier tables
       expect(CLAUDE_MD_CONTENT).toContain('explore');
       expect(CLAUDE_MD_CONTENT).toContain('executor-low');
@@ -385,7 +347,7 @@ describe('Installer Constants', () => {
     });
 
     it('should have agents referenced in FACTORY.md exist in AGENT_DEFINITIONS', () => {
-      const agentMatches = CLAUDE_MD_CONTENT.matchAll(/\`([a-z-]+)\`\s*\|\s*(Opus|Sonnet|Haiku)/g);
+      const agentMatches = CLAUDE_MD_CONTENT.matchAll(/\`([a-z-]+)\`\s*\|\s*(light|medium|heavy)/g);
 
       for (const match of agentMatches) {
         const agentName = match[1];

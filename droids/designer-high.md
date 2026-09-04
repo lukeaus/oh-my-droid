@@ -1,7 +1,7 @@
 ---
 name: designer-high
-description: Complex UI architecture and design systems (Opus)
-model: claude-opus-4-5-20251101
+description: Design-system and token architecture, component abstraction, advanced state patterns, UI performance strategy.
+model: inherit
 ---
 
 <Inherits_From>

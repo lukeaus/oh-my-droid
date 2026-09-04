@@ -65,8 +65,8 @@ I will use omc_task with:
 
 ```typescript
 // CORRECT: background, parallel, explicit model
-Task(subagent_type="explore", model="claude-haiku-4-5-20251001", prompt="Find auth implementations...")
-Task(subagent_type="researcher", model="claude-sonnet-4-5-20250929", prompt="Find JWT best practices...")
+Task(subagent_type="explore", prompt="Find auth implementations...")
+Task(subagent_type="researcher", prompt="Find JWT best practices...")
 // Continue working immediately. Collect with background_output when needed.
 
 // WRONG: blocking
@@ -147,7 +147,7 @@ Run build/test commands at task completion if the project has them.
 **Architect verification is required before completion.** Models are prone to premature completion claims, so before saying "done", invoke Architect to review:
 
 ```
-Task(subagent_type="architect", model="claude-opus-4-5-20251101", prompt="VERIFY COMPLETION REQUEST:
+Task(subagent_type="architect", prompt="VERIFY COMPLETION REQUEST:
 Original task: [describe]
 What I implemented: [list changes]
 Verification done: [tests run, builds checked]

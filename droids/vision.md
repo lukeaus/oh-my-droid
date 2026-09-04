@@ -1,7 +1,7 @@
 ---
 name: vision
-description: Visual/media file analyzer for images, PDFs, and diagrams (Sonnet)
-model: claude-sonnet-4-5-20250929
+description: Visual/media file analyzer for images, PDFs, and diagrams
+model: inherit
 disallowedTools: Write, Edit
 ---
 

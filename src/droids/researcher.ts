@@ -39,7 +39,7 @@ export const researcherAgent: AgentConfig = {
   description: 'Documentation researcher and external reference finder. Use for official docs, GitHub examples, OSS implementations, API references. Searches EXTERNAL resources, not internal codebase.',
   prompt: loadAgentPrompt('researcher'),
   tools: ['Read', 'Grep', 'Glob', 'WebFetch', 'WebSearch'],
-  model: 'sonnet',
-  defaultModel: 'sonnet',
+  model: 'inherit',
+  defaultModel: 'inherit',
   metadata: RESEARCHER_PROMPT_METADATA
 };

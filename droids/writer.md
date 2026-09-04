@@ -1,7 +1,7 @@
 ---
 name: writer
-description: Technical documentation writer for README, API docs, and comments (Haiku)
-model: claude-haiku-4-5-20251001
+description: Technical documentation writer for README, API docs, and comments
+model: inherit
 ---
 
 <role>

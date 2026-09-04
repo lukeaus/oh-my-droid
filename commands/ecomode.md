@@ -1,5 +1,5 @@
 ---
-description: Token-efficient parallel execution mode using Haiku and Sonnet agents
+description: Token-efficient parallel execution mode using LOW and MEDIUM tier agents
 aliases: [eco, efficient, save-tokens, budget]
 ---
 
@@ -18,9 +18,9 @@ Activates token-efficient parallel execution for pro-plan users who prioritize c
 
 | Aspect | Ecomode | Ultrawork |
 |--------|---------|-----------|
-| **Default Tier** | Haiku (LOW) | Sonnet (MEDIUM) |
-| **Fallback Tier** | Sonnet (MEDIUM) | Opus (HIGH) |
-| **Opus Usage** | Avoided (planning only if essential) | Used for complex tasks |
+| **Default Tier** | light (LOW) | medium (MEDIUM) |
+| **Fallback Tier** | medium (MEDIUM) | heavy (HIGH) |
+| **heavy Usage** | Avoided (planning only if essential) | Used for complex tasks |
 | **Token Cost** | Lower | Higher |
 | **Best For** | Standard dev work | Complex challenges |
 
@@ -42,10 +42,10 @@ Ecomode routes tasks to lower-tier agents:
 
 | Domain | Ecomode Uses | Ultrawork Uses |
 |--------|--------------|----------------|
-| Analysis | architect-low (haiku) | architect (opus) |
-| Execution | executor-low (haiku) | executor-high (opus) |
-| Frontend | designer-low (haiku) | designer-high (opus) |
-| Search | explore (haiku) | explore-medium (sonnet) |
+| Analysis | architect-low (light) | architect (heavy) |
+| Execution | executor-low (light) | executor-high (heavy) |
+| Frontend | designer-low (light) | designer-high (heavy) |
+| Search | explore (light) | explore-medium (medium) |
 
 ## Setting as Default
 

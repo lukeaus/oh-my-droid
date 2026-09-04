@@ -153,14 +153,14 @@ console.log(`Agent model: ${agentModel}, enabled: ${enabled}`);
 
 ```json
 {
-  "defaultModel": "claude-sonnet-4-5-20250929",
+  "defaultModel": "inherit",
   "agents": {
     "executor": {
-      "model": "claude-sonnet-4-5-20250929",
+      "model": "inherit",
       "enabled": true
     },
     "architect": {
-      "model": "claude-opus-4-5-20251101",
+      "model": "inherit",
       "enabled": true
     }
   },

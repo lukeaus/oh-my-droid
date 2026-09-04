@@ -5,7 +5,7 @@ This directory contains reusable templates for creating agent prompts, reducing 
 ## Files
 
 - **base-agent.md**: Core template structure with injection points
-- **tier-instructions.md**: Tier-specific behavioral instructions (LOW/MEDIUM/HIGH)
+- **tier-instructions.md**: Tier-specific behavioral instructions (light/medium/heavy)
 - **README.md**: This file - usage guide
 
 ## Template System
@@ -18,7 +18,7 @@ The template uses the following placeholders:
 |-------------|-------------|---------|
 | `{{AGENT_NAME}}` | Agent identifier | `executor-low`, `architect-medium` |
 | `{{ROLE_DESCRIPTION}}` | What this agent does | "You execute simple code changes..." |
-| `{{TIER_INSTRUCTIONS}}` | Tier-specific behavior | LOW/MEDIUM/HIGH instructions |
+| `{{TIER_INSTRUCTIONS}}` | Tier-specific behavior | light/medium/heavy instructions |
 | `{{TASK_SPECIFIC_INSTRUCTIONS}}` | Agent-specific protocols | "When fixing bugs, always add tests" |
 | `{{EXPECTED_DELIVERABLES}}` | What to output | "Modified files + test results" |
 
@@ -50,12 +50,12 @@ The template uses the following placeholders:
 You execute simple, well-defined code changes quickly and efficiently. Handle single-file modifications, small bug fixes, and straightforward feature additions.
 
 ## Tier-Specific Instructions
-**Tier: LOW (Haiku) - Speed-Focused Execution**
+**Tier: light - Speed-Focused Execution**
 
 - Focus on speed and direct execution
 - Handle simple, well-defined tasks only
 - Limit exploration to 5 files maximum
-- Escalate to executor (MEDIUM) if:
+- Escalate to executor (medium tier) if:
   - Task requires analyzing more than 5 files
   - Complexity is higher than expected
   - Architectural decisions needed
@@ -96,9 +96,9 @@ You execute simple, well-defined code changes quickly and efficiently. Handle si
 
 | Tier | Model | Token Cost | Use When |
 |------|-------|------------|----------|
-| LOW | Haiku | $ | Task is simple, well-defined, <5 files |
-| MEDIUM | Sonnet | $$ | Task needs investigation, <20 files |
-| HIGH | Opus | $$$ | Task is complex, architectural, unlimited files |
+| light | routed via subagentModelSettings.lightModel | $ | Task is simple, well-defined, <5 files |
+| medium | routed via subagentModelSettings.mediumModel | $$ | Task needs investigation, <20 files |
+| heavy | routed via subagentModelSettings.heavyModel | $$$ | Task is complex, architectural, unlimited files |
 
 ## Future Enhancements
 

@@ -17,7 +17,7 @@ This skill activates when:
 
 ## What It Does
 
-Delegates to the `build-fixer` agent (Sonnet model) to:
+Delegates to the `build-fixer` agent (MEDIUM tier) to:
 
 1. **Collect Errors**
    - Run `npx tsc --noEmit` to get all TypeScript errors
@@ -47,7 +47,6 @@ Delegates to the `build-fixer` agent (Sonnet model) to:
 ```
 Task(
   subagent_type="oh-my-droid:build-fixer",
-  model="claude-sonnet-4-5-20250929",
   prompt="BUILD FIX TASK
 
 Fix all build and TypeScript errors with minimal changes.

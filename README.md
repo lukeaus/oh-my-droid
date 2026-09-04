@@ -65,7 +65,7 @@ That's it. Everything else is automatic.
 ### Intelligent Orchestration
 
 - **32 specialized droids** for architecture, research, design, testing, data science
-- **Smart model routing** - Haiku for simple tasks, Opus for complex reasoning
+- **Tiered agent delegation** - Match task scope to specialized light, medium, and heavy agent variants
 - **Automatic delegation** - Right droid for the job, every time
 
 ### Developer Experience

@@ -42,7 +42,7 @@ export const designerAgent: AgentConfig = {
   description: `Designer-turned-developer who crafts stunning UI/UX even without design mockups. Use for VISUAL changes only (styling, layout, animation). Pure logic changes in frontend files should be handled directly.`,
   prompt: loadAgentPrompt('designer'),
   tools: ['Read', 'Edit', 'Write', 'Glob', 'Grep', 'Bash'],
-  model: 'sonnet',
-  defaultModel: 'sonnet',
+  model: 'inherit',
+  defaultModel: 'inherit',
   metadata: FRONTEND_ENGINEER_PROMPT_METADATA,
 };

@@ -1,6 +1,6 @@
 ---
 name: ultrawork
-description: "Decompose multi-step tasks into parallel sub-agent workloads, route each sub-task to the cheapest capable model tier (Haiku/Sonnet/Opus), run long-running commands in the background, and verify all deliverables before stopping. Use when the user asks to 'go fast', 'parallelize', 'ultrawork', or when a request contains 3+ independent sub-tasks that benefit from concurrent execution."
+description: "Decompose multi-step tasks into parallel sub-agent workloads, route each sub-task to the cheapest capable model tier (LOW/MEDIUM/HIGH), run long-running commands in the background, and verify all deliverables before stopping. Use when the user asks to 'go fast', 'parallelize', 'ultrawork', or when a request contains 3+ independent sub-tasks that benefit from concurrent execution."
 ---
 
 # Ultrawork
@@ -20,11 +20,11 @@ Follow these steps in order for every ultrawork session:
 
 ## Smart Model Routing
 
-Always start at the lowest tier that can handle the task. Escalate only on failure or when complexity demands it: **LOW (Haiku) -> MEDIUM (Sonnet) -> HIGH (Opus)**.
+Always start at the lowest tier that can handle the task. Escalate only on failure or when complexity demands it: **light -> medium -> heavy**.
 
 ### Available Agents by Tier
 
-| Domain | LOW (Haiku) | MEDIUM (Sonnet) | HIGH (Opus) |
+| Domain | light | medium | heavy |
 |--------|-------------|-----------------|-------------|
 | **Analysis** | `architect-low` | `architect-medium` | `architect` |
 | **Execution** | `executor-low` | `executor` | `executor-high` |
@@ -50,25 +50,24 @@ Always start at the lowest tier that can handle the task. Escalate only on failu
 
 ### Routing Examples
 
-OMD auto-injects the correct `model` for built-in tiered agents when missing.
-
-If you *do* specify `model`, use full model IDs (e.g. `claude-haiku-4-5-20251001`), not shorthands.
+Omit `model`. The droid variant carries the tier (`-low`/`-medium`/`-high`) and
+the model comes from the user's `subagentModelSettings` (`/settings` -> Subagents).
 
 ```
 // Simple question → LOW tier (saves tokens!)
-Task(subagent_type="oh-my-droid:architect-low", model="claude-haiku-4-5-20251001", prompt="What does this function return?")
+Task(subagent_type="oh-my-droid:architect-low", prompt="What does this function return?")
 
 // Standard implementation → MEDIUM tier
-Task(subagent_type="oh-my-droid:executor", model="claude-sonnet-4-5-20250929", prompt="Add error handling to login")
+Task(subagent_type="oh-my-droid:executor", prompt="Add error handling to login")
 
 // Complex refactoring → HIGH tier
-Task(subagent_type="oh-my-droid:executor-high", model="claude-opus-4-5-20251101", prompt="Refactor auth module using JWT across 5 files")
+Task(subagent_type="oh-my-droid:executor-high", prompt="Refactor auth module using JWT across 5 files")
 
 // Quick file lookup → LOW tier
-Task(subagent_type="oh-my-droid:explore", model="claude-haiku-4-5-20251001", prompt="Find where UserService is defined")
+Task(subagent_type="oh-my-droid:explore", prompt="Find where UserService is defined")
 
 // Thorough search → MEDIUM tier
-Task(subagent_type="oh-my-droid:explore-medium", model="claude-sonnet-4-5-20250929", prompt="Find all authentication patterns in the codebase")
+Task(subagent_type="oh-my-droid:explore-medium", prompt="Find all authentication patterns in the codebase")
 ```
 
 ## Background vs Foreground Execution
