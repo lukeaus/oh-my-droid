@@ -7,12 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+Planned release: **4.0.0**. See [migration instructions](docs/MIGRATION.md).
+
+### Changed
+
+- **Standalone MCP Integration** (#33, breaking) — Replaced the Claude Agent SDK dependency and in-process server with the existing `@modelcontextprotocol/sdk` stdio bridge. Server ID `t` and `mcp__t__` tool names remain unchanged; the standalone server exposes all 19 tools, including swarm and three skill tools. `createDroidSession()` consumers must configure the bridge separately; tool-name helpers move to `src/mcp/tool-names.ts`.
+- **Factory/Droid Public Names** (#33, breaking) — Renamed `getClaudeConfigDir` to `getFactoryConfigDir`, `isClaudeInstalled` to `isDroidInstalled`, `skipClaudeCheck` to `skipDroidCheck`, and `PaneAnalysisResult.hasClaudeCode` to `hasDroid`. The internal tmux pattern constant is now `DROID_PATTERNS`.
+- **Historical Materials** (#33) — Marked the upstream benchmark harness and seminar slides/demos as unsupported and not packaged; preserved them without porting.
+
+### Removed
+
+- **Claude Runtime Integration** (#33, breaking) — Removed `omdToolsServer` and the `sdkTools` adapter; `src/mcp/omc-tools-server.ts` remains as the shared tool registry.
+- **Unsupported Claude Signals and HUD Authentication** (#33) — Removed Claude-specific non-interactive environment signals and unsupported Anthropic OAuth credential reads/refreshes for HUD rate-limit data.
+
 ### Added
 
 - **Agent Team Mode** — Coordinate named agents as a team with inter-agent messaging, shared context, file ownership, and leader-managed lifecycle. Invoke via `/team` or magic keywords (team, collaborate, together). Includes typed control mailbox, spawn graph persistence, permission broker, per-member transcripts, and HUD statusline integration.
 
 ### Fixed
 
+- **Factory Runtime Cleanup** (#33) — Corrected tokscale usage collection to select Droid, validated `FACTORY_API_KEY` instead of Anthropic credentials, replaced dead documentation URLs, and aligned the documented hook allowlist with `.omd/`, `.factory/`, `/.factory/`, `FACTORY.md$`, and `AGENTS.md$`.
 - **Hook Registrations and Payload Handling Alignment** (#28) — Aligned all hook registrations, payload normalizers, and handler contracts with official Factory Droid hook documentation:
   - Created centralized hook input normalizer (`normalizeHookInput` / `extractResponseText`) to robustly handle both camelCase and snake_case schemas and normalize object/string tool responses without overriding caller cwd.
   - Remapped legacy tool names (`Bash` → `Execute`, `Write` → `Create`) across all script and template hooks.

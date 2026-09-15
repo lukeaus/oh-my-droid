@@ -13,9 +13,9 @@ import { fileURLToPath } from 'node:url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const CLAUDE_DIR = join(homedir(), '.factory');
-const HUD_DIR = join(CLAUDE_DIR, 'hud');
-const SETTINGS_FILE = join(CLAUDE_DIR, 'settings.json');
+const FACTORY_DIR = join(homedir(), '.factory');
+const HUD_DIR = join(FACTORY_DIR, 'hud');
+const SETTINGS_FILE = join(FACTORY_DIR, 'settings.json');
 
 console.log('[OMD] Running post-install setup...');
 

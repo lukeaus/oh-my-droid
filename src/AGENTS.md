@@ -151,7 +151,12 @@ index.ts
 │   ├── verification/
 │   └── ...
 ├── config/loader.ts
-└── mcp/omc-tools-server.ts → tools/swarm-tool.ts
+└── mcp/tool-names.ts → mcp/omc-tools-server.ts (shared 19-tool registry)
+    └── also consumed by mcp/standalone-server.ts (stdio, server id t)
 ```
+
+Custom tools run through the standalone MCP bridge, not an in-process agent SDK server.
+`createDroidSession()` retains their `mcp__t__*` permissions without registering an in-process `t` server.
+Installer APIs use `isDroidInstalled` and `skipDroidCheck`; config-path helpers use `getFactoryConfigDir`.
 
 <!-- MANUAL: -->

@@ -16,8 +16,8 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync, unlinkSync, chmodSy
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { homedir } from 'os';
-import { spawn, spawnSync } from 'child_process';
-import { checkRateLimitStatus, formatRateLimitStatus, formatTimeUntilReset } from './rate-limit-monitor.js';
+import { spawn } from 'child_process';
+import { checkRateLimitStatus, formatRateLimitStatus } from './rate-limit-monitor.js';
 import {
   isTmuxAvailable,
   scanForBlockedPanes,
@@ -27,7 +27,6 @@ import {
 import type {
   DaemonState,
   DaemonConfig,
-  BlockedPane,
   DaemonResponse,
 } from './types.js';
 
@@ -326,7 +325,7 @@ async function pollLoop(config: Required<DaemonConfig>): Promise<void> {
       if (rateLimitStatus) {
         log(`Rate limit status: ${formatRateLimitStatus(rateLimitStatus)}`, config);
       } else {
-        log('Rate limit status unavailable (no OAuth credentials?)', config);
+        log('Factory quota monitoring is unsupported; automatic resume is unavailable', config);
       }
 
       // If currently rate limited, scan for blocked panes
@@ -351,7 +350,7 @@ async function pollLoop(config: Required<DaemonConfig>): Promise<void> {
       }
 
       // If rate limit just cleared (was limited, now not), attempt resume
-      if (wasLimited && !isNowLimited && state.blockedPanes.length > 0) {
+      if (rateLimitStatus !== null && wasLimited && !isNowLimited && state.blockedPanes.length > 0) {
         log('Rate limit cleared! Attempting to resume blocked panes', config);
 
         for (const pane of state.blockedPanes) {
@@ -382,7 +381,7 @@ async function pollLoop(config: Required<DaemonConfig>): Promise<void> {
       }
 
       // If rate limit cleared and no blocked panes, clear resumed list
-      if (!isNowLimited && state.blockedPanes.length === 0) {
+      if (rateLimitStatus !== null && !isNowLimited && state.blockedPanes.length === 0) {
         state.resumedPaneIds = [];
       }
 

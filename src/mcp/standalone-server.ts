@@ -2,7 +2,7 @@
 /**
  * Standalone MCP Server for OMC Tools
  *
- * This server exposes LSP, AST, and Python REPL tools via stdio transport
+ * This server exposes 19 LSP, AST, Python REPL, skills, and swarm tools via stdio transport
  * for discovery by Factory Droid's MCP management system.
  *
  * Usage: node dist/mcp/standalone-server.js
@@ -14,30 +14,8 @@ import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js';
-import { lspTools } from '../tools/lsp-tools.js';
-import { astTools } from '../tools/ast-tools.js';
-// IMPORTANT: Import from tool.js, NOT index.js!
-// tool.js exports pythonReplTool with wrapped handler returning { content: [...] }
-// index.js exports pythonReplTool with raw handler returning string
-import { pythonReplTool } from '../tools/python-repl/tool.js';
-import { swarmTool } from '../tools/swarm-tool.js';
+import { allTools } from './omc-tools-server.js';
 import { z } from 'zod';
-
-// Tool interface matching our tool definitions
-interface ToolDef {
-  name: string;
-  description: string;
-  schema: z.ZodRawShape | z.ZodObject<z.ZodRawShape>;
-  handler: (args: unknown) => Promise<{ content: Array<{ type: 'text'; text: string }> }>;
-}
-
-// Aggregate all tools - AST tools gracefully degrade if @ast-grep/napi is unavailable
-const allTools: ToolDef[] = [
-  ...(lspTools as unknown as ToolDef[]),
-  ...(astTools as unknown as ToolDef[]),
-  pythonReplTool as unknown as ToolDef,
-  swarmTool as unknown as ToolDef,
-];
 
 // Convert Zod schema to JSON Schema for MCP
 function zodToJsonSchema(schema: z.ZodRawShape | z.ZodObject<z.ZodRawShape>): {
@@ -156,8 +134,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   }
 
   try {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const result = await (tool.handler as (args: any) => Promise<{ content: Array<{ type: 'text'; text: string }> }>)(args ?? {});
+    const schema = tool.schema instanceof z.ZodObject ? tool.schema : z.object(tool.schema);
+    const result = await tool.handler(schema.parse(args ?? {}));
     return {
       content: result.content,
       isError: false,

@@ -2,19 +2,14 @@
  * Integration Tests for Rate Limit Wait Feature
  *
  * These tests simulate real-world scenarios without hitting actual rate limits.
- * They verify the full flow from detection to resume.
+ * They verify pane detection and daemon-state formatting without a quota API.
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { mkdirSync, writeFileSync, rmSync } from 'fs';
+import { mkdirSync, rmSync } from 'fs';
 import { join } from 'path';
 import { tmpdir } from 'os';
-import type { DaemonState, RateLimitStatus, BlockedPane } from '../../features/rate-limit-wait/types.js';
-
-// Mock modules
-vi.mock('../../hud/usage-api.js', () => ({
-  getUsage: vi.fn(),
-}));
+import type { DaemonState } from '../../features/rate-limit-wait/types.js';
 
 vi.mock('child_process', () => ({
   execSync: vi.fn(),
@@ -22,7 +17,6 @@ vi.mock('child_process', () => ({
   spawn: vi.fn(),
 }));
 
-import { getUsage } from '../../hud/usage-api.js';
 import { execSync, spawnSync } from 'child_process';
 import {
   checkRateLimitStatus,
@@ -47,65 +41,8 @@ describe('Rate Limit Wait Integration Tests', () => {
     }
   });
 
-  describe('Scenario: Rate limit detection and tracking', () => {
-    it('should detect when 5-hour limit is reached', async () => {
-      // Simulate rate limit API response
-      vi.mocked(getUsage).mockResolvedValue({
-        fiveHourPercent: 100,
-        weeklyPercent: 75,
-        fiveHourResetsAt: new Date(Date.now() + 3600000),
-        weeklyResetsAt: null,
-      });
-
-      const status = await checkRateLimitStatus();
-
-      expect(status).not.toBeNull();
-      expect(status!.isLimited).toBe(true);
-      expect(status!.fiveHourLimited).toBe(true);
-      expect(status!.weeklyLimited).toBe(false);
-      expect(status!.timeUntilResetMs).toBeGreaterThan(0);
-      expect(status!.timeUntilResetMs).toBeLessThanOrEqual(3600000);
-    });
-
-    it('should detect when weekly limit is reached', async () => {
-      vi.mocked(getUsage).mockResolvedValue({
-        fiveHourPercent: 50,
-        weeklyPercent: 100,
-        fiveHourResetsAt: null,
-        weeklyResetsAt: new Date(Date.now() + 86400000),
-      });
-
-      const status = await checkRateLimitStatus();
-
-      expect(status).not.toBeNull();
-      expect(status!.isLimited).toBe(true);
-      expect(status!.fiveHourLimited).toBe(false);
-      expect(status!.weeklyLimited).toBe(true);
-    });
-
-    it('should handle transition from limited to not limited', async () => {
-      // First call: limited
-      vi.mocked(getUsage).mockResolvedValueOnce({
-        fiveHourPercent: 100,
-        weeklyPercent: 50,
-        fiveHourResetsAt: new Date(Date.now() + 1000),
-        weeklyResetsAt: null,
-      });
-
-      const limitedStatus = await checkRateLimitStatus();
-      expect(limitedStatus!.isLimited).toBe(true);
-
-      // Second call: no longer limited
-      vi.mocked(getUsage).mockResolvedValueOnce({
-        fiveHourPercent: 0,
-        weeklyPercent: 50,
-        fiveHourResetsAt: null,
-        weeklyResetsAt: null,
-      });
-
-      const clearedStatus = await checkRateLimitStatus();
-      expect(clearedStatus!.isLimited).toBe(false);
-    });
+  it('reports unavailable quota status through the public API', async () => {
+    await expect(checkRateLimitStatus()).resolves.toBeNull();
   });
 
   describe('Scenario: tmux pane analysis accuracy', () => {
@@ -128,7 +65,7 @@ What would you like to do?
 
       const result = analyzePaneContent(realWorldContent);
 
-      expect(result.hasClaudeCode).toBe(true);
+      expect(result.hasDroid).toBe(true);
       expect(result.hasRateLimitMessage).toBe(true);
       expect(result.isBlocked).toBe(true);
       expect(result.rateLimitType).toBe('five_hour');
@@ -152,7 +89,7 @@ Enter choice: `;
 
       const result = analyzePaneContent(weeklyLimitContent);
 
-      expect(result.hasClaudeCode).toBe(true);
+      expect(result.hasDroid).toBe(true);
       expect(result.hasRateLimitMessage).toBe(true);
       expect(result.isBlocked).toBe(true);
       expect(result.rateLimitType).toBe('weekly');
@@ -175,7 +112,7 @@ Just describe what you need!
 
       const result = analyzePaneContent(normalContent);
 
-      expect(result.hasClaudeCode).toBe(true);
+      expect(result.hasDroid).toBe(true);
       expect(result.hasRateLimitMessage).toBe(false);
       expect(result.isBlocked).toBe(false);
     });
@@ -191,9 +128,9 @@ $ `;
 
       const result = analyzePaneContent(unrelatedContent);
 
-      expect(result.hasClaudeCode).toBe(false);
+      expect(result.hasDroid).toBe(false);
       expect(result.hasRateLimitMessage).toBe(true);
-      expect(result.isBlocked).toBe(false); // No Claude context
+      expect(result.isBlocked).toBe(false); // No Droid context
     });
 
     it('should handle edge case: old rate limit message scrolled up', () => {
@@ -245,7 +182,7 @@ Assistant: I can help with more tasks.
             paneIndex: 0,
             isActive: true,
             analysis: {
-              hasClaudeCode: true,
+              hasDroid: true,
               hasRateLimitMessage: true,
               isBlocked: true,
               rateLimitType: 'five_hour',
@@ -303,22 +240,6 @@ Assistant: I can help with more tasks.
   });
 
   describe('Scenario: Error handling and edge cases', () => {
-    it('should handle OAuth credentials not available', async () => {
-      vi.mocked(getUsage).mockResolvedValue(null);
-
-      const status = await checkRateLimitStatus();
-
-      expect(status).toBeNull();
-    });
-
-    it('should handle API timeout gracefully', async () => {
-      vi.mocked(getUsage).mockRejectedValue(new Error('ETIMEDOUT'));
-
-      const status = await checkRateLimitStatus();
-
-      expect(status).toBeNull();
-    });
-
     it('should handle tmux not installed', () => {
       vi.mocked(spawnSync).mockReturnValue({
         status: 1,
@@ -363,7 +284,7 @@ Rate limit reached
 `;
 
       const lowConfidenceContent = `
-Claude
+Droid
 rate limit
 `;
 

@@ -1,5 +1,4 @@
 {
-  "$schema": "https://raw.githubusercontent.com/anthropics/factory-droid/main/hooks.schema.json",
   "hooks": [
     {
       "name": "auto-format-on-save",

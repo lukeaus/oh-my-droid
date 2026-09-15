@@ -14,9 +14,8 @@ export {
 
 export type { McpServerConfig, McpServersConfig } from './servers.js';
 
-// OMC Tools Server - in-process MCP server for custom tools
+// Names of custom tools served by the standalone MCP bridge
 export {
-  omdToolsServer,
   omcToolNames,
   getOmcToolNames
-} from './omc-tools-server.js';
+} from './tool-names.js';

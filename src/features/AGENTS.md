@@ -1,5 +1,5 @@
 <!-- Parent: ../AGENTS.md -->
-<!-- Generated: 2026-01-28 | Updated: 2026-01-31 -->
+<!-- Generated: 2026-01-28 | Updated: 2026-07-24 -->
 
 # features
 
@@ -17,7 +17,7 @@ This directory contains self-contained feature modules that enhance orchestratio
 - **state-manager/** - Standardized state file management
 - **context-injector/** - Context enhancement injection
 - **background-agent/** - Background task concurrency
-- **rate-limit-wait/** - API rate limit handling
+- **rate-limit-wait/** - Factory Droid pane detection (`PaneAnalysisResult.hasDroid`); quota status is unavailable until Factory provides a supported API
 
 ## Key Files
 
@@ -42,7 +42,7 @@ This directory contains self-contained feature modules that enhance orchestratio
 | `state-manager/` | Standardized state file locations |
 | `context-injector/` | Context enhancement for prompts |
 | `background-agent/` | Background task management |
-| `rate-limit-wait/` | Rate limit detection and waiting |
+| `rate-limit-wait/` | Droid tmux detection via `DROID_PATTERNS`; quota API currently unavailable |
 | `builtin-skills/` | Built-in skill definitions |
 
 ## For AI Agents

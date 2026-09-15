@@ -138,7 +138,7 @@ describe('limitOutputLines', () => {
   describe('Issue #222 scenario simulation', () => {
     it('prevents input field shrinkage by limiting excessive HUD output', () => {
       const excessiveOutput = [
-        '[OMD] Rate: 45% | Context: 30%',
+        '[OMD] Context: 30%',
         'agents: architect(5m) | executor(2m) | explorer',
         'todos: [1/5] Implementing feature X',
         'Analytics: $1.23 | 50k tokens | Cache: 67%',

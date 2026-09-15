@@ -148,22 +148,6 @@ export interface PrdStateForHud {
 // Render Context
 // ============================================================================
 
-export interface RateLimits {
-  /** 5-hour rolling window usage percentage (0-100) - all models combined */
-  fiveHourPercent: number;
-  /** Weekly usage percentage (0-100) - all models combined */
-  weeklyPercent: number;
-  /** When the 5-hour limit resets (null if unavailable) */
-  fiveHourResetsAt?: Date | null;
-  /** When the weekly limit resets (null if unavailable) */
-  weeklyResetsAt?: Date | null;
-
-  /** Sonnet-specific weekly usage percentage (0-100), if available from API */
-  sonnetWeeklyPercent?: number;
-  /** Sonnet weekly reset time */
-  sonnetWeeklyResetsAt?: Date | null;
-}
-
 export interface HudRenderContext {
   /** Context window percentage (0-100) */
   contextPercent: number;
@@ -200,9 +184,6 @@ export interface HudRenderContext {
 
   /** Last activated skill from transcript */
   lastSkill: SkillInvocation | null;
-
-  /** Rate limits (5h and weekly) */
-  rateLimits: RateLimits | null;
 
   /** Pending permission state (heuristic-based) */
   pendingPermission: PendingPermission | null;
@@ -253,7 +234,6 @@ export interface HudElementConfig {
   cwd: boolean;              // Show working directory
   cwdFormat: CwdFormat;      // Path display format
   omdLabel: boolean;
-  rateLimits: boolean;  // Show 5h and weekly rate limits
   ralph: boolean;
   autopilot: boolean;
   team: boolean;
@@ -300,7 +280,6 @@ export const DEFAULT_HUD_CONFIG: HudConfig = {
     cwd: false,               // Disabled by default for backward compatibility
     cwdFormat: 'relative',
     omdLabel: true,
-    rateLimits: true,  // Show rate limits by default
     ralph: true,
     autopilot: true,
     team: true,
@@ -336,7 +315,6 @@ export const PRESET_CONFIGS: Record<HudPreset, Partial<HudElementConfig>> = {
     cwd: false,
     cwdFormat: 'folder',
     omdLabel: true,
-    rateLimits: true,
     ralph: true,
     autopilot: true,
     team: true,
@@ -362,7 +340,6 @@ export const PRESET_CONFIGS: Record<HudPreset, Partial<HudElementConfig>> = {
     cwd: false,
     cwdFormat: 'folder',
     omdLabel: false,
-    rateLimits: false,
     ralph: false,
     autopilot: false,
     prdStory: false,
@@ -387,7 +364,6 @@ export const PRESET_CONFIGS: Record<HudPreset, Partial<HudElementConfig>> = {
     cwd: false,
     cwdFormat: 'relative',
     omdLabel: true,
-    rateLimits: true,
     ralph: true,
     autopilot: true,
     team: true,
@@ -413,7 +389,6 @@ export const PRESET_CONFIGS: Record<HudPreset, Partial<HudElementConfig>> = {
     cwd: false,
     cwdFormat: 'relative',
     omdLabel: true,
-    rateLimits: true,
     ralph: true,
     autopilot: true,
     team: true,
@@ -439,7 +414,6 @@ export const PRESET_CONFIGS: Record<HudPreset, Partial<HudElementConfig>> = {
     cwd: false,
     cwdFormat: 'relative',
     omdLabel: true,
-    rateLimits: false,
     ralph: true,
     autopilot: true,
     team: true,
@@ -465,7 +439,6 @@ export const PRESET_CONFIGS: Record<HudPreset, Partial<HudElementConfig>> = {
     cwd: false,
     cwdFormat: 'relative',
     omdLabel: true,
-    rateLimits: true,
     ralph: true,
     autopilot: true,
     team: true,

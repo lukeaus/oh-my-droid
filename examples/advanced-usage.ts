@@ -11,7 +11,7 @@
 import {
   createDroidSession,
   getAgentDefinitions,
-  getDroidSystemPrompt,
+  getOmcSystemPrompt,
   getDefaultMcpServers
 } from '../src/index.js';
 
@@ -46,8 +46,8 @@ async function main() {
   console.log('Example 2: Agent Definitions');
 
   const agents = getAgentDefinitions({
-    oracle: {
-      // Override oracle's prompt for a specific use case
+    architect: {
+      // Override architect's prompt for a specific use case
       prompt: 'You are a security-focused code reviewer...'
     }
   });
@@ -61,7 +61,7 @@ async function main() {
   // Example 3: Custom system prompt
   console.log('Example 3: Custom System Prompt');
 
-  const customPrompt = getDroidSystemPrompt({
+  const customPrompt = getOmcSystemPrompt({
     includeContinuation: true,
     customAddition: `
 ## Project-Specific Instructions
@@ -149,38 +149,23 @@ Always:
   // Example 6: Building a custom tool integration
   console.log('Example 6: Tool Integration Pattern');
   console.log(`
-// Pattern for adding custom tools:
+// Register a standalone stdio MCP server, not an in-process SDK server.
+// The referenced script must implement the MCP protocol.
+import { createDroidSession } from 'oh-my-droid';
 
-import { createSdkMcpServer, tool } from '@anthropic-ai/claude-agent-sdk';
-import { z } from 'zod';
-import { createOmcSession } from 'oh-my-droid';
-
-// Create custom MCP server with your tools
-const customTools = createSdkMcpServer({
-  name: 'my-custom-tools',
-  version: '1.0.0',
-  tools: [
-    tool(
-      'deploy_to_staging',
-      'Deploy the current branch to staging environment',
-      { branch: z.string().optional() },
-      async (args) => {
-        // Your deployment logic here
-        return { content: [{ type: 'text', text: 'Deployed!' }] };
-      }
-    )
-  ]
-});
-
-// Create session and merge custom MCP server
 const session = createDroidSession();
 const options = {
   ...session.queryOptions.options,
   mcpServers: {
     ...session.queryOptions.options.mcpServers,
-    'my-custom-tools': customTools
+    'my-custom-tools': {
+      command: 'node',
+      args: ['/absolute/path/to/custom-mcp-server.js']
+    }
   }
 };
+// Factory Droid itself loads MCP servers from its MCP configuration.
+// The plugin's built-in tools remain registered separately under server id "t".
 `);
 
 }

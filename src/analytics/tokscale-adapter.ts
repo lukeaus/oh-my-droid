@@ -8,6 +8,8 @@
 
 import { ModelPricing, PRICING } from './types.js';
 
+export const TOKSCALE_SOURCES = ['droid'] as const;
+
 /**
  * Interface for the tokscale adapter - wraps tokscale's native API
  */
@@ -128,7 +130,7 @@ export async function getTokscaleAdapter(): Promise<TokscaleAdapter> {
       getReport: async () => {
         try {
           // Use getModelReport which is the high-level API that works
-          const report = await tokscale.getModelReport({ sources: ['claude'] });
+          const report = await tokscale.getModelReport({ sources: TOKSCALE_SOURCES });
 
           // Convert tokscale ModelReport to our TokscaleReport
           // Field mapping: totalInput -> totalInputTokens, totalOutput -> totalOutputTokens, etc.

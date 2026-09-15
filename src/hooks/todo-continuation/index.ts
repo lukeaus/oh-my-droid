@@ -62,10 +62,10 @@ export interface Todo {
  * tool schema. The file structure ~/.factory/tasks/{sessionId}/{taskId}.json is inferred
  * from Factory Droid's implementation and may change in future versions.
  *
- * As of 2025-01, Anthropic has not published official documentation for the Task system
- * file format. This implementation should be verified empirically when issues arise.
+ * This file format is inferred rather than a documented Factory API contract.
+ * Verify the implementation empirically when issues arise.
  *
- * @see https://docs.anthropic.com/en/docs/factory-droid (check for updates)
+ * @see https://docs.factory.ai (check for updates)
  */
 export interface Task {
   id: string;

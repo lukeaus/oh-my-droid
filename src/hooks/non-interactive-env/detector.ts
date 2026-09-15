@@ -3,10 +3,6 @@ export function isNonInteractive(): boolean {
     return true
   }
 
-  if (process.env.CLAUDE_CODE_RUN === "true" || process.env.CLAUDE_CODE_NON_INTERACTIVE === "true") {
-    return true
-  }
-
   if (process.env.GITHUB_ACTIONS === "true") {
     return true
   }

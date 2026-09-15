@@ -21,7 +21,7 @@ export function toForwardSlash(path: string): string {
 /**
  * Get Factory Droid config directory path
  */
-export function getClaudeConfigDir(): string {
+export function getFactoryConfigDir(): string {
   return join(homedir(), '.factory');
 }
 

@@ -43,7 +43,7 @@ When a user prompt contains trigger keywords, the relevant skills are automatica
 
 **Features:**
 - Detects Write/Edit operations on source files (.ts, .py, .go, etc.)
-- Excludes system/config paths (.omd/, .factory/, CLAUDE.md, etc.)
+- Excludes system/config paths (.omd/, .factory/, FACTORY.md, AGENTS.md)
 - Counts incomplete todos to suggest boulder mode
 - Provides soft warnings with delegation recommendations
 
@@ -52,11 +52,17 @@ When a user prompt contains trigger keywords, the relevant skills are automatica
 - Editing Python/Go/Rust files
 - Editing other source code files
 
-**Allowed Paths (no warning):**
+**Allowed Path Patterns (no warning):**
+
+The allowlist in `templates/hooks/pre-tool-use.mjs` matches:
+
 - `.omd/` - oh-my-droid configuration
 - `.factory/` - Factory configuration
-- `.claude/` - Claude configuration
-- `CLAUDE.md`, `AGENTS.md`, `README.md` - Documentation
+- `/.factory/` - Factory configuration within a path
+- `FACTORY.md$` - Paths ending in `FACTORY.md`
+- `AGENTS.md$` - Paths ending in `AGENTS.md`
+
+These are allowlist patterns, not the complete warning criteria: files without a source-code extension also pass without a warning.
 
 ### 3. post-tool-verifier.mjs
 

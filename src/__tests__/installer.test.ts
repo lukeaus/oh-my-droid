@@ -1,4 +1,5 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { execSync } from 'child_process';
 import {
   VERSION,
   FACTORY_CONFIG_DIR,
@@ -7,11 +8,16 @@ import {
   SKILLS_DIR,
   HOOKS_DIR,
   isRunningAsPlugin,
+  isDroidInstalled,
 } from '../installer/index.js';
+import { getFactoryConfigDir, getHooksDir } from '../installer/hooks.js';
+import { getFactoryConfigDir as getFactoryConfigPath } from '../utils/paths.js';
 import { join, dirname } from 'path';
 import { homedir } from 'os';
 import { readdirSync, readFileSync, existsSync } from 'fs';
 import { fileURLToPath } from 'url';
+
+vi.mock('child_process', () => ({ execSync: vi.fn() }));
 
 /**
  * Get the package root directory for testing
@@ -67,7 +73,7 @@ function loadCommandDefinitions(): Record<string, string> {
 /**
  * Load FACTORY.md content for testing
  */
-function loadClaudeMdContent(): string {
+function loadFactoryMdContent(): string {
   const factoryMdPath = join(getPackageDir(), 'docs', 'FACTORY.md');
 
   if (!existsSync(factoryMdPath)) {
@@ -81,7 +87,24 @@ describe('Installer Constants', () => {
   // Load definitions once for all tests
   const AGENT_DEFINITIONS = loadAgentDefinitions();
   const COMMAND_DEFINITIONS = loadCommandDefinitions();
-  const CLAUDE_MD_CONTENT = loadClaudeMdContent();
+  const FACTORY_MD_CONTENT = loadFactoryMdContent();
+
+  describe('isDroidInstalled', () => {
+    afterEach(() => vi.resetAllMocks());
+
+    it('checks for the Factory Droid executable', () => {
+      const exec = vi.mocked(execSync).mockReturnValue('/usr/local/bin/droid');
+      expect(isDroidInstalled()).toBe(true);
+      expect(exec).toHaveBeenCalledWith(process.platform === 'win32' ? 'where droid' : 'which droid', {
+        encoding: 'utf-8', stdio: 'pipe',
+      });
+    });
+
+    it('returns false when Droid is not installed', () => {
+      vi.mocked(execSync).mockImplementation(() => { throw new Error('not found'); });
+      expect(isDroidInstalled()).toBe(false);
+    });
+  });
 
   describe('AGENT_DEFINITIONS', () => {
     it('should contain expected core droids', () => {
@@ -216,11 +239,11 @@ describe('Installer Constants', () => {
     });
   });
 
-  describe('CLAUDE_MD_CONTENT', () => {
+  describe('FACTORY_MD_CONTENT', () => {
     it('should be valid markdown', () => {
-      expect(typeof CLAUDE_MD_CONTENT).toBe('string');
-      expect(CLAUDE_MD_CONTENT.length).toBeGreaterThan(100);
-      expect(CLAUDE_MD_CONTENT).toMatch(/^#\s+/m); // Has headers
+      expect(typeof FACTORY_MD_CONTENT).toBe('string');
+      expect(FACTORY_MD_CONTENT.length).toBeGreaterThan(100);
+      expect(FACTORY_MD_CONTENT).toMatch(/^#\s+/m); // Has headers
     });
 
     it('should contain essential sections', () => {
@@ -233,7 +256,7 @@ describe('Installer Constants', () => {
       ];
 
       for (const section of essentialSections) {
-        expect(CLAUDE_MD_CONTENT).toContain(section);
+        expect(FACTORY_MD_CONTENT).toContain(section);
       }
     });
 
@@ -251,24 +274,24 @@ describe('Installer Constants', () => {
 
       for (const agent of keyAgents) {
         // Agents appear in tables and delegation examples
-        expect(CLAUDE_MD_CONTENT).toContain(agent);
+        expect(FACTORY_MD_CONTENT).toContain(agent);
       }
     });
 
     it('should include tiered agent routing table', () => {
       // Verify the Smart Model Routing section and agent tiers exist
-      expect(CLAUDE_MD_CONTENT).toContain('Smart Model Routing');
-      expect(CLAUDE_MD_CONTENT).toContain('light');
-      expect(CLAUDE_MD_CONTENT).toContain('medium');
-      expect(CLAUDE_MD_CONTENT).toContain('heavy');
+      expect(FACTORY_MD_CONTENT).toContain('Smart Model Routing');
+      expect(FACTORY_MD_CONTENT).toContain('light');
+      expect(FACTORY_MD_CONTENT).toContain('medium');
+      expect(FACTORY_MD_CONTENT).toContain('heavy');
       // Agent names appear in tier tables
-      expect(CLAUDE_MD_CONTENT).toContain('explore');
-      expect(CLAUDE_MD_CONTENT).toContain('executor-low');
+      expect(FACTORY_MD_CONTENT).toContain('explore');
+      expect(FACTORY_MD_CONTENT).toContain('executor-low');
     });
 
     it('should document magic keywords and compatibility commands', () => {
       // New FACTORY.md has "Magic Keywords" instead of slash commands
-      expect(CLAUDE_MD_CONTENT).toContain('Magic Keywords');
+      expect(FACTORY_MD_CONTENT).toContain('Magic Keywords');
 
       // Check for key keywords in the table
       const keywords = [
@@ -279,17 +302,17 @@ describe('Installer Constants', () => {
       ];
 
       for (const keyword of keywords) {
-        expect(CLAUDE_MD_CONTENT).toContain(keyword);
+        expect(FACTORY_MD_CONTENT).toContain(keyword);
       }
 
       // Verify migration section exists
-      expect(CLAUDE_MD_CONTENT).toContain('Migration');
+      expect(FACTORY_MD_CONTENT).toContain('Migration');
     });
 
     it('should contain markdown tables', () => {
       // Check for table structure
-      expect(CLAUDE_MD_CONTENT).toMatch(/\|[^\n]+\|/); // Contains pipes
-      expect(CLAUDE_MD_CONTENT).toMatch(/\|[-\s]+\|/); // Contains separator row
+      expect(FACTORY_MD_CONTENT).toMatch(/\|[^\n]+\|/); // Contains pipes
+      expect(FACTORY_MD_CONTENT).toMatch(/\|[-\s]+\|/); // Contains separator row
     });
   });
 
@@ -311,6 +334,9 @@ describe('Installer Constants', () => {
       const expectedBase = join(homedir(), '.factory');
 
       expect(FACTORY_CONFIG_DIR).toBe(expectedBase);
+      expect(getFactoryConfigDir()).toBe(expectedBase);
+      expect(getFactoryConfigPath()).toBe(expectedBase);
+      expect(getHooksDir()).toBe(join(expectedBase, 'hooks'));
       expect(AGENTS_DIR).toBe(join(expectedBase, 'droids'));
       expect(COMMANDS_DIR).toBe(join(expectedBase, 'commands'));
       expect(SKILLS_DIR).toBe(join(expectedBase, 'skills'));
@@ -347,7 +373,7 @@ describe('Installer Constants', () => {
     });
 
     it('should have agents referenced in FACTORY.md exist in AGENT_DEFINITIONS', () => {
-      const agentMatches = CLAUDE_MD_CONTENT.matchAll(/\`([a-z-]+)\`\s*\|\s*(light|medium|heavy)/g);
+      const agentMatches = FACTORY_MD_CONTENT.matchAll(/\`([a-z-]+)\`\s*\|\s*(light|medium|heavy)/g);
 
       for (const match of agentMatches) {
         const agentName = match[1];
@@ -462,7 +488,7 @@ describe('Installer Constants', () => {
       const allContent = [
         ...Object.values(AGENT_DEFINITIONS),
         ...Object.values(COMMAND_DEFINITIONS),
-        CLAUDE_MD_CONTENT,
+        FACTORY_MD_CONTENT,
       ];
 
       // Note: "TODO" appears intentionally in "Todo_Discipline", "TodoWrite" tool, and "TODO OBSESSION"

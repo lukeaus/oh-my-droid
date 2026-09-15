@@ -111,6 +111,8 @@ async function atomicWriteState(path: string, data: object) {
 
 ### M3: OAuth Token Response Validation
 
+**4.0.0 update (unreleased):** The affected `src/hud/usage-api.ts` module and its Anthropic OAuth credential handling are removed. The finding below is retained as historical context, not a current remediation task.
+
 **Location:** `src/hud/usage-api.ts:60-80`
 
 **Issue:** Token refresh response is not strictly validated before updating credentials.

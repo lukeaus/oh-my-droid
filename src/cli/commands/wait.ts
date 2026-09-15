@@ -20,18 +20,18 @@ import chalk from 'chalk';
 import {
   checkRateLimitStatus,
   formatRateLimitStatus,
-  formatTimeUntilReset,
   isTmuxAvailable,
   isInsideTmux,
   getDaemonStatus,
   startDaemon,
   stopDaemon,
   detectBlockedPanes,
-  formatDaemonState,
   runDaemonForeground,
   isDaemonRunning,
 } from '../../features/rate-limit-wait/index.js';
 import type { DaemonConfig } from '../../features/rate-limit-wait/types.js';
+
+const QUOTA_UNAVAILABLE = 'Factory quota monitoring and automatic resume are unavailable: no supported Factory quota API.';
 
 export interface WaitOptions {
   json?: boolean;
@@ -86,8 +86,10 @@ export async function waitCommand(options: WaitOptions): Promise<void> {
   console.log(chalk.bold('\n🕐 Rate Limit Status\n'));
 
   if (!rateLimitStatus) {
-    console.log(chalk.yellow('Unable to check rate limits (OAuth credentials required)\n'));
-    console.log(chalk.gray('Rate limit monitoring requires Droid Pro/Max subscription.'));
+    console.log(chalk.yellow(QUOTA_UNAVAILABLE));
+    if (daemonRunning) {
+      console.log(chalk.gray('Stop the existing daemon with: omd wait --stop'));
+    }
     return;
   }
 
@@ -160,7 +162,7 @@ export async function waitStatusCommand(options: WaitStatusOptions): Promise<voi
     }
     console.log(chalk.dim(`    Last checked: ${rateLimitStatus.lastCheckedAt.toLocaleTimeString()}`));
   } else {
-    console.log(chalk.yellow('  ? Unable to check (no OAuth credentials?)'));
+    console.log(chalk.yellow(`  ${QUOTA_UNAVAILABLE}`));
   }
 
   // Daemon status
@@ -189,7 +191,7 @@ export async function waitStatusCommand(options: WaitStatusOptions): Promise<voi
     }
   } else {
     console.log(chalk.yellow('  ⚠ Not installed'));
-    console.log(chalk.gray('    Install tmux for auto-resume functionality'));
+    console.log(chalk.gray('    Install tmux for session detection'));
   }
 
   console.log('');
@@ -210,15 +212,13 @@ export async function waitDaemonCommand(
   if (action === 'start') {
     if (options.foreground) {
       // Run in foreground (blocking)
+      console.log(chalk.yellow(QUOTA_UNAVAILABLE));
       await runDaemonForeground(config);
     } else {
       const result = startDaemon(config);
       if (result.success) {
         console.log(chalk.green(`✓ ${result.message}`));
-        console.log(chalk.gray('\nThe daemon will:'));
-        console.log(chalk.gray('  • Poll rate limit status every minute'));
-        console.log(chalk.gray('  • Track blocked Factory Droid sessions in tmux'));
-        console.log(chalk.gray('  • Auto-resume sessions when rate limit clears'));
+        console.log(chalk.yellow(QUOTA_UNAVAILABLE));
         console.log(chalk.gray('\nUse "omd wait status" to check daemon status'));
         console.log(chalk.gray('Use "omd wait daemon stop" to stop the daemon'));
       } else {
@@ -249,7 +249,7 @@ export async function waitDaemonCommand(
 export async function waitDetectCommand(options: WaitDetectOptions): Promise<void> {
   if (!isTmuxAvailable()) {
     console.error(chalk.yellow('⚠ tmux is not installed'));
-    console.log(chalk.gray('Install tmux to use session detection and auto-resume'));
+    console.log(chalk.gray('Install tmux to use session detection'));
     process.exit(1);
   }
 
@@ -269,8 +269,8 @@ export async function waitDetectCommand(options: WaitDetectOptions): Promise<voi
   console.log(result.message);
 
   if (result.state?.blockedPanes && result.state.blockedPanes.length > 0) {
-    console.log(chalk.gray('\nTip: Start the daemon to auto-resume when rate limit clears:'));
-    console.log(chalk.gray('  omd wait daemon start'));
+    console.log(chalk.yellow(`\n${QUOTA_UNAVAILABLE}`));
+    console.log(chalk.gray('Resume blocked sessions manually after confirming quota availability.'));
   }
 
   // Also show rate limit status

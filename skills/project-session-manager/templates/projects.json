@@ -6,8 +6,8 @@
       "default_base": "main"
     },
     "cc": {
-      "repo": "anthropics/factory-droid",
-      "local": "~/Workspace/factory-droid",
+      "repo": "lukeaus/oh-my-droid",
+      "local": "~/Workspace/oh-my-droid",
       "default_base": "main"
     }
   },
