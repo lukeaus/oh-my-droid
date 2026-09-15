@@ -3,15 +3,17 @@
 
 # agents
 
-32 specialized AI agent definitions with 3-tier model routing for optimal cost and performance.
+Agent definitions in three scope tiers. Every agent is `model: inherit`, so the
+model comes from the user's `subagentModelSettings`; the tier is what the
+dispatcher passes as `complexity`.
 
 ## Purpose
 
 This directory defines all agents available in oh-my-droid:
 
-- **12 base agents** with default model assignments
+- **12 base agents**
 - **4 specialized agents** (security-reviewer, build-fixer, tdd-guide, code-reviewer)
-- **16 tiered variants** (LOW/MEDIUM/HIGH) for smart routing
+- **16 tiered variants** (light/medium/heavy scope)
 - Prompts loaded dynamically from `/droids/*.md` files
 - Tools assigned based on agent specialization
 
@@ -20,18 +22,18 @@ This directory defines all agents available in oh-my-droid:
 | File | Description |
 |------|-------------|
 | `definitions.ts` | **Main registry** - `getAgentDefinitions()`, `omcSystemPrompt` |
-| `architect.ts` | Architecture & debugging expert (Opus) |
-| `executor.ts` | Focused task implementation (Sonnet) |
-| `explore.ts` | Fast codebase search (Haiku) |
-| `designer.ts` | UI/UX specialist (Sonnet) |
-| `researcher.ts` | Documentation research (Sonnet) |
-| `writer.ts` | Technical documentation (Haiku) |
-| `vision.ts` | Visual/image analysis (Sonnet) |
-| `critic.ts` | Critical plan review (Opus) |
-| `analyst.ts` | Pre-planning analysis (Opus) |
-| `planner.ts` | Strategic planning (Opus) |
-| `qa-tester.ts` | CLI/service testing with tmux (Sonnet) |
-| `scientist.ts` | Data analysis & hypothesis testing (Sonnet) |
+| `architect.ts` | Architecture & debugging expert |
+| `executor.ts` | Focused task implementation |
+| `explore.ts` | Fast codebase search |
+| `designer.ts` | UI/UX specialist |
+| `researcher.ts` | Documentation research |
+| `writer.ts` | Technical documentation |
+| `vision.ts` | Visual/image analysis |
+| `critic.ts` | Critical plan review |
+| `analyst.ts` | Pre-planning analysis |
+| `planner.ts` | Strategic planning |
+| `qa-tester.ts` | CLI/service testing with tmux |
+| `scientist.ts` | Data analysis & hypothesis testing |
 | `index.ts` | Exports all agents and utilities |
 
 ## For AI Agents
@@ -52,48 +54,47 @@ const agents = getAgentDefinitions();
   description: 'Architecture & Debugging Advisor',
   prompt: '...',  // Loaded from /droids/architect.md
   tools: ['Read', 'Glob', 'Grep', 'WebSearch', 'WebFetch'],
-  model: 'opus',
-  defaultModel: 'opus'
+  model: 'inherit',
+  defaultModel: 'inherit'
 }
 ```
 
 #### Agent Selection Guide
 
-| Task Type | Best Agent | Model | Tools |
-|-----------|------------|-------|-------|
-| Complex debugging | `architect` | opus | Read, Glob, Grep, WebSearch, WebFetch |
-| Quick code lookup | `architect-low` | haiku | Read, Glob, Grep |
-| Standard analysis | `architect-medium` | sonnet | Read, Glob, Grep, WebSearch, WebFetch |
-| Feature implementation | `executor` | sonnet | Read, Glob, Grep, Edit, Write, Bash, TodoWrite |
-| Simple fixes | `executor-low` | haiku | Read, Glob, Grep, Edit, Write, Bash, TodoWrite |
-| Complex refactoring | `executor-high` | opus | Read, Glob, Grep, Edit, Write, Bash, TodoWrite |
-| Fast file search | `explore` | haiku | Read, Glob, Grep |
-| Thorough search | `explore-medium` | sonnet | Read, Glob, Grep |
-| Architectural discovery | `explore-high` | opus | Read, Glob, Grep |
-| UI components | `designer` | sonnet | Read, Glob, Grep, Edit, Write, Bash |
-| Simple styling | `designer-low` | haiku | Read, Glob, Grep, Edit, Write, Bash |
-| Design systems | `designer-high` | opus | Read, Glob, Grep, Edit, Write, Bash |
-| API documentation | `researcher` | sonnet | Read, Glob, Grep, WebSearch, WebFetch |
-| Quick doc lookup | `researcher-low` | haiku | Read, Glob, Grep, WebSearch, WebFetch |
-| README/docs | `writer` | haiku | Read, Glob, Grep, Edit, Write |
-| Image analysis | `vision` | sonnet | Read, Glob, Grep |
-| Plan review | `critic` | opus | Read, Glob, Grep |
-| Requirements analysis | `analyst` | opus | Read, Glob, Grep, WebSearch |
-| Strategic planning | `planner` | opus | Read, Glob, Grep, WebSearch |
-| CLI testing | `qa-tester` | sonnet | Bash, Read, Grep, Glob, TodoWrite |
-| Production QA | `qa-tester-high` | opus | Bash, Read, Grep, Glob, TodoWrite |
-| Data analysis | `scientist` | sonnet | Read, Glob, Grep, Bash, python_repl |
-| Quick data check | `scientist-low` | haiku | Read, Glob, Grep, Bash, python_repl |
-| ML/hypothesis | `scientist-high` | opus | Read, Glob, Grep, Bash, python_repl |
-| Security audit | `security-reviewer` | opus | Read, Grep, Glob, Bash |
-| Quick security scan | `security-reviewer-low` | haiku | Read, Grep, Glob, Bash |
-| Build errors | `build-fixer` | sonnet | Read, Grep, Glob, Edit, Write, Bash |
-| Simple type errors | `build-fixer-low` | haiku | Read, Grep, Glob, Edit, Write, Bash |
-| TDD workflow | `tdd-guide` | sonnet | Read, Grep, Glob, Edit, Write, Bash |
-| Test suggestions | `tdd-guide-low` | haiku | Read, Grep, Glob, Bash |
-| Code review | `code-reviewer` | opus | Read, Grep, Glob, Bash |
-| Quick code check | `code-reviewer-low` | haiku | Read, Grep, Glob, Bash |
-
+| Task Type | Best Agent | Tools |
+|-----------|------------|-------|
+| Complex debugging | `architect` | Read, Glob, Grep, WebSearch, WebFetch |
+| Quick code lookup | `architect-low` | Read, Glob, Grep |
+| Standard analysis | `architect-medium` | Read, Glob, Grep, WebSearch, WebFetch |
+| Feature implementation | `executor` | Read, Glob, Grep, Edit, Write, Bash, TodoWrite |
+| Simple fixes | `executor-low` | Read, Glob, Grep, Edit, Write, Bash, TodoWrite |
+| Complex refactoring | `executor-high` | Read, Glob, Grep, Edit, Write, Bash, TodoWrite |
+| Fast file search | `explore` | Read, Glob, Grep |
+| Thorough search | `explore-medium` | Read, Glob, Grep |
+| Architectural discovery | `explore-high` | Read, Glob, Grep |
+| UI components | `designer` | Read, Glob, Grep, Edit, Write, Bash |
+| Simple styling | `designer-low` | Read, Glob, Grep, Edit, Write, Bash |
+| Design systems | `designer-high` | Read, Glob, Grep, Edit, Write, Bash |
+| API documentation | `researcher` | Read, Glob, Grep, WebSearch, WebFetch |
+| Quick doc lookup | `researcher-low` | Read, Glob, Grep, WebSearch, WebFetch |
+| README/docs | `writer` | Read, Glob, Grep, Edit, Write |
+| Image analysis | `vision` | Read, Glob, Grep |
+| Plan review | `critic` | Read, Glob, Grep |
+| Requirements analysis | `analyst` | Read, Glob, Grep, WebSearch |
+| Strategic planning | `planner` | Read, Glob, Grep, WebSearch |
+| CLI testing | `qa-tester` | Bash, Read, Grep, Glob, TodoWrite |
+| Production QA | `qa-tester-high` | Bash, Read, Grep, Glob, TodoWrite |
+| Data analysis | `scientist` | Read, Glob, Grep, Bash, python_repl |
+| Quick data check | `scientist-low` | Read, Glob, Grep, Bash, python_repl |
+| ML/hypothesis | `scientist-high` | Read, Glob, Grep, Bash, python_repl |
+| Security audit | `security-reviewer` | Read, Grep, Glob, Bash |
+| Quick security scan | `security-reviewer-low` | Read, Grep, Glob, Bash |
+| Build errors | `build-fixer` | Read, Grep, Glob, Edit, Write, Bash |
+| Simple type errors | `build-fixer-low` | Read, Grep, Glob, Edit, Write, Bash |
+| TDD workflow | `tdd-guide` | Read, Grep, Glob, Edit, Write, Bash |
+| Test suggestions | `tdd-guide-low` | Read, Grep, Glob, Bash |
+| Code review | `code-reviewer` | Read, Grep, Glob, Bash |
+| Quick code check | `code-reviewer-low` | Read, Grep, Glob, Bash |
 #### Creating a New Agent
 
 1. **Create agent file** (e.g., `new-agent.ts`):
@@ -105,8 +106,8 @@ export const newAgent: AgentConfig = {
   description: 'What this agent does',
   prompt: '', // Will be loaded from /droids/new-agent.md
   tools: ['Read', 'Glob', 'Grep'],
-  model: 'sonnet',
-  defaultModel: 'sonnet'
+  model: 'inherit',
+  defaultModel: 'inherit'
 };
 ```
 
@@ -115,7 +116,7 @@ export const newAgent: AgentConfig = {
 ---
 name: new-agent
 description: What this agent does
-model: claude-sonnet-4-5-20250929
+model: inherit
 tools: [Read, Glob, Grep]
 ---
 
@@ -143,27 +144,27 @@ export { newAgent } from './new-agent.js';
 
 #### Creating Tiered Variants
 
-For model routing, create LOW/MEDIUM/HIGH variants in `definitions.ts`:
+To cover a range of scopes, create light/medium/heavy variants in `definitions.ts`:
 
 ```typescript
-// Haiku variant for simple tasks
+// Low variant: narrower scope, fewer tools
 export const newAgentLow: AgentConfig = {
   name: 'new-agent-low',
-  description: 'Quick new-agent tasks (Haiku)',
+  description: 'Single-file new-agent tasks; escalates anything wider',
   prompt: loadAgentPrompt('new-agent-low'),
   tools: ['Read', 'Glob', 'Grep'],
-  model: 'haiku',
-  defaultModel: 'haiku'
+  model: 'inherit',
+  defaultModel: 'inherit'
 };
 
-// Opus variant for complex tasks
+// High variant: broader scope, more tools
 export const newAgentHigh: AgentConfig = {
   name: 'new-agent-high',
-  description: 'Complex new-agent tasks (Opus)',
+  description: 'Multi-file new-agent tasks spanning modules',
   prompt: loadAgentPrompt('new-agent-high'),
   tools: ['Read', 'Glob', 'Grep', 'WebSearch'],
-  model: 'opus',
-  defaultModel: 'opus'
+  model: 'inherit',
+  defaultModel: 'inherit'
 };
 ```
 

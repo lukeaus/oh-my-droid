@@ -1,7 +1,7 @@
 ---
 name: researcher-low
-description: Quick documentation lookups (Haiku)
-model: claude-haiku-4-5-20251001
+description: Quick documentation and API lookups: signatures, parameters, version compatibility. Escalates multi-source research and conflicting-information synthesis to researcher.
+model: inherit
 disallowedTools: Write, Edit
 ---
 

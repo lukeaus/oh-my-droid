@@ -161,16 +161,16 @@ parallel(explore, researcher) -> architect -> executor
 ### With Model Specification
 
 ```
-/pipeline explore:haiku -> architect:opus -> executor:sonnet "optimize performance"
+/pipeline explore:light -> architect:heavy -> executor:medium "optimize performance"
 ```
 
 ### With Branching
 
 ```
 /pipeline explore -> (
-  complexity:high -> architect:opus -> executor-high:opus
-  complexity:medium -> executor:sonnet
-  complexity:low -> executor-low:haiku
+  complexity:heavy -> architect:heavy -> executor-high:heavy
+  complexity:medium -> executor:medium
+  complexity:light -> executor-low:light
 ) "fix reported issues"
 ```
 
@@ -191,7 +191,7 @@ Each agent in the pipeline receives structured context from the previous stage:
     "previous_stages": [
       {
         "agent": "explore",
-        "model": "haiku",
+        "complexity": "light",
         "findings": "...",
         "files_identified": ["src/auth.ts", "src/user.ts"]
       }
@@ -224,7 +224,7 @@ When an agent fails, the pipeline can:
 
 **Pattern 1: Fallback to Higher Tier**
 ```
-executor-low -> on-error -> executor:sonnet
+executor-low -> on-error -> executor:medium
 ```
 
 **Pattern 2: Consult Architect**
@@ -251,21 +251,21 @@ Pipelines maintain state in `.omd/pipeline-state.json`:
     {
       "name": "explore",
       "agent": "explore",
-      "model": "haiku",
+      "complexity": "light",
       "status": "completed",
       "output": "..."
     },
     {
       "name": "architect",
       "agent": "architect",
-      "model": "opus",
+      "complexity": "heavy",
       "status": "in_progress",
       "started_at": "2026-01-23T10:30:00Z"
     },
     {
       "name": "executor",
       "agent": "executor",
-      "model": "sonnet",
+      "complexity": "medium",
       "status": "pending"
     }
   ],
@@ -292,8 +292,8 @@ Based on agent output, route to different paths:
 
 ```
 explore -> {
-  if files_found > 5 -> architect:opus -> executor-high:opus
-  if files_found <= 5 -> executor:sonnet
+  if files_found > 5 -> architect:heavy -> executor-high:heavy
+  if files_found <= 5 -> executor:medium
 }
 ```
 
@@ -331,7 +331,7 @@ When parallel agents complete:
 
 ### Example 3: Custom Chain
 ```
-/pipeline explore:haiku -> architect:opus -> executor:sonnet -> tdd-guide:sonnet "refactor auth module"
+/pipeline explore:light -> architect:heavy -> executor:medium -> tdd-guide:medium "refactor auth module"
 ```
 
 ### Example 4: Research-Driven Implementation
@@ -361,7 +361,7 @@ Pipelines can be used within other skills:
 ## Best Practices
 
 1. **Start with presets** - Use built-in pipelines before creating custom ones
-2. **Match model to complexity** - Don't waste opus on simple tasks
+2. **Match model to complexity** - Don't waste heavy on simple tasks
 3. **Keep stages focused** - Each agent should have one clear responsibility
 4. **Use parallel stages** - Run independent work simultaneously
 5. **Verify at checkpoints** - Use architect or critic to verify progress

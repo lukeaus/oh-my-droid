@@ -38,7 +38,7 @@ export const analystAgent: AgentConfig = {
   description: `Pre-planning consultant that analyzes requests before implementation to identify hidden requirements, edge cases, and potential risks. Use before creating a work plan.`,
   prompt: loadAgentPrompt('analyst'),
   tools: ['Read', 'Grep', 'Glob', 'WebSearch'],
-  model: 'opus',
-  defaultModel: 'opus',
+  model: 'inherit',
+  defaultModel: 'inherit',
   metadata: ANALYST_PROMPT_METADATA,
 };

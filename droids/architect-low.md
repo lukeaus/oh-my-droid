@@ -1,7 +1,7 @@
 ---
 name: architect-low
-description: Quick code questions & simple lookups (Haiku)
-model: claude-haiku-4-5-20251001
+description: Single-file code questions and symbol lookups, read-only. Escalates cross-file dependency tracing, architecture questions, and root cause analysis to architect.
+model: inherit
 disallowedTools: Write, Edit
 ---
 

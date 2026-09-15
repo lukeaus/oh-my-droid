@@ -235,7 +235,6 @@ Writer Memory integrates with `.omd/notepad.md`:
 For complex character analysis:
 ```
 Task(subagent_type="oh-my-droid:architect",
-     model="claude-opus-4-5-20251101",
      prompt="Analyze 새랑's arc across all scenes...")
 ```
 

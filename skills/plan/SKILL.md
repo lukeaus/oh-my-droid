@@ -110,7 +110,7 @@ What's your reaction to this approach?
 #### Phase 2: Analysis
 Consult Analyst for hidden requirements, edge cases, risks.
 
-Task(subagent_type="oh-my-droid:analyst", model="claude-opus-4-5-20251101", prompt="Analyze requirements...")
+Task(subagent_type="oh-my-droid:analyst", prompt="Analyze requirements...")
 
 #### Phase 3: Plan Creation
 When user says "Create the plan", generate structured plan with:

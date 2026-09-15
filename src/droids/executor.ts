@@ -38,7 +38,7 @@ export const executorAgent: AgentConfig = {
   description: 'Focused task executor. Execute tasks directly. NEVER delegate or spawn other agents. Execute tasks directly, no delegation.',
   prompt: loadAgentPrompt('executor'),
   tools: ['Read', 'Write', 'Edit', 'Grep', 'Glob', 'Bash', 'lsp_diagnostics', 'lsp_diagnostics_directory', 'mcp__t__swarm'],
-  model: 'sonnet',
-  defaultModel: 'sonnet',
+  model: 'inherit',
+  defaultModel: 'inherit',
   metadata: EXECUTOR_PROMPT_METADATA
 };

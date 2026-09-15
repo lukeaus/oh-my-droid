@@ -21,7 +21,6 @@ Your task: Expand this product idea into detailed requirements and technical spe
 \`\`\`
 Task(
   subagent_type="oh-my-droid:analyst",
-  model="opus",
   prompt="REQUIREMENTS ANALYSIS for: ${escapeForPrompt(idea)}
 
 Extract and document:
@@ -43,7 +42,6 @@ After Analyst completes, spawn Architect:
 \`\`\`
 Task(
   subagent_type="oh-my-droid:architect",
-  model="opus",
   prompt="TECHNICAL SPECIFICATION for: ${escapeForPrompt(idea)}
 
 Based on the requirements analysis above, create:
@@ -88,7 +86,6 @@ Spawn Architect to create the implementation plan:
 \`\`\`
 Task(
   subagent_type="oh-my-droid:architect",
-  model="opus",
   prompt="CREATE IMPLEMENTATION PLAN
 
 Read the specification at: ${specPath}
@@ -126,7 +123,6 @@ After Architect creates the plan:
 \`\`\`
 Task(
   subagent_type="oh-my-droid:critic",
-  model="opus",
   prompt="REVIEW IMPLEMENTATION PLAN
 
 Plan file: .omd/plans/autopilot-impl.md
@@ -175,13 +171,13 @@ Ralph and Ultrawork are now active. Execute tasks in parallel where possible.
 
 \`\`\`
 // For simple tasks (single file, straightforward logic)
-Task(subagent_type="oh-my-droid:executor-low", model="haiku", prompt="...")
+Task(subagent_type="oh-my-droid:executor-low", prompt="...")
 
 // For standard implementation (feature, multiple methods)
-Task(subagent_type="oh-my-droid:executor", model="sonnet", prompt="...")
+Task(subagent_type="oh-my-droid:executor", prompt="...")
 
 // For complex work (architecture, debugging, refactoring)
-Task(subagent_type="oh-my-droid:executor-high", model="opus", prompt="...")
+Task(subagent_type="oh-my-droid:executor-high", prompt="...")
 \`\`\`
 
 ### Progress Tracking
@@ -233,7 +229,6 @@ For each failure:
 \`\`\`
 Task(
   subagent_type="oh-my-droid:architect-low",
-  model="haiku",
   prompt="Diagnose this error and suggest fix: [ERROR]"
 )
 \`\`\`
@@ -242,7 +237,6 @@ Task(
 \`\`\`
 Task(
   subagent_type="oh-my-droid:build-fixer",
-  model="sonnet",
   prompt="Fix this error with minimal changes: [ERROR]"
 )
 \`\`\`
@@ -276,7 +270,6 @@ Spawn all three architects in parallel:
 // Functional Completeness Review
 Task(
   subagent_type="oh-my-droid:architect",
-  model="opus",
   prompt="FUNCTIONAL COMPLETENESS REVIEW
 
 Read the original spec at: ${specPath}
@@ -293,7 +286,6 @@ Verdict: APPROVED (all requirements met) or REJECTED (with specific gaps)"
 // Security Review
 Task(
   subagent_type="oh-my-droid:security-reviewer",
-  model="opus",
   prompt="SECURITY REVIEW
 
 Check the implementation for:
@@ -310,7 +302,6 @@ Verdict: APPROVED (no vulnerabilities) or REJECTED (with specific issues)"
 // Code Quality Review
 Task(
   subagent_type="oh-my-droid:code-reviewer",
-  model="opus",
   prompt="CODE QUALITY REVIEW
 
 Review the implementation for:

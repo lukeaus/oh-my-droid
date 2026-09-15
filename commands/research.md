@@ -36,22 +36,22 @@ Fire independent stages in parallel via Task tool:
 
 ```
 // Stage 1 - Simple data gathering
-Task(subagent_type="oh-my-droid:scientist-low", model="claude-haiku-4-5-20251001", prompt="[RESEARCH_STAGE:1] Investigate...")
+Task(subagent_type="oh-my-droid:scientist-low", prompt="[RESEARCH_STAGE:1] Investigate...")
 
 // Stage 2 - Standard analysis
-Task(subagent_type="oh-my-droid:scientist", model="claude-sonnet-4-5-20250929", prompt="[RESEARCH_STAGE:2] Analyze...")
+Task(subagent_type="oh-my-droid:scientist", prompt="[RESEARCH_STAGE:2] Analyze...")
 
 // Stage 3 - Complex reasoning
-Task(subagent_type="oh-my-droid:scientist-high", model="claude-opus-4-5-20251101", prompt="[RESEARCH_STAGE:3] Deep analysis of...")
+Task(subagent_type="oh-my-droid:scientist-high", prompt="[RESEARCH_STAGE:3] Deep analysis of...")
 ```
 
 ### Smart Model Routing
 
-| Task Complexity | Agent | Model | Use For |
+| Task Complexity | Agent | Complexity tier | Use For |
 |-----------------|-------|-------|---------|
-| Data gathering | `scientist-low` | haiku | File enumeration, pattern counting, simple lookups |
-| Standard analysis | `scientist` | sonnet | Code analysis, pattern detection, documentation review |
-| Complex reasoning | `scientist-high` | opus | Architecture analysis, cross-cutting concerns, hypothesis validation |
+| Data gathering | `scientist-low` | light | File enumeration, pattern counting, simple lookups |
+| Standard analysis | `scientist` | medium | Code analysis, pattern detection, documentation review |
+| Complex reasoning | `scientist-high` | heavy | Architecture analysis, cross-cutting concerns, hypothesis validation |
 
 ### Concurrency Limit
 

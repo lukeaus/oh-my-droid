@@ -6,7 +6,7 @@
  * task complexity.
  */
 
-import type { ModelType } from '../../shared/types.js';
+import type { ModelIdentifier, ModelType } from '../../shared/types.js';
 
 /**
  * Complexity tier for task routing
@@ -14,21 +14,29 @@ import type { ModelType } from '../../shared/types.js';
 export type ComplexityTier = 'LOW' | 'MEDIUM' | 'HIGH';
 
 /**
- * Model tier mapping to actual models
+ * Model tier mapping.
+ *
+ * Deliberately `inherit` for every tier: the concrete model belongs to the
+ * user's `subagentModelSettings` (`/settings` -> Subagents), and a pinned
+ * snapshot ID here would go stale and quietly override that choice. Pass a
+ * `complexity` tier and let Factory resolve the model.
  */
 export const TIER_MODELS: Record<ComplexityTier, string> = {
-  LOW: 'claude-haiku-4-5-20251001',
-  MEDIUM: 'claude-sonnet-4-5-20250929',
-  HIGH: 'claude-opus-4-5-20251101',
+  LOW: 'inherit',
+  MEDIUM: 'inherit',
+  HIGH: 'inherit',
 };
 
 /**
- * Model tier to simple model type mapping
+ * Model tier to model type mapping.
+ *
+ * `inherit` for every tier, for the same reason as TIER_MODELS above: naming a
+ * vendor family here would override the user's `subagentModelSettings`.
  */
-export const TIER_TO_MODEL_TYPE: Record<ComplexityTier, ModelType> = {
-  LOW: 'haiku',
-  MEDIUM: 'sonnet',
-  HIGH: 'opus',
+export const TIER_TO_MODEL_TYPE: Record<ComplexityTier, ModelIdentifier> = {
+  LOW: 'inherit',
+  MEDIUM: 'inherit',
+  HIGH: 'inherit',
 };
 
 /**
@@ -107,7 +115,7 @@ export interface RoutingDecision {
   /** Selected model ID */
   model: string;
   /** Selected model type */
-  modelType: ModelType;
+  modelType: ModelIdentifier;
   /** Complexity tier */
   tier: ComplexityTier;
   /** Confidence score (0-1) */
@@ -143,7 +151,7 @@ export interface RoutingContext {
   /** Current agent chain depth */
   agentChainDepth?: number;
   /** Explicit model override (bypasses routing) */
-  explicitModel?: ModelType;
+  explicitModel?: ModelIdentifier;
 }
 
 /**

@@ -1,7 +1,7 @@
 ---
 name: designer
-description: UI/UX Designer-Developer for stunning interfaces (Sonnet)
-model: claude-sonnet-4-5-20250929
+description: UI/UX Designer-Developer for stunning interfaces
+model: inherit
 ---
 
 # Role: Designer-Turned-Developer

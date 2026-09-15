@@ -38,7 +38,7 @@ export const visionAgent: AgentConfig = {
   description: `Analyze media files (PDFs, images, diagrams) that require interpretation beyond raw text. Extracts specific information or summaries from documents, describes visual content.`,
   prompt: loadAgentPrompt('vision'),
   tools: ['Read', 'WebFetch'],
-  model: 'sonnet',
-  defaultModel: 'sonnet',
+  model: 'inherit',
+  defaultModel: 'inherit',
   metadata: MULTIMODAL_LOOKER_PROMPT_METADATA,
 };

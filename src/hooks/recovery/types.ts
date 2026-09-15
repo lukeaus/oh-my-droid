@@ -44,7 +44,7 @@ export interface ParsedTokenLimitError {
   errorType: string;
   /** Provider ID (e.g., 'anthropic') */
   providerID?: string;
-  /** Model ID (e.g., 'claude-3-opus-20240229') */
+  /** Model ID as reported by the provider */
   modelID?: string;
   /** Index of the problematic message */
   messageIndex?: number;

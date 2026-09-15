@@ -2,6 +2,16 @@
  * Shared types for Oh-My-Droid
  */
 
+/**
+ * Model identifier for agent configuration.
+ * 'inherit' uses the parent session / subagentModelSettings.
+ * Can also be any valid model ID string (e.g. 'custom:gpt-4o', public model ID).
+ */
+export type ModelIdentifier = 'inherit' | (string & {});
+
+/**
+ * @deprecated Use ModelIdentifier instead. Legacy 4-value model type union.
+ */
 export type ModelType = 'sonnet' | 'opus' | 'haiku' | 'inherit';
 
 export interface AgentConfig {
@@ -9,8 +19,8 @@ export interface AgentConfig {
   description: string;
   prompt: string;
   tools: string[];
-  model?: ModelType;
-  defaultModel?: ModelType;
+  model?: ModelIdentifier;
+  defaultModel?: ModelIdentifier;
 }
 
 export interface PluginConfig {
@@ -72,12 +82,6 @@ export interface PluginConfig {
     escalationEnabled?: boolean;
     /** Maximum escalation attempts */
     maxEscalations?: number;
-    /** Model mapping per tier */
-    tierModels?: {
-      LOW?: string;
-      MEDIUM?: string;
-      HIGH?: string;
-    };
     /** Agent-specific tier overrides */
     agentOverrides?: Record<string, {
       tier: 'LOW' | 'MEDIUM' | 'HIGH';

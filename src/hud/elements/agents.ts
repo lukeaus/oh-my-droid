@@ -18,50 +18,50 @@ const CYAN = '\x1b[36m';
 
 /**
  * Single-character codes for each agent type.
- * Case indicates model tier: Uppercase = Opus, lowercase = Sonnet/Haiku
+ * Case indicates scope tier: Uppercase = heavy scope (-high / base), lowercase = light/medium scope
  */
 const AGENT_TYPE_CODES: Record<string, string> = {
   // Architect variants - 'A' for Architect
-  architect: 'A',           // opus
-  'architect-medium': 'a',  // sonnet
-  'architect-low': 'a',     // haiku
+  architect: 'A',           // heavy
+  'architect-medium': 'a',  // medium
+  'architect-low': 'a',     // light
 
   // Researcher variants - 'R' for Researcher
-  researcher: 'r',          // sonnet
-  'researcher-low': 'r',    // haiku
+  researcher: 'r',          // medium
+  'researcher-low': 'r',    // light
 
   // Explore variants - 'E' for Explore
-  explore: 'e',             // haiku
-  'explore-medium': 'e',    // sonnet
+  explore: 'e',             // light
+  'explore-medium': 'e',    // medium
 
   // Designer variants - 'D' for Designer
-  designer: 'd',            // sonnet
-  'designer-low': 'd',      // haiku
-  'designer-high': 'D',     // opus
+  designer: 'd',            // medium
+  'designer-low': 'd',      // light
+  'designer-high': 'D',     // heavy
 
   // Writer - 'W' for Writer
-  writer: 'w',              // haiku
+  writer: 'w',              // light
 
   // Vision - 'V' for Vision
-  vision: 'v',              // sonnet
+  vision: 'v',              // medium
 
   // Critic - 'C' for Critic
-  critic: 'C',              // opus
+  critic: 'C',              // heavy
 
   // Analyst - 'T' for meTis (A taken by Architect)
-  analyst: 'T',             // opus
+  analyst: 'T',             // heavy
 
   // Executor variants - 'X' for eXecutor
-  executor: 'x',            // sonnet
-  'executor-low': 'x',      // haiku
-  'executor-high': 'X',     // opus
+  executor: 'x',            // medium
+  'executor-low': 'x',      // light
+  'executor-high': 'X',     // heavy
 
   // Planner - 'P' for Planner
-  planner: 'P',             // opus
+  planner: 'P',             // heavy
 
   // QA-Tester variants - 'Q' for QA
-  'qa-tester': 'q',         // sonnet
-  'qa-tester-high': 'Q',    // opus
+  'qa-tester': 'q',         // medium
+  'qa-tester-high': 'Q',    // heavy
 };
 
 /**
@@ -80,10 +80,10 @@ function getAgentCode(agentType: string, model?: string): string {
     code = shortName.charAt(0).toUpperCase();
   }
 
-  // Determine case based on model tier if code is single letter
-  if (model) {
+  // Determine case based on model tier if an explicit non-inherit model is given
+  if (model && model !== 'inherit') {
     const tier = model.toLowerCase();
-    if (tier.includes('opus')) {
+    if (tier.includes('opus') || tier.includes('heavy')) {
       code = code.toUpperCase();
     } else {
       code = code.toLowerCase();

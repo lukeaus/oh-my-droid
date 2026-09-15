@@ -8,7 +8,7 @@ Core feature modules for oh-my-droid - model routing, state management, verifica
 ## Purpose
 
 This directory contains self-contained feature modules that enhance orchestration:
-- **model-routing/** - Smart routing to Haiku/Sonnet/Opus based on task complexity
+- **model-routing/** - Complexity tier selection (LOW/MEDIUM/HIGH); the concrete model comes from the user's subagentModelSettings
 - **boulder-state/** - Plan state persistence and tracking
 - **verification/** - Reusable verification protocol
 - **notepad-wisdom/** - Plan-scoped learnings, decisions, issues
@@ -28,7 +28,6 @@ This directory contains self-contained feature modules that enhance orchestratio
 | `continuation-enforcement.ts` | Ensures task completion before stopping |
 | `auto-update.ts` | Silent version checking and updates |
 | `background-tasks.ts` | Background task execution patterns |
-| `delegation-enforcer.ts` | Enforces delegation-first protocol |
 
 ## Subdirectories
 
@@ -52,13 +51,14 @@ This directory contains self-contained feature modules that enhance orchestratio
 
 #### Model Routing
 
-Routes tasks to optimal model based on complexity signals:
+Picks a complexity tier from signals in the prompt. The tier is what callers act
+on; the concrete model comes from the user's `subagentModelSettings`.
 
 ```typescript
-import { routeToModel, extractComplexitySignals } from './model-routing';
+import { routeTask } from './model-routing';
 
-const signals = extractComplexitySignals(prompt);
-const model = routeToModel(signals); // 'haiku' | 'sonnet' | 'opus'
+const decision = routeTask({ taskPrompt: prompt });
+decision.tier; // 'LOW' | 'MEDIUM' | 'HIGH'
 ```
 
 **Signal types:**
