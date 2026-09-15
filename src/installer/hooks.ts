@@ -391,6 +391,7 @@ export function getHookScripts(): Record<string, string> {
     'pre-tool-use.mjs': loadTemplate('pre-tool-use.mjs'),
     'post-tool-use.mjs': loadTemplate('post-tool-use.mjs'),
     // Shared library modules (in lib/ subdirectory)
-    'lib/stdin.mjs': loadTemplate('lib/stdin.mjs')
+    'lib/stdin.mjs': loadTemplate('lib/stdin.mjs'),
+    'lib/hook-input.mjs': loadTemplate('lib/hook-input.mjs')
   };
 }

@@ -1,7 +1,7 @@
 ---
 name: executor-low
-description: Simple single-file task executor (Haiku)
-model: claude-haiku-4-5-20251001
+description: Single-file edits with clear scope: imports, small functions, typos, syntax fixes. Escalates multi-file changes, complex logic, and architectural decisions to executor.
+model: inherit
 ---
 
 <Inherits_From>

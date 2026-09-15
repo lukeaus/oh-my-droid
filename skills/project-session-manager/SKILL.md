@@ -37,7 +37,7 @@ Supported formats:
 {
   "aliases": {
     "omd": {
-      "repo": "MeroZemory/oh-my-droid",
+      "repo": "lukeaus/oh-my-droid",
       "local": "~/Workspace/oh-my-droid",
       "default_base": "main"
     }
@@ -389,7 +389,7 @@ if [[ ! -f ~/.psm/projects.json ]]; then
 {
   "aliases": {
     "omd": {
-      "repo": "MeroZemory/oh-my-droid",
+      "repo": "lukeaus/oh-my-droid",
       "local": "~/Workspace/oh-my-droid",
       "default_base": "main"
     }

@@ -2217,55 +2217,55 @@ var CYAN2 = "\x1B[36m";
 var AGENT_TYPE_CODES = {
   // Architect variants - 'A' for Architect
   architect: "A",
-  // opus
+  // heavy
   "architect-medium": "a",
-  // sonnet
+  // medium
   "architect-low": "a",
-  // haiku
+  // light
   // Researcher variants - 'R' for Researcher
   researcher: "r",
-  // sonnet
+  // medium
   "researcher-low": "r",
-  // haiku
+  // light
   // Explore variants - 'E' for Explore
   explore: "e",
-  // haiku
+  // light
   "explore-medium": "e",
-  // sonnet
+  // medium
   // Designer variants - 'D' for Designer
   designer: "d",
-  // sonnet
+  // medium
   "designer-low": "d",
-  // haiku
+  // light
   "designer-high": "D",
-  // opus
+  // heavy
   // Writer - 'W' for Writer
   writer: "w",
-  // haiku
+  // light
   // Vision - 'V' for Vision
   vision: "v",
-  // sonnet
+  // medium
   // Critic - 'C' for Critic
   critic: "C",
-  // opus
+  // heavy
   // Analyst - 'T' for meTis (A taken by Architect)
   analyst: "T",
-  // opus
+  // heavy
   // Executor variants - 'X' for eXecutor
   executor: "x",
-  // sonnet
+  // medium
   "executor-low": "x",
-  // haiku
+  // light
   "executor-high": "X",
-  // opus
+  // heavy
   // Planner - 'P' for Planner
   planner: "P",
-  // opus
+  // heavy
   // QA-Tester variants - 'Q' for QA
   "qa-tester": "q",
-  // sonnet
+  // medium
   "qa-tester-high": "Q"
-  // opus
+  // heavy
 };
 function getAgentCode(agentType, model) {
   const parts = agentType.split(":");
@@ -2274,9 +2274,9 @@ function getAgentCode(agentType, model) {
   if (!code) {
     code = shortName.charAt(0).toUpperCase();
   }
-  if (model) {
+  if (model && model !== "inherit") {
     const tier = model.toLowerCase();
-    if (tier.includes("opus")) {
+    if (tier.includes("opus") || tier.includes("heavy")) {
       code = code.toUpperCase();
     } else {
       code = code.toLowerCase();

@@ -9,7 +9,9 @@ import * as esbuild from 'esbuild';
 import { mkdir } from 'fs/promises';
 import { dirname } from 'path';
 
-const outfile = 'dist/hooks/skill-bridge.cjs';
+// Output to bridge/ (tracked) so skill-injector.mjs keeps its persistent
+// cross-process cache on tracked-only installs, where dist/ never ships.
+const outfile = 'bridge/skill-bridge.cjs';
 
 // Ensure output directory exists
 await mkdir(dirname(outfile), { recursive: true });

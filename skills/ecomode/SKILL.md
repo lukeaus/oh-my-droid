@@ -1,6 +1,6 @@
 ---
 name: ecomode
-description: Token-efficient parallel execution mode using Haiku and Sonnet agents
+description: Token-efficient parallel execution mode using LOW and MEDIUM tier agents
 ---
 
 # Ecomode Skill
@@ -12,7 +12,7 @@ Activates token-efficient parallel execution for pro-plan users who prioritize c
 This skill enhances the agent's capabilities by:
 
 1. **Parallel Execution**: Running multiple agents simultaneously for independent tasks
-2. **Token-Conscious Routing**: Preferring Haiku and Sonnet agents, avoiding Opus
+2. **Token-Conscious Routing**: Preferring LOW and MEDIUM tier agents, avoiding HIGH
 3. **Background Operations**: Using `run_in_background: true` for long operations
 4. **Persistence Enforcement**: Never stopping until all tasks are verified complete
 5. **Cost Optimization**: Minimizing token usage while maintaining quality
@@ -23,17 +23,17 @@ This skill enhances the agent's capabilities by:
 
 | Decision | Rule |
 |----------|------|
-| DEFAULT | Use LOW tier (Haiku) for all tasks |
-| UPGRADE | Use MEDIUM (Sonnet) only when task complexity warrants |
-| AVOID | HIGH tier (Opus) - only use for planning/critique if explicitly essential |
+| DEFAULT | Use LOW tier (light) for all tasks |
+| UPGRADE | Use medium only when task complexity warrants |
+| AVOID | heavy tier - only use for planning/critique if explicitly essential |
 
 ## Smart Model Routing (PREFER LOW TIER)
 
-**Choose tier based on task complexity: LOW (haiku) preferred → MEDIUM (sonnet) fallback → HIGH (opus) AVOID**
+**Choose tier based on task complexity: light preferred → medium fallback → heavy AVOID**
 
 ### Agent Routing Table
 
-| Domain | PREFERRED (Haiku) | FALLBACK (Sonnet) | AVOID (Opus) |
+| Domain | PREFERRED (light) | FALLBACK (medium) | AVOID (heavy) |
 |--------|-------------------|-------------------|--------------|
 | **Analysis** | `architect-low` | `architect-medium` | ~~`architect`~~ |
 | **Execution** | `executor-low` | `executor` | ~~`executor-high`~~ |
@@ -62,25 +62,24 @@ This skill enhances the agent's capabilities by:
 
 ### Routing Examples
 
-OMD auto-injects the correct `model` for built-in tiered agents when missing.
-
-If you *do* specify `model`, use full model IDs (e.g. `claude-haiku-4-5-20251001`), not shorthands.
+Omit `model`. The droid variant carries the tier (`-low`/`-medium`/`-high`) and
+the model comes from the user's `subagentModelSettings` (`/settings` -> Subagents).
 
 ```
 // Simple question → LOW tier (DEFAULT)
-Task(subagent_type="oh-my-droid:architect-low", model="claude-haiku-4-5-20251001", prompt="What does this function return?")
+Task(subagent_type="oh-my-droid:architect-low", prompt="What does this function return?")
 
 // Standard implementation → TRY LOW first
-Task(subagent_type="oh-my-droid:executor-low", model="claude-haiku-4-5-20251001", prompt="Add validation to login form")
+Task(subagent_type="oh-my-droid:executor-low", prompt="Add validation to login form")
 
 // If LOW fails, escalate to MEDIUM
-Task(subagent_type="oh-my-droid:executor", model="claude-sonnet-4-5-20250929", prompt="Add error handling to login")
+Task(subagent_type="oh-my-droid:executor", prompt="Add error handling to login")
 
 // File lookup → ALWAYS LOW
-Task(subagent_type="oh-my-droid:explore", model="claude-haiku-4-5-20251001", prompt="Find where UserService is defined")
+Task(subagent_type="oh-my-droid:explore", prompt="Find where UserService is defined")
 
 // Only use MEDIUM for complex patterns
-Task(subagent_type="oh-my-droid:explore-medium", model="claude-sonnet-4-5-20250929", prompt="Find all authentication patterns in the codebase")
+Task(subagent_type="oh-my-droid:explore-medium", prompt="Find all authentication patterns in the codebase")
 ```
 
 ## DELEGATION ENFORCEMENT (CRITICAL)
@@ -124,10 +123,10 @@ Before stopping, verify:
 ## Token Savings Tips
 
 1. **Batch similar tasks** to one agent instead of spawning many
-2. **Use explore (haiku)** for file discovery, not architect
+2. **Use explore (light)** for file discovery, not architect
 3. **Prefer executor-low** for simple changes - only upgrade if it fails
-4. **Avoid opus agents** unless the task genuinely requires deep reasoning
-5. **Use writer (haiku)** for all documentation tasks
+4. **Avoid heavy agents** unless the task genuinely requires deep reasoning
+5. **Use writer (light)** for all documentation tasks
 
 ## STATE CLEANUP ON COMPLETION
 

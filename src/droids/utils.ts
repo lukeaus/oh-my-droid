@@ -16,6 +16,7 @@ import type {
   AgentPromptMetadata,
   AvailableAgent,
   AgentOverrideConfig,
+  ModelIdentifier,
   ModelType
 } from './types.js';
 
@@ -97,7 +98,7 @@ export function mergeAgentConfig(
 
   const merged: AgentConfig = {
     ...base,
-    ...(rest.model && { model: rest.model as ModelType }),
+    ...(rest.model && { model: rest.model as ModelIdentifier }),
     ...(rest.enabled !== undefined && { enabled: rest.enabled })
   };
 

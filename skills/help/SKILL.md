@@ -57,8 +57,8 @@ But now you don't NEED them - everything is automatic.
 
 ## Need More Help?
 
-- **README**: https://github.com/MeroZemory/oh-my-droid
-- **Issues**: https://github.com/MeroZemory/oh-my-droid/issues
+- **README**: https://github.com/lukeaus/oh-my-droid
+- **Issues**: https://github.com/lukeaus/oh-my-droid/issues
 
 ---
 

@@ -81,7 +81,7 @@ Reference formats:
 
 Examples:
   psm review omc#123
-  psm fix MeroZemory/oh-my-droid#42
+  psm fix lukeaus/oh-my-droid#42
   psm feature omc add-webhooks
   psm list
   psm attach omc:pr-123

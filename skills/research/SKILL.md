@@ -63,24 +63,24 @@ Fire independent stages in parallel via Task tool:
 
 ```
 // Stage 1 - Simple data gathering
-Task(subagent_type="oh-my-droid:scientist-low", model="claude-haiku-4-5-20251001", prompt="[RESEARCH_STAGE:1] Investigate...")
+Task(subagent_type="oh-my-droid:scientist-low", prompt="[RESEARCH_STAGE:1] Investigate...")
 
 // Stage 2 - Standard analysis
-Task(subagent_type="oh-my-droid:scientist", model="claude-sonnet-4-5-20250929", prompt="[RESEARCH_STAGE:2] Analyze...")
+Task(subagent_type="oh-my-droid:scientist", prompt="[RESEARCH_STAGE:2] Analyze...")
 
 // Stage 3 - Complex reasoning
-Task(subagent_type="oh-my-droid:scientist-high", model="claude-opus-4-5-20251101", prompt="[RESEARCH_STAGE:3] Deep analysis of...")
+Task(subagent_type="oh-my-droid:scientist-high", prompt="[RESEARCH_STAGE:3] Deep analysis of...")
 ```
 
 ### Smart Model Routing
 
-**CRITICAL: Always pass `model` parameter explicitly!**
+**Pass `complexity` explicitly when a tier matters; it resolves through `subagentModelSettings` in `/settings` -> Subagents.**
 
-| Task Complexity | Agent | Model | Use For |
+| Task Complexity | Agent | Complexity tier | Use For |
 |-----------------|-------|-------|---------|
-| Data gathering | `scientist-low` | haiku | File enumeration, pattern counting, simple lookups |
-| Standard analysis | `scientist` | sonnet | Code analysis, pattern detection, documentation review |
-| Complex reasoning | `scientist-high` | opus | Architecture analysis, cross-cutting concerns, hypothesis validation |
+| Data gathering | `scientist-low` | light | File enumeration, pattern counting, simple lookups |
+| Standard analysis | `scientist` | medium | Code analysis, pattern detection, documentation review |
+| Complex reasoning | `scientist-high` | heavy | Architecture analysis, cross-cutting concerns, hypothesis validation |
 
 ### Routing Decision Guide
 
@@ -99,7 +99,7 @@ After parallel execution completes, verify findings:
 
 ```
 // Cross-validation stage
-Task(subagent_type="oh-my-droid:scientist", model="claude-sonnet-4-5-20250929", prompt="
+Task(subagent_type="oh-my-droid:scientist", prompt="
 [RESEARCH_VERIFICATION]
 Cross-validate these findings for consistency:
 
@@ -180,9 +180,9 @@ When stages analyze different data sources:
 
 ```
 // All fire simultaneously
-Task(subagent_type="oh-my-droid:scientist-low", model="claude-haiku-4-5-20251001", prompt="[STAGE:1] Analyze src/api/...")
-Task(subagent_type="oh-my-droid:scientist-low", model="claude-haiku-4-5-20251001", prompt="[STAGE:2] Analyze src/utils/...")
-Task(subagent_type="oh-my-droid:scientist-low", model="claude-haiku-4-5-20251001", prompt="[STAGE:3] Analyze src/components/...")
+Task(subagent_type="oh-my-droid:scientist-low", prompt="[STAGE:1] Analyze src/api/...")
+Task(subagent_type="oh-my-droid:scientist-low", prompt="[STAGE:2] Analyze src/utils/...")
+Task(subagent_type="oh-my-droid:scientist-low", prompt="[STAGE:3] Analyze src/components/...")
 ```
 
 ### Hypothesis Battery (Parallel)
@@ -191,9 +191,9 @@ When testing multiple hypotheses:
 
 ```
 // Test hypotheses simultaneously
-Task(subagent_type="oh-my-droid:scientist", model="claude-sonnet-4-5-20250929", prompt="[HYPOTHESIS:A] Test if caching improves...")
-Task(subagent_type="oh-my-droid:scientist", model="claude-sonnet-4-5-20250929", prompt="[HYPOTHESIS:B] Test if batching reduces...")
-Task(subagent_type="oh-my-droid:scientist", model="claude-sonnet-4-5-20250929", prompt="[HYPOTHESIS:C] Test if lazy loading helps...")
+Task(subagent_type="oh-my-droid:scientist", prompt="[HYPOTHESIS:A] Test if caching improves...")
+Task(subagent_type="oh-my-droid:scientist", prompt="[HYPOTHESIS:B] Test if batching reduces...")
+Task(subagent_type="oh-my-droid:scientist", prompt="[HYPOTHESIS:C] Test if lazy loading helps...")
 ```
 
 ### Cross-Validation (Sequential)
@@ -205,7 +205,7 @@ When verification depends on all findings:
 [stages complete]
 
 // Then sequential verification
-Task(subagent_type="oh-my-droid:scientist-high", model="claude-opus-4-5-20251101", prompt="
+Task(subagent_type="oh-my-droid:scientist-high", prompt="
 [CROSS_VALIDATION]
 Validate consistency across all findings:
 - Finding 1: ...

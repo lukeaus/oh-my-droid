@@ -1,36 +1,18 @@
 /**
  * Session Recovery
  *
- * Helps recover session state when Factory Droid restarts or crashes.
- * Detects and fixes various error conditions that can cause session failures.
+ * Classifies API errors that break a session (missing tool results, thinking
+ * block ordering, empty content) and returns guidance telling the model how to
+ * correct itself on the next turn.
  */
 
 import { appendFileSync } from 'node:fs';
 import {
-  findEmptyMessages,
-  findEmptyMessageByIndex,
-  findMessageByIndexNeedingThinking,
-  findMessagesWithEmptyTextParts,
-  findMessagesWithOrphanThinking,
-  findMessagesWithThinkingBlocks,
-  findMessagesWithThinkingOnly,
-  injectTextPart,
-  prependThinkingPart,
-  readParts,
-  replaceEmptyTextParts,
-  stripThinkingParts,
-} from './storage.js';
-import {
   DEBUG,
   DEBUG_FILE,
-  PLACEHOLDER_TEXT,
   RECOVERY_MESSAGES,
 } from './constants.js';
-import type {
-  MessageData,
-  RecoveryResult,
-  RecoveryConfig,
-} from './types.js';
+import type { RecoveryResult, RecoveryConfig } from './types.js';
 
 /**
  * Recovery error types
@@ -86,15 +68,6 @@ function getErrorMessage(error: unknown): string {
 }
 
 /**
- * Extract message index from error (e.g., "messages.5")
- */
-function extractMessageIndex(error: unknown): number | null {
-  const message = getErrorMessage(error);
-  const match = message.match(/messages\.(\d+)/);
-  return match ? parseInt(match[1], 10) : null;
-}
-
-/**
  * Detect the type of recoverable error
  */
 export function detectErrorType(error: unknown): RecoveryErrorType {
@@ -138,197 +111,14 @@ export function isRecoverableError(error: unknown): boolean {
 }
 
 /**
- * Extract tool_use IDs from message parts
- */
-function extractToolUseIds(
-  parts: Array<{ type: string; id?: string; callID?: string }>
-): string[] {
-  return parts
-    .filter((p) => p.type === 'tool_use' && !!p.id)
-    .map((p) => p.id!);
-}
-
-/**
- * Recover from missing tool results
- */
-async function recoverToolResultMissing(
-  sessionID: string,
-  failedAssistantMsg: MessageData
-): Promise<boolean> {
-  debugLog('recoverToolResultMissing', { sessionID, msgId: failedAssistantMsg.info?.id });
-
-  // Try API parts first, fallback to filesystem if empty
-  let parts = failedAssistantMsg.parts || [];
-  if (parts.length === 0 && failedAssistantMsg.info?.id) {
-    const storedParts = readParts(failedAssistantMsg.info.id);
-    parts = storedParts.map((p) => ({
-      type: p.type === 'tool' ? 'tool_use' : p.type,
-      id: 'callID' in p ? (p as { callID?: string }).callID : p.id,
-      name: 'tool' in p ? (p as { tool?: string }).tool : undefined,
-      input:
-        'state' in p
-          ? (p as { state?: { input?: Record<string, unknown> } }).state?.input
-          : undefined,
-    }));
-  }
-
-  const toolUseIds = extractToolUseIds(parts);
-
-  if (toolUseIds.length === 0) {
-    debugLog('No tool_use IDs found');
-    return false;
-  }
-
-  debugLog('Found tool_use IDs to inject results for', toolUseIds);
-
-  // Note: In Factory Droid's simplified architecture, we would need to
-  // integrate with the actual session/tool system to inject tool results.
-  // This is a placeholder showing the recovery intent.
-  // A full implementation would require access to the SDK client.
-
-  return true; // Indicate recovery was attempted
-}
-
-/**
- * Recover from thinking block order errors
- */
-async function recoverThinkingBlockOrder(
-  sessionID: string,
-  _failedAssistantMsg: MessageData,
-  error: unknown
-): Promise<boolean> {
-  debugLog('recoverThinkingBlockOrder', { sessionID });
-
-  const targetIndex = extractMessageIndex(error);
-  if (targetIndex !== null) {
-    const targetMessageID = findMessageByIndexNeedingThinking(sessionID, targetIndex);
-    if (targetMessageID) {
-      debugLog('Found target message by index', { targetIndex, targetMessageID });
-      return prependThinkingPart(sessionID, targetMessageID);
-    }
-  }
-
-  const orphanMessages = findMessagesWithOrphanThinking(sessionID);
-
-  if (orphanMessages.length === 0) {
-    debugLog('No orphan thinking messages found');
-    return false;
-  }
-
-  debugLog('Found orphan thinking messages', orphanMessages);
-
-  let anySuccess = false;
-  for (const messageID of orphanMessages) {
-    if (prependThinkingPart(sessionID, messageID)) {
-      anySuccess = true;
-    }
-  }
-
-  return anySuccess;
-}
-
-/**
- * Recover from thinking disabled violations
- */
-async function recoverThinkingDisabledViolation(
-  sessionID: string,
-  _failedAssistantMsg: MessageData
-): Promise<boolean> {
-  debugLog('recoverThinkingDisabledViolation', { sessionID });
-
-  const messagesWithThinking = findMessagesWithThinkingBlocks(sessionID);
-
-  if (messagesWithThinking.length === 0) {
-    debugLog('No messages with thinking blocks found');
-    return false;
-  }
-
-  debugLog('Found messages with thinking blocks', messagesWithThinking);
-
-  let anySuccess = false;
-  for (const messageID of messagesWithThinking) {
-    if (stripThinkingParts(messageID)) {
-      anySuccess = true;
-    }
-  }
-
-  return anySuccess;
-}
-
-/**
- * Recover from empty content messages
- */
-async function recoverEmptyContentMessage(
-  sessionID: string,
-  failedAssistantMsg: MessageData,
-  error: unknown
-): Promise<boolean> {
-  debugLog('recoverEmptyContentMessage', { sessionID });
-
-  const targetIndex = extractMessageIndex(error);
-  const failedID = failedAssistantMsg.info?.id;
-  let anySuccess = false;
-
-  // Fix messages with empty text parts
-  const messagesWithEmptyText = findMessagesWithEmptyTextParts(sessionID);
-  for (const messageID of messagesWithEmptyText) {
-    if (replaceEmptyTextParts(messageID, PLACEHOLDER_TEXT)) {
-      anySuccess = true;
-    }
-  }
-
-  // Fix messages with only thinking
-  const thinkingOnlyIDs = findMessagesWithThinkingOnly(sessionID);
-  for (const messageID of thinkingOnlyIDs) {
-    if (injectTextPart(sessionID, messageID, PLACEHOLDER_TEXT)) {
-      anySuccess = true;
-    }
-  }
-
-  // Try target index if provided
-  if (targetIndex !== null) {
-    const targetMessageID = findEmptyMessageByIndex(sessionID, targetIndex);
-    if (targetMessageID) {
-      if (replaceEmptyTextParts(targetMessageID, PLACEHOLDER_TEXT)) {
-        return true;
-      }
-      if (injectTextPart(sessionID, targetMessageID, PLACEHOLDER_TEXT)) {
-        return true;
-      }
-    }
-  }
-
-  // Try failed message ID
-  if (failedID) {
-    if (replaceEmptyTextParts(failedID, PLACEHOLDER_TEXT)) {
-      return true;
-    }
-    if (injectTextPart(sessionID, failedID, PLACEHOLDER_TEXT)) {
-      return true;
-    }
-  }
-
-  // Fix all empty messages as last resort
-  const emptyMessageIDs = findEmptyMessages(sessionID);
-  for (const messageID of emptyMessageIDs) {
-    if (replaceEmptyTextParts(messageID, PLACEHOLDER_TEXT)) {
-      anySuccess = true;
-    }
-    if (injectTextPart(sessionID, messageID, PLACEHOLDER_TEXT)) {
-      anySuccess = true;
-    }
-  }
-
-  return anySuccess;
-}
-
-/**
  * Main recovery handler
+ *
+ * Returns the corrective guidance for a recoverable session error, or an
+ * unattempted result when the error is not one we know how to recover from.
  */
 export async function handleSessionRecovery(
   sessionID: string,
   error: unknown,
-  failedMessage?: MessageData,
   config?: RecoveryConfig
 ): Promise<RecoveryResult> {
   debugLog('handleSessionRecovery', { sessionID, error });
@@ -344,44 +134,15 @@ export async function handleSessionRecovery(
 
   debugLog('Detected recoverable error type', errorType);
 
-  try {
-    let success = false;
-    const failedMsg = failedMessage || { info: {}, parts: [] };
+  const message =
+    config?.customMessages?.[errorType] ||
+    RECOVERY_MESSAGES[errorType]?.message ||
+    `Session recovery attempted for ${errorType}`;
 
-    switch (errorType) {
-      case 'tool_result_missing':
-        success = await recoverToolResultMissing(sessionID, failedMsg);
-        break;
-      case 'thinking_block_order':
-        success = await recoverThinkingBlockOrder(sessionID, failedMsg, error);
-        break;
-      case 'thinking_disabled_violation':
-        success = await recoverThinkingDisabledViolation(sessionID, failedMsg);
-        break;
-      case 'empty_content':
-        success = await recoverEmptyContentMessage(sessionID, failedMsg, error);
-        break;
-    }
-
-    debugLog('Recovery result', { errorType, success });
-
-    const recoveryMessage =
-      config?.customMessages?.[errorType] ||
-      RECOVERY_MESSAGES[errorType]?.message ||
-      `Session recovery attempted for ${errorType}`;
-
-    return {
-      attempted: true,
-      success,
-      message: success ? recoveryMessage : undefined,
-      errorType,
-    };
-  } catch (err) {
-    debugLog('Recovery failed with error', err);
-    return {
-      attempted: true,
-      success: false,
-      errorType,
-    };
-  }
+  return {
+    attempted: true,
+    success: true,
+    message,
+    errorType,
+  };
 }

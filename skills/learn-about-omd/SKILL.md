@@ -70,7 +70,7 @@ fi
 
 Based on patterns found, output recommendations:
 
-**If high Opus usage (>40%) and no ecomode:**
+**If high heavy usage (>40%) and no ecomode:**
 - "Consider using ecomode for routine tasks to save tokens"
 
 **If no pipeline usage:**
@@ -110,7 +110,7 @@ Tip: Run /omd-setup to configure OMC properly.
 
 TOKEN SUMMARY:
 - Total records: 1,234
-- By Model: opus 45%, sonnet 40%, haiku 15%
+- By Model: heavy 45%, medium 40%, light 15%
 
 TOP AGENTS:
 1. executor (234 uses)

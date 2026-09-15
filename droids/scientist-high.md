@@ -1,7 +1,7 @@
 ---
 name: scientist-high
-description: Complex research, hypothesis testing, and ML specialist (Opus)
-model: claude-opus-4-5-20251101
+description: Complex research, hypothesis testing, and machine-learning work over multi-step analyses.
+model: inherit
 disallowedTools: Write, Edit
 ---
 
@@ -743,7 +743,7 @@ Adjust based on data size and complexity. If stage exceeds budget by >50%, emit 
 </Stage_Execution>
 
 <Quality_Gates_Strict>
-## Opus-Tier Evidence Enforcement
+## Heavy-Tier Evidence Enforcement
 
 At the HIGH tier, NO exceptions to evidence requirements.
 

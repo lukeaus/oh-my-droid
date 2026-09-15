@@ -1,18 +1,18 @@
 # Tier-Specific Instructions
 
-This document defines the behavioral differences between agent tiers (LOW/MEDIUM/HIGH).
+This document defines the behavioral differences between agent tiers (light/medium/heavy).
 
-## LOW Tier (Haiku)
-**Model**: claude-haiku-4-5
+## light tier
+**Routing**: `complexity` tier, resolved via `subagentModelSettings` in `/settings` -> Subagents
 **Focus**: Speed and efficiency for simple, well-defined tasks
 
 ```markdown
-**Tier: LOW (Haiku) - Speed-Focused Execution**
+**Tier: light - Speed-Focused Execution**
 
 - Focus on speed and direct execution
 - Handle simple, well-defined tasks only
 - Limit exploration to 5 files maximum
-- Escalate to MEDIUM tier if:
+- Escalate to the medium tier if:
   - Task requires analyzing more than 5 files
   - Complexity is higher than expected
   - Architectural decisions needed
@@ -20,18 +20,18 @@ This document defines the behavioral differences between agent tiers (LOW/MEDIUM
 - Skip deep investigation - implement what's asked
 ```
 
-## MEDIUM Tier (Sonnet)
-**Model**: claude-sonnet-4-5
+## medium tier
+**Routing**: `complexity` tier, resolved via `subagentModelSettings` in `/settings` -> Subagents
 **Focus**: Balance between thoroughness and efficiency
 
 ```markdown
-**Tier: MEDIUM (Sonnet) - Balanced Execution**
+**Tier: medium - Balanced Execution**
 
 - Balance thoroughness with efficiency
 - Can explore up to 20 files
 - Handle moderate complexity tasks
 - Consult architect agent for architectural decisions
-- Escalate to HIGH tier if:
+- Escalate to the heavy tier if:
   - Task requires deep architectural changes
   - System-wide refactoring needed
   - Complex debugging across many components
@@ -39,12 +39,12 @@ This document defines the behavioral differences between agent tiers (LOW/MEDIUM
 - Document non-obvious decisions
 ```
 
-## HIGH Tier (Opus)
-**Model**: claude-opus-4-5
+## heavy tier
+**Routing**: `complexity` tier, resolved via `subagentModelSettings` in `/settings` -> Subagents
 **Focus**: Correctness and quality for complex tasks
 
 ```markdown
-**Tier: HIGH (Opus) - Excellence-Focused Execution**
+**Tier: heavy - Excellence-Focused Execution**
 
 - Prioritize correctness and code quality above all
 - Full codebase exploration allowed
@@ -63,14 +63,14 @@ This document defines the behavioral differences between agent tiers (LOW/MEDIUM
 
 | Task Type | Tier | Rationale |
 |-----------|------|-----------|
-| Simple bug fix in known file | LOW | Well-defined, single file |
-| Add validation to existing function | LOW | Straightforward addition |
-| Implement feature across 3-5 files | MEDIUM | Moderate scope |
-| Debug integration issue | MEDIUM | Requires investigation |
-| Refactor module architecture | HIGH | Architectural decision |
-| Design new system component | HIGH | Complex design needed |
-| Fix subtle race condition | HIGH | Deep debugging required |
-| Optimize performance bottleneck | HIGH | Requires deep analysis |
+| Simple bug fix in known file | light | Well-defined, single file |
+| Add validation to existing function | light | Straightforward addition |
+| Implement feature across 3-5 files | medium | Moderate scope |
+| Debug integration issue | medium | Requires investigation |
+| Refactor module architecture | heavy | Architectural decision |
+| Design new system component | heavy | Complex design needed |
+| Fix subtle race condition | heavy | Deep debugging required |
+| Optimize performance bottleneck | heavy | Requires deep analysis |
 
 ## Template Usage
 
@@ -84,11 +84,11 @@ Example for executor-low:
 You execute simple, well-defined code changes quickly and efficiently.
 
 ## Tier-Specific Instructions
-**Tier: LOW (Haiku) - Speed-Focused Execution**
+**Tier: light - Speed-Focused Execution**
 
 - Focus on speed and direct execution
 - Handle simple, well-defined tasks only
 - Limit exploration to 5 files maximum
-- Escalate to MEDIUM tier if complexity exceeds expectations
+- Escalate to the medium tier if complexity exceeds expectations
 ...
 ```

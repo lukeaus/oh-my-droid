@@ -26,6 +26,7 @@
 import { writeFileSync, mkdirSync, existsSync, unlinkSync } from 'fs';
 import { join } from 'path';
 import { homedir } from 'os';
+import { normalizeHookInput } from './lib/hook-input.mjs';
 
 const ULTRATHINK_MESSAGE = `<think-mode>
 
@@ -91,12 +92,14 @@ function activateState(directory, prompt, stateName, sessionId) {
     last_checked_at: new Date().toISOString()
   };
 
-  // Write to local .omd/state directory
-  const localDir = join(directory, '.omd', 'state');
-  if (!existsSync(localDir)) {
-    try { mkdirSync(localDir, { recursive: true }); } catch {}
+  // Write to local .omd/state directory (only when a project root is known)
+  if (directory) {
+    const localDir = join(directory, '.omd', 'state');
+    if (!existsSync(localDir)) {
+      try { mkdirSync(localDir, { recursive: true }); } catch {}
+    }
+    try { writeFileSync(join(localDir, `${stateName}-state.json`), JSON.stringify(state, null, 2)); } catch {}
   }
-  try { writeFileSync(join(localDir, `${stateName}-state.json`), JSON.stringify(state, null, 2)); } catch {}
 
   // Write to global .omd/state directory
   const globalDir = join(homedir(), '.omd', 'state');
@@ -111,9 +114,11 @@ function activateState(directory, prompt, stateName, sessionId) {
  */
 function clearStateFiles(directory, modeNames) {
   for (const name of modeNames) {
-    const localPath = join(directory, '.omd', 'state', `${name}-state.json`);
+    if (directory) {
+      const localPath = join(directory, '.omd', 'state', `${name}-state.json`);
+      try { if (existsSync(localPath)) unlinkSync(localPath); } catch {}
+    }
     const globalPath = join(homedir(), '.omd', 'state', `${name}-state.json`);
-    try { if (existsSync(localPath)) unlinkSync(localPath); } catch {}
     try { if (existsSync(globalPath)) unlinkSync(globalPath); } catch {}
   }
 }
@@ -216,12 +221,11 @@ async function main() {
       return;
     }
 
-    let data = {};
-    try { data = JSON.parse(input); } catch {}
-    const directory = data.directory || process.cwd();
-    const sessionId = data.sessionId || data.session_id || '';
+    const data = normalizeHookInput(input);
+    const directory = data.cwd;
+    const sessionId = data.session_id || '';
 
-    const prompt = extractPrompt(input);
+    const prompt = data.prompt || extractPrompt(input);
     if (!prompt) {
       console.log(JSON.stringify({ continue: true }));
       return;

@@ -2,17 +2,17 @@
 
 ## Model Selection Strategy
 
-**Haiku** (90% of Sonnet capability, 3x cost savings):
+**light** (90% of medium capability, 3x cost savings):
 - Lightweight agents with frequent invocation
 - Code generation and exploration
 - Worker agents in multi-agent systems
 
-**Sonnet** (Best coding model):
+**medium** (Best coding model):
 - Main development work
 - Orchestrating multi-agent workflows
 - Complex coding tasks
 
-**Opus** (Deepest reasoning):
+**heavy** (Deepest reasoning):
 - Complex architectural decisions
 - Maximum reasoning requirements
 - Research and analysis tasks

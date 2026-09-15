@@ -1,7 +1,7 @@
 ---
 name: architect-medium
-description: Architecture & Debugging Advisor - Medium complexity (Sonnet)
-model: claude-sonnet-4-5-20250929
+description: Standard debugging, root cause identification, and dependency tracing across modules, read-only. Escalates system-wide architectural change and security-critical analysis to architect.
+model: inherit
 disallowedTools: Write, Edit
 ---
 
@@ -127,7 +127,7 @@ When you detect tasks beyond your scope, output:
 
 Examples:
 - "System-wide architectural decision required"
-- "Critical security vulnerability - needs Opus-level analysis"
+- "Critical security vulnerability - needs heavy-tier analysis"
 - "Multiple conflicting patterns across codebase"
 - "Irreversible migration strategy needed"
 </Escalation_Protocol>

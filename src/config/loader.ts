@@ -18,19 +18,19 @@ import type { PluginConfig } from '../shared/types.js';
  */
 export const DEFAULT_CONFIG: PluginConfig = {
   agents: {
-    omd: { model: 'claude-opus-4-5-20251101' },
-    architect: { model: 'claude-opus-4-5-20251101', enabled: true },
-    researcher: { model: 'claude-sonnet-4-5-20250929' },
-    explore: { model: 'claude-haiku-4-5-20251001' },
-    frontendEngineer: { model: 'claude-sonnet-4-5-20250929', enabled: true },
-    documentWriter: { model: 'claude-haiku-4-5-20251001', enabled: true },
-    multimodalLooker: { model: 'claude-sonnet-4-5-20250929', enabled: true },
+    omd: { model: 'inherit' },
+    architect: { model: 'inherit', enabled: true },
+    researcher: { model: 'inherit' },
+    explore: { model: 'inherit' },
+    frontendEngineer: { model: 'inherit', enabled: true },
+    documentWriter: { model: 'inherit', enabled: true },
+    multimodalLooker: { model: 'inherit', enabled: true },
     // New agents from oh-my-opencode
-    critic: { model: 'claude-opus-4-5-20251101', enabled: true },
-    analyst: { model: 'claude-opus-4-5-20251101', enabled: true },
-    orchestrator: { model: 'claude-sonnet-4-5-20250929', enabled: true },
-    executor: { model: 'claude-sonnet-4-5-20250929', enabled: true },
-    planner: { model: 'claude-opus-4-5-20251101', enabled: true }
+    critic: { model: 'inherit', enabled: true },
+    analyst: { model: 'inherit', enabled: true },
+    orchestrator: { model: 'inherit', enabled: true },
+    executor: { model: 'inherit', enabled: true },
+    planner: { model: 'inherit', enabled: true }
   },
   features: {
     parallelExecution: true,
@@ -61,11 +61,6 @@ export const DEFAULT_CONFIG: PluginConfig = {
     defaultTier: 'MEDIUM',
     escalationEnabled: true,
     maxEscalations: 2,
-    tierModels: {
-      LOW: 'claude-haiku-4-5-20251001',
-      MEDIUM: 'claude-sonnet-4-5-20250929',
-      HIGH: 'claude-opus-4-5-20251101'
-    },
     agentOverrides: {
       architect: { tier: 'HIGH', reason: 'Advisory agent requires deep reasoning' },
       planner: { tier: 'HIGH', reason: 'Strategic planning requires deep reasoning' },

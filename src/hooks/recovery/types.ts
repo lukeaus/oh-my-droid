@@ -44,7 +44,7 @@ export interface ParsedTokenLimitError {
   errorType: string;
   /** Provider ID (e.g., 'anthropic') */
   providerID?: string;
-  /** Model ID (e.g., 'claude-3-opus-20240229') */
+  /** Model ID as reported by the provider */
   modelID?: string;
   /** Index of the problematic message */
   messageIndex?: number;
@@ -98,78 +98,6 @@ export interface MessageData {
     callID?: string;
   }>;
 }
-
-/**
- * Stored message metadata
- */
-export interface StoredMessageMeta {
-  id: string;
-  sessionID: string;
-  role: 'user' | 'assistant';
-  parentID?: string;
-  time?: {
-    created: number;
-    completed?: number;
-  };
-  error?: unknown;
-}
-
-/**
- * Stored text part
- */
-export interface StoredTextPart {
-  id: string;
-  sessionID: string;
-  messageID: string;
-  type: 'text';
-  text: string;
-  synthetic?: boolean;
-  ignored?: boolean;
-}
-
-/**
- * Stored tool part
- */
-export interface StoredToolPart {
-  id: string;
-  sessionID: string;
-  messageID: string;
-  type: 'tool';
-  callID: string;
-  tool: string;
-  state: {
-    status: 'pending' | 'running' | 'completed' | 'error';
-    input: Record<string, unknown>;
-    output?: string;
-    error?: string;
-  };
-}
-
-/**
- * Stored reasoning/thinking part
- */
-export interface StoredReasoningPart {
-  id: string;
-  sessionID: string;
-  messageID: string;
-  type: 'reasoning';
-  text: string;
-}
-
-/**
- * Union of all stored part types
- */
-export type StoredPart =
-  | StoredTextPart
-  | StoredToolPart
-  | StoredReasoningPart
-  | {
-      id: string;
-      sessionID: string;
-      messageID: string;
-      type: string;
-      [key: string]: unknown;
-    };
 
 /**
  * Unified recovery configuration

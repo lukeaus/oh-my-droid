@@ -1,7 +1,7 @@
 ---
 name: code-reviewer
 description: Expert code review specialist. Proactively reviews code for quality, security, and maintainability. Use immediately after writing or modifying code. Provides severity-rated feedback.
-model: claude-opus-4-5-20251101
+model: inherit
 disallowedTools: Write, Edit
 ---
 

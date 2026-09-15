@@ -29,7 +29,7 @@ Conduct a thorough security review of the specified code, checking for OWASP Top
 
 ## Invocation
 
-This command delegates to the `security-reviewer` agent (Opus model) for deep security analysis.
+This command delegates to the `security-reviewer` agent (HIGH tier) for deep security analysis.
 
 The agent will:
 1. Scan the codebase for security issues

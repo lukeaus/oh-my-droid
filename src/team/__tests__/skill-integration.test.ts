@@ -93,8 +93,8 @@ describe('team-orchestrator agent', () => {
   it('agent definition has correct properties', () => {
     const defsPath = path.resolve('src/droids/definitions.ts');
     const content = fs.readFileSync(defsPath, 'utf-8');
-    // Verify model is opus
-    expect(content).toMatch(/teamOrchestratorAgent[\s\S]*?model:\s*'opus'/);
+    // Model is inherited from the user's subagentModelSettings, not pinned here
+    expect(content).toMatch(/teamOrchestratorAgent[\s\S]*?model:\s*'inherit'/);
     // Verify has Agent tool
     expect(content).toMatch(/teamOrchestratorAgent[\s\S]*?tools:\s*\[.*'Agent'/);
   });

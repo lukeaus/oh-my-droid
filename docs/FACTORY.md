@@ -87,13 +87,13 @@ When you detect these patterns, you MUST invoke the corresponding skill:
 
 ### Smart Model Routing (SAVE TOKENS)
 
-**ALWAYS pass `model` parameter explicitly when delegating!**
+**Pass `complexity` explicitly when a tier matters. It resolves through `subagentModelSettings` in `/settings` -> Subagents, so it respects the user's own model choice.**
 
-| Task Complexity | Model | When to Use |
+| Task Complexity | Complexity tier | When to Use |
 |-----------------|-------|-------------|
-| Simple lookup | `haiku` | "What does this return?", "Find definition of X" |
-| Standard work | `sonnet` | "Add error handling", "Implement feature" |
-| Complex reasoning | `opus` | "Debug race condition", "Refactor architecture" |
+| Simple lookup | `light` | "What does this return?", "Find definition of X" |
+| Standard work | `medium` | "Add error handling", "Implement feature" |
+| Complex reasoning | `heavy` | "Debug race condition", "Refactor architecture" |
 
 ### Path-Based Write Rules
 
@@ -120,7 +120,6 @@ Direct file writes are enforced via path patterns:
 **How to Delegate Source File Changes:**
 ```
 Task(subagent_type="oh-my-droid:executor",
-     model="claude-sonnet-4-5-20250929",
      prompt="Edit src/file.ts to add validation...")
 ```
 
@@ -222,7 +221,7 @@ User says "stop", "cancel", "abort" -> Invoke unified `cancel` skill (automatica
 
 Always use `oh-my-droid:` prefix when calling via Task tool.
 
-| Domain | LOW (Haiku) | MEDIUM (Sonnet) | HIGH (Opus) |
+| Domain | light | medium | heavy |
 |--------|-------------|-----------------|-------------|
 | **Analysis** | `architect-low` | `architect-medium` | `architect` |
 | **Execution** | `executor-low` | `executor` | `executor-high` |
@@ -243,35 +242,35 @@ Always use `oh-my-droid:` prefix when calling via Task tool.
 
 ### Agent Selection Guide
 
-| Task Type | Best Agent | Model |
+| Task Type | Best Agent | Complexity tier |
 |-----------|------------|-------|
-| Quick code lookup | `explore` | haiku |
-| Find files/patterns | `explore` or `explore-medium` | haiku/sonnet |
-| Simple code change | `executor-low` | haiku |
-| Feature implementation | `executor` | sonnet |
-| Complex refactoring | `executor-high` | opus |
-| Debug simple issue | `architect-low` | haiku |
-| Debug complex issue | `architect` | opus |
-| UI component | `designer` | sonnet |
-| Complex UI system | `designer-high` | opus |
-| Write docs/comments | `writer` | haiku |
-| Research docs/APIs | `researcher` | sonnet |
-| Analyze images/diagrams | `vision` | sonnet |
-| Strategic planning | `planner` | opus |
-| Review/critique plan | `critic` | opus |
-| Pre-planning analysis | `analyst` | opus |
-| Test CLI interactively | `qa-tester` | sonnet |
-| Security review | `security-reviewer` | opus |
-| Quick security scan | `security-reviewer-low` | haiku |
-| Fix build errors | `build-fixer` | sonnet |
-| Simple build fix | `build-fixer-low` | haiku |
-| TDD workflow | `tdd-guide` | sonnet |
-| Quick test suggestions | `tdd-guide-low` | haiku |
-| Code review | `code-reviewer` | opus |
-| Quick code check | `code-reviewer-low` | haiku |
-| Data analysis/stats | `scientist` | sonnet |
-| Quick data inspection | `scientist-low` | haiku |
-| Complex ML/hypothesis | `scientist-high` | opus |
+| Quick code lookup | `explore` | light |
+| Find files/patterns | `explore` or `explore-medium` | light/medium |
+| Simple code change | `executor-low` | light |
+| Feature implementation | `executor` | medium |
+| Complex refactoring | `executor-high` | heavy |
+| Debug simple issue | `architect-low` | light |
+| Debug complex issue | `architect` | heavy |
+| UI component | `designer` | medium |
+| Complex UI system | `designer-high` | heavy |
+| Write docs/comments | `writer` | light |
+| Research docs/APIs | `researcher` | medium |
+| Analyze images/diagrams | `vision` | medium |
+| Strategic planning | `planner` | heavy |
+| Review/critique plan | `critic` | heavy |
+| Pre-planning analysis | `analyst` | heavy |
+| Test CLI interactively | `qa-tester` | medium |
+| Security review | `security-reviewer` | heavy |
+| Quick security scan | `security-reviewer-low` | light |
+| Fix build errors | `build-fixer` | medium |
+| Simple build fix | `build-fixer-low` | light |
+| TDD workflow | `tdd-guide` | medium |
+| Quick test suggestions | `tdd-guide-low` | light |
+| Code review | `code-reviewer` | heavy |
+| Quick code check | `code-reviewer-low` | light |
+| Data analysis/stats | `scientist` | medium |
+| Quick data inspection | `scientist-low` | light |
+| Complex ML/hypothesis | `scientist-high` | heavy |
 
 ---
 
@@ -343,7 +342,7 @@ When in planning/interview mode, use the `AskUserQuestion` tool for preference q
 
 ```
 1. Complete all work
-2. Spawn Architect: Task(subagent_type="oh-my-droid:architect", model="claude-opus-4-5-20251101", prompt="Verify...")
+2. Spawn Architect: Task(subagent_type="oh-my-droid:architect", prompt="Verify...")
 3. WAIT for response
 4. If APPROVED -> output completion
 5. If REJECTED -> fix issues and re-verify

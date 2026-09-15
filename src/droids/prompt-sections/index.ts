@@ -35,7 +35,7 @@ export function buildAgentRegistry(agents: AgentConfig[]): string {
   if (baseAgents.length > 0) {
     lines.push('### Primary Agents');
     for (const agent of baseAgents) {
-      const modelInfo = agent.model ? ` (${agent.model})` : '';
+      const modelInfo = agent.model && agent.model !== 'inherit' ? ` (${agent.model})` : '';
       lines.push(`- **${agent.name}**${modelInfo}: ${agent.description}`);
     }
     lines.push('');
@@ -44,14 +44,15 @@ export function buildAgentRegistry(agents: AgentConfig[]): string {
   // Tiered variants
   if (tieredAgents.length > 0) {
     lines.push('### Tiered Variants');
-    lines.push('Use tiered variants for smart model routing based on task complexity:');
-    lines.push('- **HIGH tier (opus)**: Complex analysis, architecture, debugging');
-    lines.push('- **MEDIUM tier (sonnet)**: Standard tasks, moderate complexity');
-    lines.push('- **LOW tier (haiku)**: Simple lookups, trivial operations');
+    lines.push('Variants differ by scope and tool envelope. The model is inherited from');
+    lines.push("the user's subagentModelSettings (/settings -> Subagents):");
+    lines.push('- **heavy scope** (`-high` / base): Broad scope, full tool set');
+    lines.push('- **medium scope** (`-medium`): Cross-module scope');
+    lines.push('- **light scope** (`-low`): Single-file scope, escalates beyond it');
     lines.push('');
 
     for (const agent of tieredAgents) {
-      const modelInfo = agent.model ? ` (${agent.model})` : '';
+      const modelInfo = agent.model && agent.model !== 'inherit' ? ` (${agent.model})` : '';
       lines.push(`- **${agent.name}**${modelInfo}: ${agent.description}`);
     }
     lines.push('');
@@ -108,7 +109,8 @@ export function buildToolSelectionSection(agents: AgentConfig[]): string {
   for (const [category, categoryAgents] of categorizedAgents) {
     lines.push(`### ${capitalizeFirst(category)} Agents`);
     for (const agent of categoryAgents) {
-      lines.push(`**${agent.name}** (${agent.model || 'sonnet'}):`);
+      const modelInfo = agent.model && agent.model !== 'inherit' ? ` (${agent.model})` : '';
+      lines.push(`**${agent.name}**${modelInfo}:`);
       lines.push(`- Tools: ${agent.tools.join(', ')}`);
 
       if (agent.metadata?.useWhen && agent.metadata.useWhen.length > 0) {
@@ -142,17 +144,16 @@ export function buildDelegationMatrix(agents: AgentConfig[]): string {
     categorizedAgents.get(category)!.push(agent);
   }
 
-  lines.push('| Category | Agent | Model | Use Case |');
-  lines.push('|----------|-------|-------|----------|');
+  lines.push('| Category | Agent | Use Case |');
+  lines.push('|----------|-------|----------|');
 
   for (const [category, categoryAgents] of categorizedAgents) {
     const categoryName = capitalizeFirst(category);
     for (let i = 0; i < categoryAgents.length; i++) {
       const agent = categoryAgents[i];
       const catDisplay = i === 0 ? categoryName : '';
-      const model = agent.model || 'sonnet';
       const useCase = agent.metadata?.useWhen?.[0] || agent.description;
-      lines.push(`| ${catDisplay} | **${agent.name}** | ${model} | ${useCase} |`);
+      lines.push(`| ${catDisplay} | **${agent.name}** | ${useCase} |`);
     }
   }
 
