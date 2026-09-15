@@ -2,7 +2,7 @@
  * Tests for rate-limit-monitor.ts
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import {
   checkRateLimitStatus,
   formatTimeUntilReset,
@@ -10,106 +10,10 @@ import {
 } from '../../features/rate-limit-wait/rate-limit-monitor.js';
 import type { RateLimitStatus } from '../../features/rate-limit-wait/types.js';
 
-// Mock the usage-api module
-vi.mock('../../hud/usage-api.js', () => ({
-  getUsage: vi.fn(),
-}));
-
-import { getUsage } from '../../hud/usage-api.js';
-
 describe('rate-limit-monitor', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
   describe('checkRateLimitStatus', () => {
-    it('should return null when getUsage returns null', async () => {
-      vi.mocked(getUsage).mockResolvedValue(null);
-
-      const result = await checkRateLimitStatus();
-
-      expect(result).toBeNull();
-    });
-
-    it('should detect 5-hour rate limit', async () => {
-      const resetTime = new Date(Date.now() + 3600000); // 1 hour from now
-      vi.mocked(getUsage).mockResolvedValue({
-        fiveHourPercent: 100,
-        weeklyPercent: 50,
-        fiveHourResetsAt: resetTime,
-        weeklyResetsAt: null,
-      });
-
-      const result = await checkRateLimitStatus();
-
-      expect(result).not.toBeNull();
-      expect(result!.fiveHourLimited).toBe(true);
-      expect(result!.weeklyLimited).toBe(false);
-      expect(result!.isLimited).toBe(true);
-      expect(result!.nextResetAt).toEqual(resetTime);
-    });
-
-    it('should detect weekly rate limit', async () => {
-      const resetTime = new Date(Date.now() + 86400000); // 1 day from now
-      vi.mocked(getUsage).mockResolvedValue({
-        fiveHourPercent: 50,
-        weeklyPercent: 100,
-        fiveHourResetsAt: null,
-        weeklyResetsAt: resetTime,
-      });
-
-      const result = await checkRateLimitStatus();
-
-      expect(result).not.toBeNull();
-      expect(result!.fiveHourLimited).toBe(false);
-      expect(result!.weeklyLimited).toBe(true);
-      expect(result!.isLimited).toBe(true);
-      expect(result!.nextResetAt).toEqual(resetTime);
-    });
-
-    it('should detect both limits and return earliest reset', async () => {
-      const fiveHourReset = new Date(Date.now() + 3600000); // 1 hour
-      const weeklyReset = new Date(Date.now() + 86400000); // 1 day
-      vi.mocked(getUsage).mockResolvedValue({
-        fiveHourPercent: 100,
-        weeklyPercent: 100,
-        fiveHourResetsAt: fiveHourReset,
-        weeklyResetsAt: weeklyReset,
-      });
-
-      const result = await checkRateLimitStatus();
-
-      expect(result).not.toBeNull();
-      expect(result!.fiveHourLimited).toBe(true);
-      expect(result!.weeklyLimited).toBe(true);
-      expect(result!.isLimited).toBe(true);
-      expect(result!.nextResetAt).toEqual(fiveHourReset); // Earlier reset
-    });
-
-    it('should return not limited when under thresholds', async () => {
-      vi.mocked(getUsage).mockResolvedValue({
-        fiveHourPercent: 50,
-        weeklyPercent: 75,
-        fiveHourResetsAt: null,
-        weeklyResetsAt: null,
-      });
-
-      const result = await checkRateLimitStatus();
-
-      expect(result).not.toBeNull();
-      expect(result!.fiveHourLimited).toBe(false);
-      expect(result!.weeklyLimited).toBe(false);
-      expect(result!.isLimited).toBe(false);
-      expect(result!.nextResetAt).toBeNull();
-      expect(result!.timeUntilResetMs).toBeNull();
-    });
-
-    it('should handle API errors gracefully', async () => {
-      vi.mocked(getUsage).mockRejectedValue(new Error('API error'));
-
-      const result = await checkRateLimitStatus();
-
-      expect(result).toBeNull();
+    it('should resolve to null while the Factory quota API is unsupported', async () => {
+      await expect(checkRateLimitStatus()).resolves.toBeNull();
     });
   });
 

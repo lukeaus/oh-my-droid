@@ -43,7 +43,7 @@ export interface TmuxPane {
 
 export interface PaneAnalysisResult {
   /** Whether this pane appears to have Factory Droid */
-  hasClaudeCode: boolean;
+  hasDroid: boolean;
   /** Whether rate limit message is visible */
   hasRateLimitMessage: boolean;
   /** Whether the pane appears blocked (waiting for input) */

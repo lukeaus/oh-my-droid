@@ -1,73 +1,19 @@
 /**
  * Rate Limit Monitor
  *
- * Wraps the existing usage-api.ts to provide rate limit status monitoring.
- * Uses the OAuth API to check utilization percentages.
+ * Rate limit status availability and display formatting.
  */
 
-import { getUsage } from '../../hud/usage-api.js';
 import type { RateLimitStatus } from './types.js';
 
-/** Threshold percentage for considering rate limited */
-const RATE_LIMIT_THRESHOLD = 100;
-
 /**
- * Check current rate limit status using the OAuth API
+ * Check current rate limit status
  *
  * @returns Rate limit status or null if API unavailable
  */
 export async function checkRateLimitStatus(): Promise<RateLimitStatus | null> {
-  try {
-    const usage = await getUsage();
-
-    if (!usage) {
-      // No OAuth credentials or API unavailable
-      return null;
-    }
-
-    const fiveHourLimited = usage.fiveHourPercent >= RATE_LIMIT_THRESHOLD;
-    const weeklyLimited = usage.weeklyPercent >= RATE_LIMIT_THRESHOLD;
-    const isLimited = fiveHourLimited || weeklyLimited;
-
-    // Determine next reset time
-    let nextResetAt: Date | null = null;
-    let timeUntilResetMs: number | null = null;
-
-    if (isLimited) {
-      const now = Date.now();
-      const resets: Date[] = [];
-
-      if (fiveHourLimited && usage.fiveHourResetsAt) {
-        resets.push(usage.fiveHourResetsAt);
-      }
-      if (weeklyLimited && usage.weeklyResetsAt) {
-        resets.push(usage.weeklyResetsAt);
-      }
-
-      if (resets.length > 0) {
-        // Find earliest reset
-        nextResetAt = resets.reduce((earliest, current) =>
-          current < earliest ? current : earliest
-        );
-        timeUntilResetMs = Math.max(0, nextResetAt.getTime() - now);
-      }
-    }
-
-    return {
-      fiveHourLimited,
-      weeklyLimited,
-      isLimited,
-      fiveHourResetsAt: usage.fiveHourResetsAt ?? null,
-      weeklyResetsAt: usage.weeklyResetsAt ?? null,
-      nextResetAt,
-      timeUntilResetMs,
-      lastCheckedAt: new Date(),
-    };
-  } catch (error) {
-    // Log error but don't throw - return null to indicate unavailable
-    console.error('[RateLimitMonitor] Error checking rate limit:', error);
-    return null;
-  }
+  // ponytail: Factory quota API is unsupported; add monitoring when a supported API exists.
+  return null;
 }
 
 /**

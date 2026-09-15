@@ -1,5 +1,7 @@
 # SWE-bench Benchmark Suite
 
+> **Historical / unsupported:** This upstream harness is preserved for reference only. It is not packaged with oh-my-droid and has not been ported to Factory Droid. The instructions below are historical, not supported setup or test commands. Do not port this harness as part of runtime maintenance.
+
 Automated benchmark comparison between vanilla Factory Droid and OMC-enhanced Factory Droid.
 
 ## Quick Start

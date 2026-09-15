@@ -1,7 +1,7 @@
 /**
  * Command Expansion Utilities
  *
- * Provides SDK-compatible access to slash commands by reading
+ * Provides programmatic access to slash commands by reading
  * command templates and expanding them with arguments.
  */
 
@@ -117,7 +117,7 @@ export function listCommands(): string[] {
  *
  * @param name - Command name (without leading slash)
  * @param args - Arguments to substitute for $ARGUMENTS
- * @returns Expanded command ready for SDK query
+ * @returns Expanded command ready for a Droid session
  *
  * @example
  * ```typescript
@@ -146,18 +146,15 @@ export function expandCommand(name: string, args: string = ''): ExpandedCommand 
 
 /**
  * Expand a command and return just the prompt string
- * Convenience function for direct use with SDK query
+ * Convenience function for passing a command prompt to a Droid session
  *
  * @example
  * ```typescript
  * import { expandCommandPrompt } from 'oh-my-droid';
- * import { query } from '@anthropic-ai/claude-agent-sdk';
  *
  * const prompt = expandCommandPrompt('ultrawork', 'Refactor the auth module');
  *
- * for await (const msg of query({ prompt })) {
- *   console.log(msg);
- * }
+ * console.log(prompt);
  * ```
  */
 export function expandCommandPrompt(name: string, args: string = ''): string | null {

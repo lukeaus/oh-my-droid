@@ -1,7 +1,7 @@
 /**
  * Oh-My-Droid
  *
- * A multi-agent orchestration system for the Factory Droid SDK.
+ * A multi-agent orchestration system for the Factory Droid CLI.
  * Inspired by oh-my-opencode, reimagined for Factory Droid.
  *
  * Main features:
@@ -16,7 +16,7 @@
 import { loadConfig, findContextFiles, loadContextFromFiles } from './config/loader.js';
 import { getAgentDefinitions, omcSystemPrompt } from './droids/definitions.js';
 import { getDefaultMcpServers, toSdkMcpFormat } from './mcp/servers.js';
-import { omdToolsServer, getOmcToolNames } from './mcp/omc-tools-server.js';
+import { getOmcToolNames } from './mcp/tool-names.js';
 import { createMagicKeywordProcessor, detectMagicKeywords } from './features/magic-keywords.js';
 import { continuationSystemPromptAddition } from './features/continuation-enforcement.js';
 import {
@@ -32,7 +32,7 @@ import type { PluginConfig, SessionState } from './shared/types.js';
 export { loadConfig, getAgentDefinitions, omcSystemPrompt };
 export { getDefaultMcpServers, toSdkMcpFormat } from './mcp/servers.js';
 export { lspTools, astTools, allCustomTools } from './tools/index.js';
-export { omdToolsServer, omcToolNames, getOmcToolNames } from './mcp/omc-tools-server.js';
+export { omcToolNames, getOmcToolNames } from './mcp/tool-names.js';
 export { createMagicKeywordProcessor, detectMagicKeywords } from './features/magic-keywords.js';
 export {
   createBackgroundTaskManager,
@@ -168,7 +168,7 @@ export {
   ORCHESTRATOR_PROMPT_METADATA
 } from './droids/index.js';
 
-// Command expansion utilities for SDK integration
+// Command expansion utilities
 export {
   expandCommand,
   expandCommandPrompt,
@@ -187,7 +187,7 @@ export {
   install,
   isInstalled,
   getInstallInfo,
-  isClaudeInstalled,
+  isDroidInstalled,
   FACTORY_CONFIG_DIR as INSTALLER_FACTORY_CONFIG_DIR,
   AGENTS_DIR,
   COMMANDS_DIR,
@@ -210,7 +210,7 @@ export interface DroidOptions {
   skipContextInjection?: boolean;
   /** Custom system prompt addition */
   customSystemPrompt?: string;
-  /** API key (default: from ANTHROPIC_API_KEY env) */
+  /** Unused legacy option. Configure Factory authentication with FACTORY_API_KEY. */
   apiKey?: string;
 }
 
@@ -218,7 +218,7 @@ export interface DroidOptions {
  * Result of creating a OMD session
  */
 export interface DroidSession {
-  /** The query options to pass to Factory Droid SDK */
+  /** Session configuration; custom tools are served separately by the plugin's MCP bridge. */
   queryOptions: {
     options: {
       systemPrompt: string;
@@ -245,23 +245,16 @@ export interface DroidSession {
 /**
  * Create a OMD orchestration session
  *
- * This prepares all the configuration and options needed
- * to run a query with the Factory Droid SDK.
+ * Prepares orchestration configuration and prompt helpers without starting a model query.
+ * Factory Droid discovers custom tools through the plugin's standalone MCP bridge.
  *
  * @example
  * ```typescript
- * import { createOmcSession } from 'oh-my-droid';
- * import { query } from '@anthropic-ai/claude-agent-sdk';
+ * import { createDroidSession } from 'oh-my-droid';
  *
  * const session = createDroidSession();
  *
- * // Use with Factory Droid SDK
- * for await (const message of query({
- *   prompt: session.processPrompt("ultrawork refactor the authentication module"),
- *   ...session.queryOptions
- * })) {
- *   console.log(message);
- * }
+ * console.log(session.processPrompt("ultrawork refactor the authentication module"));
  * ```
  */
 export function createDroidSession(options?: DroidOptions): DroidSession {
@@ -343,7 +336,7 @@ export function createDroidSession(options?: DroidOptions): DroidSession {
     allowedTools.push(`mcp__${serverName}__*`);
   }
 
-  // Add OMC custom tools in MCP format (LSP, AST, python_repl)
+  // Allow custom tools served by the plugin's standalone MCP bridge (server id: t)
   const omdTools = getOmcToolNames({
     includeLsp: config.features?.lspTools !== false,
     includeAst: config.features?.astTools !== false,
@@ -369,10 +362,7 @@ export function createDroidSession(options?: DroidOptions): DroidSession {
       options: {
         systemPrompt,
         agents,
-        mcpServers: {
-          ...toSdkMcpFormat(externalMcpServers),
-          't': omdToolsServer as any
-        },
+        mcpServers: toSdkMcpFormat(externalMcpServers),
         allowedTools,
         permissionMode: 'acceptEdits'
       }

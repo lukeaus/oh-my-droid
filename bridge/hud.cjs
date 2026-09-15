@@ -226,7 +226,7 @@ async function getTokscaleAdapter() {
       version: (typeof tokscale.version === "function" ? tokscale.version() : tokscale.version) ?? "unknown",
       getReport: async () => {
         try {
-          const report = await tokscale.getModelReport({ sources: ["claude"] });
+          const report = await tokscale.getModelReport({ sources: TOKSCALE_SOURCES });
           return {
             totalInputTokens: report.totalInput ?? 0,
             totalOutputTokens: report.totalOutput ?? 0,
@@ -302,11 +302,12 @@ async function lookupPricingWithFallback(modelName) {
   }
   return getFallbackPricing(modelName);
 }
-var FALLBACK_ADAPTER, cachedAdapter, loadAttempted;
+var TOKSCALE_SOURCES, FALLBACK_ADAPTER, cachedAdapter, loadAttempted;
 var init_tokscale_adapter = __esm({
   "src/analytics/tokscale-adapter.ts"() {
     "use strict";
     init_types2();
+    TOKSCALE_SOURCES = ["droid"];
     FALLBACK_ADAPTER = {
       isAvailable: false
     };
@@ -439,7 +440,7 @@ function resetTokenTracker(sessionId) {
   globalTracker = new TokenTracker(sessionId);
   return globalTracker;
 }
-var fs2, path2, import_os3, TOKEN_LOG_FILE, SESSION_STATS_FILE, TokenTracker, globalTracker;
+var fs2, path2, import_os2, TOKEN_LOG_FILE, SESSION_STATS_FILE, TokenTracker, globalTracker;
 var init_token_tracker = __esm({
   "src/analytics/token-tracker.ts"() {
     "use strict";
@@ -447,9 +448,9 @@ var init_token_tracker = __esm({
     init_tokscale_adapter();
     fs2 = __toESM(require("fs/promises"), 1);
     path2 = __toESM(require("path"), 1);
-    import_os3 = require("os");
-    TOKEN_LOG_FILE = path2.join((0, import_os3.homedir)(), ".omd", "state", "token-tracking.jsonl");
-    SESSION_STATS_FILE = path2.join((0, import_os3.homedir)(), ".omd", "state", "session-token-stats.json");
+    import_os2 = require("os");
+    TOKEN_LOG_FILE = path2.join((0, import_os2.homedir)(), ".omd", "state", "token-tracking.jsonl");
+    SESSION_STATS_FILE = path2.join((0, import_os2.homedir)(), ".omd", "state", "session-token-stats.json");
     TokenTracker = class {
       currentSessionId;
       sessionStats;
@@ -785,13 +786,13 @@ var init_audit = __esm({
 // src/hooks/omd-orchestrator/index.ts
 function getGitDiffStats(directory) {
   try {
-    const output = (0, import_child_process2.execSync)("git diff --numstat HEAD", {
+    const output = (0, import_child_process.execSync)("git diff --numstat HEAD", {
       cwd: directory,
       encoding: "utf-8",
       timeout: 5e3
     }).trim();
     if (!output) return [];
-    const statusOutput = (0, import_child_process2.execSync)("git status --porcelain", {
+    const statusOutput = (0, import_child_process.execSync)("git status --porcelain", {
       cwd: directory,
       encoding: "utf-8",
       timeout: 5e3
@@ -828,11 +829,11 @@ function getGitDiffStats(directory) {
     return [];
   }
 }
-var import_child_process2;
+var import_child_process;
 var init_omd_orchestrator = __esm({
   "src/hooks/omd-orchestrator/index.ts"() {
     "use strict";
-    import_child_process2 = require("child_process");
+    import_child_process = require("child_process");
     init_constants();
     init_boulder_state();
     init_notepad();
@@ -1490,8 +1491,6 @@ var DEFAULT_HUD_CONFIG = {
     // Disabled by default for backward compatibility
     cwdFormat: "relative",
     omdLabel: true,
-    rateLimits: true,
-    // Show rate limits by default
     ralph: true,
     autopilot: true,
     team: true,
@@ -1845,316 +1844,6 @@ function readTeamStateForHud(directory) {
   } catch {
     return null;
   }
-}
-
-// src/hud/usage-api.ts
-var import_fs4 = require("fs");
-var import_os2 = require("os");
-var import_path4 = require("path");
-var import_child_process = require("child_process");
-var import_https = __toESM(require("https"), 1);
-var CACHE_TTL_SUCCESS_MS = 30 * 1e3;
-var CACHE_TTL_FAILURE_MS = 15 * 1e3;
-var API_TIMEOUT_MS = 1e4;
-var TOKEN_REFRESH_URL_HOSTNAME = "platform.claude.com";
-var TOKEN_REFRESH_URL_PATH = "/v1/oauth/token";
-var DEFAULT_OAUTH_CLIENT_ID = "9d1c250a-e61b-44d9-88ed-5944d1962f5e";
-function getCachePath() {
-  return (0, import_path4.join)((0, import_os2.homedir)(), ".factory/plugins/oh-my-droid/.usage-cache.json");
-}
-function readCache() {
-  try {
-    const cachePath = getCachePath();
-    if (!(0, import_fs4.existsSync)(cachePath)) return null;
-    const content = (0, import_fs4.readFileSync)(cachePath, "utf-8");
-    const cache = JSON.parse(content);
-    if (cache.data) {
-      if (cache.data.fiveHourResetsAt) {
-        cache.data.fiveHourResetsAt = new Date(cache.data.fiveHourResetsAt);
-      }
-      if (cache.data.weeklyResetsAt) {
-        cache.data.weeklyResetsAt = new Date(cache.data.weeklyResetsAt);
-      }
-    }
-    return cache;
-  } catch {
-    return null;
-  }
-}
-function writeCache(data, error = false) {
-  try {
-    const cachePath = getCachePath();
-    const cacheDir = (0, import_path4.dirname)(cachePath);
-    if (!(0, import_fs4.existsSync)(cacheDir)) {
-      (0, import_fs4.mkdirSync)(cacheDir, { recursive: true });
-    }
-    const cache = {
-      timestamp: Date.now(),
-      data,
-      error
-    };
-    (0, import_fs4.writeFileSync)(cachePath, JSON.stringify(cache, null, 2));
-  } catch {
-  }
-}
-function isCacheValid(cache) {
-  const ttl = cache.error ? CACHE_TTL_FAILURE_MS : CACHE_TTL_SUCCESS_MS;
-  return Date.now() - cache.timestamp < ttl;
-}
-function readKeychainCredentials() {
-  if (process.platform !== "darwin") return null;
-  try {
-    const result = (0, import_child_process.execSync)(
-      '/usr/bin/security find-generic-password -s "Factory Droid-credentials" -w 2>/dev/null',
-      { encoding: "utf-8", timeout: 2e3 }
-    ).trim();
-    if (!result) return null;
-    const parsed = JSON.parse(result);
-    const creds = parsed.claudeAiOauth || parsed;
-    if (creds.accessToken) {
-      return {
-        accessToken: creds.accessToken,
-        expiresAt: creds.expiresAt,
-        refreshToken: creds.refreshToken,
-        source: "keychain"
-      };
-    }
-  } catch {
-  }
-  return null;
-}
-function readFileCredentials() {
-  try {
-    const credPath = (0, import_path4.join)((0, import_os2.homedir)(), ".factory/.credentials.json");
-    if (!(0, import_fs4.existsSync)(credPath)) return null;
-    const content = (0, import_fs4.readFileSync)(credPath, "utf-8");
-    const parsed = JSON.parse(content);
-    const creds = parsed.claudeAiOauth || parsed;
-    if (creds.accessToken) {
-      return {
-        accessToken: creds.accessToken,
-        expiresAt: creds.expiresAt,
-        refreshToken: creds.refreshToken,
-        source: "file"
-      };
-    }
-  } catch {
-  }
-  return null;
-}
-function getCredentials() {
-  const keychainCreds = readKeychainCredentials();
-  if (keychainCreds) return keychainCreds;
-  return readFileCredentials();
-}
-function validateCredentials(creds) {
-  if (!creds.accessToken) return false;
-  if (creds.expiresAt != null) {
-    const now = Date.now();
-    if (creds.expiresAt <= now) return false;
-  }
-  return true;
-}
-function refreshAccessToken(refreshToken) {
-  return new Promise((resolve) => {
-    const clientId = process.env.CLAUDE_CODE_OAUTH_CLIENT_ID || DEFAULT_OAUTH_CLIENT_ID;
-    const body = new URLSearchParams({
-      grant_type: "refresh_token",
-      refresh_token: refreshToken,
-      client_id: clientId
-    }).toString();
-    const req = import_https.default.request(
-      {
-        hostname: TOKEN_REFRESH_URL_HOSTNAME,
-        path: TOKEN_REFRESH_URL_PATH,
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-          "Content-Length": Buffer.byteLength(body)
-        },
-        timeout: API_TIMEOUT_MS
-      },
-      (res) => {
-        let data = "";
-        res.on("data", (chunk) => {
-          data += chunk;
-        });
-        res.on("end", () => {
-          if (res.statusCode === 200) {
-            try {
-              const parsed = JSON.parse(data);
-              if (parsed.access_token) {
-                resolve({
-                  accessToken: parsed.access_token,
-                  refreshToken: parsed.refresh_token || refreshToken,
-                  expiresAt: parsed.expires_in ? Date.now() + parsed.expires_in * 1e3 : parsed.expires_at
-                });
-                return;
-              }
-            } catch {
-            }
-          }
-          if (process.env.OMC_DEBUG) {
-            console.error(`[usage-api] Token refresh failed: HTTP ${res.statusCode}`);
-          }
-          resolve(null);
-        });
-      }
-    );
-    req.on("error", () => resolve(null));
-    req.on("timeout", () => {
-      req.destroy();
-      resolve(null);
-    });
-    req.end(body);
-  });
-}
-function fetchUsageFromApi(accessToken) {
-  return new Promise((resolve) => {
-    const req = import_https.default.request(
-      {
-        hostname: "api.anthropic.com",
-        path: "/api/oauth/usage",
-        method: "GET",
-        headers: {
-          "Authorization": `Bearer ${accessToken}`,
-          "anthropic-beta": "oauth-2025-04-20",
-          "Content-Type": "application/json"
-        },
-        timeout: API_TIMEOUT_MS
-      },
-      (res) => {
-        let data = "";
-        res.on("data", (chunk) => {
-          data += chunk;
-        });
-        res.on("end", () => {
-          if (res.statusCode === 200) {
-            try {
-              resolve(JSON.parse(data));
-            } catch {
-              resolve(null);
-            }
-          } else {
-            resolve(null);
-          }
-        });
-      }
-    );
-    req.on("error", () => resolve(null));
-    req.on("timeout", () => {
-      req.destroy();
-      resolve(null);
-    });
-    req.end();
-  });
-}
-function writeBackCredentials(creds) {
-  try {
-    const credPath = (0, import_path4.join)((0, import_os2.homedir)(), ".factory/.credentials.json");
-    if (!(0, import_fs4.existsSync)(credPath)) return;
-    const content = (0, import_fs4.readFileSync)(credPath, "utf-8");
-    const parsed = JSON.parse(content);
-    if (parsed.claudeAiOauth) {
-      parsed.claudeAiOauth.accessToken = creds.accessToken;
-      if (creds.expiresAt != null) {
-        parsed.claudeAiOauth.expiresAt = creds.expiresAt;
-      }
-      if (creds.refreshToken) {
-        parsed.claudeAiOauth.refreshToken = creds.refreshToken;
-      }
-    } else {
-      parsed.accessToken = creds.accessToken;
-      if (creds.expiresAt != null) {
-        parsed.expiresAt = creds.expiresAt;
-      }
-      if (creds.refreshToken) {
-        parsed.refreshToken = creds.refreshToken;
-      }
-    }
-    const tmpPath = `${credPath}.tmp.${process.pid}`;
-    try {
-      (0, import_fs4.writeFileSync)(tmpPath, JSON.stringify(parsed, null, 2), { mode: 384 });
-      (0, import_fs4.renameSync)(tmpPath, credPath);
-    } catch (writeErr) {
-      try {
-        if ((0, import_fs4.existsSync)(tmpPath)) {
-          (0, import_fs4.unlinkSync)(tmpPath);
-        }
-      } catch {
-      }
-      throw writeErr;
-    }
-  } catch {
-    if (process.env.OMC_DEBUG) {
-      console.error("[usage-api] Failed to write back refreshed credentials");
-    }
-  }
-}
-function parseUsageResponse(response) {
-  const fiveHour = response.five_hour?.utilization;
-  const sevenDay = response.seven_day?.utilization;
-  if (fiveHour == null && sevenDay == null) return null;
-  const clamp = (v) => {
-    if (v == null || !isFinite(v)) return 0;
-    return Math.max(0, Math.min(100, v));
-  };
-  const parseDate = (dateStr) => {
-    if (!dateStr) return null;
-    try {
-      const date = new Date(dateStr);
-      return isNaN(date.getTime()) ? null : date;
-    } catch {
-      return null;
-    }
-  };
-  const sonnetSevenDay = response.seven_day_sonnet?.utilization;
-  const sonnetResetsAt = response.seven_day_sonnet?.resets_at;
-  const result = {
-    fiveHourPercent: clamp(fiveHour),
-    weeklyPercent: clamp(sevenDay),
-    fiveHourResetsAt: parseDate(response.five_hour?.resets_at),
-    weeklyResetsAt: parseDate(response.seven_day?.resets_at)
-  };
-  if (sonnetSevenDay != null) {
-    result.sonnetWeeklyPercent = clamp(sonnetSevenDay);
-    result.sonnetWeeklyResetsAt = parseDate(sonnetResetsAt);
-  }
-  return result;
-}
-async function getUsage() {
-  const cache = readCache();
-  if (cache && isCacheValid(cache)) {
-    return cache.data;
-  }
-  let creds = getCredentials();
-  if (!creds) {
-    writeCache(null, true);
-    return null;
-  }
-  if (!validateCredentials(creds)) {
-    if (creds.refreshToken) {
-      const refreshed = await refreshAccessToken(creds.refreshToken);
-      if (refreshed) {
-        creds = { ...creds, ...refreshed };
-        writeBackCredentials(creds);
-      } else {
-        writeCache(null, true);
-        return null;
-      }
-    } else {
-      writeCache(null, true);
-      return null;
-    }
-  }
-  const response = await fetchUsageFromApi(creds.accessToken);
-  if (!response) {
-    writeCache(null, true);
-    return null;
-  }
-  const usage = parseUsageResponse(response);
-  writeCache(usage, !usage);
-  return usage;
 }
 
 // src/hud/colors.ts
@@ -2646,74 +2335,12 @@ function renderPrd(state) {
   return null;
 }
 
-// src/hud/elements/limits.ts
-var GREEN7 = "\x1B[32m";
-var YELLOW6 = "\x1B[33m";
-var RED4 = "\x1B[31m";
-var DIM4 = "\x1B[2m";
-var WARNING_THRESHOLD = 70;
-var CRITICAL_THRESHOLD = 90;
-function getColor(percent) {
-  if (percent >= CRITICAL_THRESHOLD) {
-    return RED4;
-  } else if (percent >= WARNING_THRESHOLD) {
-    return YELLOW6;
-  }
-  return GREEN7;
-}
-function formatResetTime(date) {
-  if (!date) return null;
-  const now = Date.now();
-  const resetMs = date.getTime();
-  const diffMs = resetMs - now;
-  if (diffMs <= 0) return null;
-  const diffMinutes = Math.floor(diffMs / 6e4);
-  const diffHours = Math.floor(diffMinutes / 60);
-  const diffDays = Math.floor(diffHours / 24);
-  if (diffDays > 0) {
-    const remainingHours = diffHours % 24;
-    return `${diffDays}d${remainingHours}h`;
-  }
-  const remainingMinutes = diffMinutes % 60;
-  return `${diffHours}h${remainingMinutes}m`;
-}
-function renderRateLimits(limits) {
-  if (!limits) return null;
-  const fiveHour = Math.min(100, Math.max(0, Math.round(limits.fiveHourPercent)));
-  const weekly = Math.min(100, Math.max(0, Math.round(limits.weeklyPercent)));
-  const fiveHourColor = getColor(fiveHour);
-  const weeklyColor = getColor(weekly);
-  const fiveHourReset = formatResetTime(limits.fiveHourResetsAt);
-  const weeklyReset = formatResetTime(limits.weeklyResetsAt);
-  const fiveHourPart = fiveHourReset ? `5h:${fiveHourColor}${fiveHour}%${RESET}${DIM4}(${fiveHourReset})${RESET}` : `5h:${fiveHourColor}${fiveHour}%${RESET}`;
-  const weeklyPart = weeklyReset ? `${DIM4}wk:${RESET}${weeklyColor}${weekly}%${RESET}${DIM4}(${weeklyReset})${RESET}` : `${DIM4}wk:${RESET}${weeklyColor}${weekly}%${RESET}`;
-  return `${fiveHourPart} ${weeklyPart}`;
-}
-function renderRateLimitsWithBar(limits, barWidth = 8) {
-  if (!limits) return null;
-  const fiveHour = Math.min(100, Math.max(0, Math.round(limits.fiveHourPercent)));
-  const weekly = Math.min(100, Math.max(0, Math.round(limits.weeklyPercent)));
-  const fiveHourColor = getColor(fiveHour);
-  const weeklyColor = getColor(weekly);
-  const fiveHourFilled = Math.round(fiveHour / 100 * barWidth);
-  const fiveHourEmpty = barWidth - fiveHourFilled;
-  const fiveHourBar = `${fiveHourColor}${"\u2588".repeat(fiveHourFilled)}${DIM4}${"\u2591".repeat(fiveHourEmpty)}${RESET}`;
-  const weeklyFilled = Math.round(weekly / 100 * barWidth);
-  const weeklyEmpty = barWidth - weeklyFilled;
-  const weeklyBar = `${weeklyColor}${"\u2588".repeat(weeklyFilled)}${DIM4}${"\u2591".repeat(weeklyEmpty)}${RESET}`;
-  const fiveHourReset = formatResetTime(limits.fiveHourResetsAt);
-  const weeklyReset = formatResetTime(limits.weeklyResetsAt);
-  const fiveHourPart = fiveHourReset ? `5h:[${fiveHourBar}]${fiveHourColor}${fiveHour}%${RESET}${DIM4}(${fiveHourReset})${RESET}` : `5h:[${fiveHourBar}]${fiveHourColor}${fiveHour}%${RESET}`;
-  const weeklyPart = weeklyReset ? `${DIM4}wk:${RESET}[${weeklyBar}]${weeklyColor}${weekly}%${RESET}${DIM4}(${weeklyReset})${RESET}` : `${DIM4}wk:${RESET}[${weeklyBar}]${weeklyColor}${weekly}%${RESET}`;
-  return `${fiveHourPart} ${weeklyPart}`;
-}
-
 // src/hud/elements/permission.ts
-var YELLOW7 = "\x1B[33m";
-var DIM5 = "\x1B[2m";
+var YELLOW6 = "\x1B[33m";
+var DIM4 = "\x1B[2m";
 function renderPermission(pending) {
   if (!pending) return null;
-  return `${YELLOW7}APPROVE?${RESET} ${DIM5}${pending.toolName.toLowerCase()}${RESET}:${pending.targetSummary}`;
+  return `${YELLOW6}APPROVE?${RESET} ${DIM4}${pending.toolName.toLowerCase()}${RESET}:${pending.targetSummary}`;
 }
 
 // src/hud/elements/thinking.ts
@@ -2735,20 +2362,20 @@ function renderThinking(state, format = "text") {
 }
 
 // src/hud/elements/session.ts
-var GREEN8 = "\x1B[32m";
-var YELLOW8 = "\x1B[33m";
-var RED5 = "\x1B[31m";
+var GREEN7 = "\x1B[32m";
+var YELLOW7 = "\x1B[33m";
+var RED4 = "\x1B[31m";
 function renderSession(session) {
   if (!session) return null;
-  const color = session.health === "critical" ? RED5 : session.health === "warning" ? YELLOW8 : GREEN8;
+  const color = session.health === "critical" ? RED4 : session.health === "warning" ? YELLOW7 : GREEN7;
   return `session:${color}${session.durationMinutes}m${RESET}`;
 }
 
 // src/hud/elements/autopilot.ts
 var CYAN7 = "\x1B[36m";
-var GREEN9 = "\x1B[32m";
-var YELLOW9 = "\x1B[33m";
-var RED6 = "\x1B[31m";
+var GREEN8 = "\x1B[32m";
+var YELLOW8 = "\x1B[33m";
+var RED5 = "\x1B[31m";
 var MAGENTA3 = "\x1B[35m";
 var PHASE_NAMES = {
   expansion: "Expand",
@@ -2778,16 +2405,16 @@ function renderAutopilot(state, _thresholds) {
   let phaseColor;
   switch (phase) {
     case "complete":
-      phaseColor = GREEN9;
+      phaseColor = GREEN8;
       break;
     case "failed":
-      phaseColor = RED6;
+      phaseColor = RED5;
       break;
     case "validation":
       phaseColor = MAGENTA3;
       break;
     case "qa":
-      phaseColor = YELLOW9;
+      phaseColor = YELLOW8;
       break;
     default:
       phaseColor = CYAN7;
@@ -2797,7 +2424,7 @@ function renderAutopilot(state, _thresholds) {
     output += ` (iter ${iteration}/${maxIterations})`;
   }
   if (phase === "execution" && tasksTotal && tasksTotal > 0) {
-    const taskColor = tasksCompleted === tasksTotal ? GREEN9 : YELLOW9;
+    const taskColor = tasksCompleted === tasksTotal ? GREEN8 : YELLOW8;
     output += ` | Tasks: ${taskColor}${tasksCompleted || 0}/${tasksTotal}${RESET}`;
   }
   if (filesCreated && filesCreated > 0) {
@@ -2808,9 +2435,9 @@ function renderAutopilot(state, _thresholds) {
 
 // src/hud/elements/team.ts
 var CYAN8 = "\x1B[36m";
-var GREEN10 = "\x1B[32m";
-var YELLOW10 = "\x1B[33m";
-var RED7 = "\x1B[31m";
+var GREEN9 = "\x1B[32m";
+var YELLOW9 = "\x1B[33m";
+var RED6 = "\x1B[31m";
 var PHASE_NAMES2 = {
   init: "Init",
   delegate: "Assign",
@@ -2826,18 +2453,18 @@ function renderTeam(state) {
   const phaseName = PHASE_NAMES2[phase] || phase;
   let statusColor;
   if (failed > 0) {
-    statusColor = RED7;
+    statusColor = RED6;
   } else if (completed === totalMembers) {
-    statusColor = GREEN10;
+    statusColor = GREEN9;
   } else if (running > 0) {
     statusColor = CYAN8;
   } else {
-    statusColor = YELLOW10;
+    statusColor = YELLOW9;
   }
   const progress = `${statusColor}${completed}/${totalMembers}${RESET}`;
   let output = `${CYAN8}[TEAM:${teamName}]${RESET} ${progress} done`;
   if (failed > 0) {
-    output += ` ${RED7}${failed} failed${RESET}`;
+    output += ` ${RED6}${failed} failed${RESET}`;
   }
   output += ` | ${phaseName}`;
   return output;
@@ -3053,10 +2680,6 @@ async function render(context, config) {
   }
   if (enabledElements.omdLabel) {
     elements.push(bold("[OMD]"));
-  }
-  if (enabledElements.rateLimits && context.rateLimits) {
-    const limits = enabledElements.useBars ? renderRateLimitsWithBar(context.rateLimits) : renderRateLimits(context.rateLimits);
-    if (limits) elements.push(limits);
   }
   if (enabledElements.permissionStatus && context.pendingPermission) {
     const permission = renderPermission(context.pendingPermission);
@@ -3336,7 +2959,6 @@ async function main() {
     const team = readTeamStateForHud(cwd);
     const hudState = readHudState(cwd);
     const backgroundTasks = hudState?.backgroundTasks || [];
-    const rateLimits = config.elements.rateLimits !== false ? await getUsage() : null;
     const context = {
       contextPercent: getContextPercent(stdin),
       modelName: getModelName(stdin),
@@ -3350,7 +2972,6 @@ async function main() {
       backgroundTasks: getRunningTasks(hudState),
       cwd,
       lastSkill: transcriptData.lastActivatedSkill || null,
-      rateLimits,
       pendingPermission: transcriptData.pendingPermission || null,
       thinkingState: transcriptData.thinkingState || null,
       sessionHealth: await calculateSessionHealth(

@@ -65,13 +65,13 @@ export function shouldUseNodeHooks(): boolean {
 }
 
 /** Get the Factory Droid config directory path (cross-platform) */
-export function getClaudeConfigDir(): string {
+export function getFactoryConfigDir(): string {
   return join(homedir(), '.factory');
 }
 
 /** Get the hooks directory path */
 export function getHooksDir(): string {
-  return join(getClaudeConfigDir(), 'hooks');
+  return join(getFactoryConfigDir(), 'hooks');
 }
 
 /**

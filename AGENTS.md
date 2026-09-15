@@ -1,10 +1,10 @@
-<!-- Generated: 2026-01-28 | Updated: 2026-01-31 -->
+<!-- Generated: 2026-01-28 | Updated: 2026-09-15 -->
 
 # oh-my-droid
 
 Multi-agent orchestration system for Factory Droid CLI, providing intelligent delegation, parallel execution, and IDE-like capabilities through LSP/AST integration.
 
-**Version:** 3.8.17
+**Version:** 4.0.0 (unreleased)
 **Purpose:** Transform Factory Droid into a conductor of specialized AI agents
 **Inspired by:** oh-my-zsh / oh-my-opencode
 
@@ -15,7 +15,7 @@ oh-my-droid enhances Factory Droid with:
 - **32 specialized agents** across multiple domains in three scope tiers (light/medium/heavy)
 - **38 skills** for workflow automation and specialized behaviors
 - **31 hooks** for event-driven execution modes and enhancements
-- **15 custom tools** including 12 LSP, 2 AST, and Python REPL
+- **19 MCP tools** including 12 LSP, 2 AST, Python REPL, swarm, and 3 skill tools
 - **Execution modes**: autopilot, ultrawork, ralph, ultrapilot, swarm, pipeline, ecomode
 - **MCP integration** with plugin-scoped tool discovery and skill loading
 
@@ -29,6 +29,7 @@ oh-my-droid enhances Factory Droid with:
 | `docs/FACTORY.md` | End-user orchestration instructions (installed to user projects) |
 | `src/index.ts` | Main entry point - exports `createDroidSession()` |
 | `.mcp.json` | MCP server configuration for plugin discovery |
+| `src/mcp/tool-names.ts` | MCP tool names and category filtering (no in-process server) |
 | `.factory-plugin/plugin.json` | Factory Droid plugin manifest |
 
 ## Subdirectories
@@ -42,7 +43,8 @@ oh-my-droid enhances Factory Droid with:
 | `scripts/` | Build scripts, utilities, and automation | - |
 | `docs/` | User documentation and guides | `docs/AGENTS.md` |
 | `templates/` | Hook and rule templates (coding-style, testing, security, performance, git-workflow) | - |
-| `benchmark/` | Performance testing framework | - |
+| `benchmark/` | Historical, unsupported upstream harness; not packaged or ported | - |
+| `seminar/` | Historical, unsupported upstream slides/demos; not packaged | - |
 | `bridge/` | Pre-bundled runtimes for plugin distribution (MCP server, HUD, hook runtime, skill bridge) | - |
 
 ## For AI Agents
@@ -99,7 +101,7 @@ oh-my-droid enhances Factory Droid with:
 | `src/hooks/{session-end,subagent-tracker,pre-compact,permission-handler,setup}/*` | rebuild `bridge/hooks.cjs` (`npm run build`) and commit it |
 | `src/hooks/learner/bridge.ts` | rebuild `bridge/skill-bridge.cjs` (`npm run build`) and commit it |
 | Agent prompt | Tiered variants (`-low`, `-medium`, `-high`) |
-| Tool definition | `src/tools/index.ts`, `src/mcp/omc-tools-server.ts`, `docs/REFERENCE.md` |
+| Tool definition | `src/tools/index.ts`, `src/mcp/omc-tools-server.ts` (shared registry), `docs/REFERENCE.md` |
 | `src/hud/*` | `commands/hud.md`, `skills/hud/SKILL.md` |
 | `src/mcp/*` | `docs/REFERENCE.md` (MCP Tools section) |
 | Agent tool assignments | `docs/FACTORY.md` (Agent Tool Matrix) |
@@ -303,7 +305,7 @@ JavaScript, TypeScript, TSX, Python, Ruby, Go, Rust, Java, Kotlin, Swift, C, C++
 
 | Package | Purpose |
 |---------|---------|
-| `@anthropic-ai/claude-agent-sdk` | Factory Droid integration |
+| `@modelcontextprotocol/sdk` | Standalone stdio MCP bridge (`t`); no Claude Agent SDK dependency |
 | `@ast-grep/napi` | AST-based code search/replace |
 | `vscode-languageserver-protocol` | LSP types |
 | `zod` | Runtime schema validation |

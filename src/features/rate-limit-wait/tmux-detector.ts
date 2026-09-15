@@ -43,13 +43,8 @@ const RATE_LIMIT_PATTERNS = [
 ];
 
 /** Patterns that indicate Factory Droid is running */
-const CLAUDE_CODE_PATTERNS = [
-  /droid/i,
-  /anthropic/i,
-  /\$ droid/,
-  /factory droid/i,
-  /conversation/i,
-  /assistant/i,
+const DROID_PATTERNS = [
+  /\bdroid\b/i,
 ];
 
 /** Patterns that indicate the pane is waiting for user input */
@@ -169,7 +164,7 @@ export function capturePaneContent(paneId: string, lines = 15): string {
 export function analyzePaneContent(content: string): PaneAnalysisResult {
   if (!content.trim()) {
     return {
-      hasClaudeCode: false,
+      hasDroid: false,
       hasRateLimitMessage: false,
       isBlocked: false,
       confidence: 0,
@@ -177,7 +172,7 @@ export function analyzePaneContent(content: string): PaneAnalysisResult {
   }
 
   // Check for Factory Droid indicators
-  const hasClaudeCode = CLAUDE_CODE_PATTERNS.some((pattern) =>
+  const hasDroid = DROID_PATTERNS.some((pattern) =>
     pattern.test(content)
   );
 
@@ -204,16 +199,16 @@ export function analyzePaneContent(content: string): PaneAnalysisResult {
 
   // Calculate confidence
   let confidence = 0;
-  if (hasClaudeCode) confidence += 0.4;
+  if (hasDroid) confidence += 0.4;
   if (hasRateLimitMessage) confidence += 0.4;
   if (isWaiting) confidence += 0.2;
   if (rateLimitMatches.length > 1) confidence += 0.1; // Multiple matches = higher confidence
 
   // Determine if blocked
-  const isBlocked = hasClaudeCode && hasRateLimitMessage && confidence >= 0.6;
+  const isBlocked = hasDroid && hasRateLimitMessage && confidence >= 0.6;
 
   return {
-    hasClaudeCode,
+    hasDroid,
     hasRateLimitMessage,
     isBlocked,
     rateLimitType,

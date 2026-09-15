@@ -2244,8 +2244,8 @@ var require_resolve = __commonJS({
       }
       return count;
     }
-    function getFullPath(resolver, id = "", normalize) {
-      if (normalize !== false)
+    function getFullPath(resolver, id = "", normalize4) {
+      if (normalize4 !== false)
         id = normalizeId(id);
       const p = resolver.parse(id);
       return _getFullPath(resolver, p);
@@ -2993,7 +2993,7 @@ var require_compile = __commonJS({
       const schOrFunc = root.refs[ref];
       if (schOrFunc)
         return schOrFunc;
-      let _sch = resolve5.call(this, root, ref);
+      let _sch = resolve6.call(this, root, ref);
       if (_sch === void 0) {
         const schema = (_a = root.localRefs) === null || _a === void 0 ? void 0 : _a[ref];
         const { schemaId } = this.opts;
@@ -3020,7 +3020,7 @@ var require_compile = __commonJS({
     function sameSchemaEnv(s1, s2) {
       return s1.schema === s2.schema && s1.root === s2.root && s1.baseId === s2.baseId;
     }
-    function resolve5(root, ref) {
+    function resolve6(root, ref) {
       let sch;
       while (typeof (sch = this.refs[ref]) == "string")
         ref = sch;
@@ -3585,7 +3585,7 @@ var require_fast_uri = __commonJS({
     "use strict";
     var { normalizeIPv6, removeDotSegments, recomposeAuthority, normalizeComponentEncoding, isIPv4, nonSimpleDomain } = require_utils();
     var { SCHEMES, getSchemeHandler } = require_schemes();
-    function normalize(uri, options) {
+    function normalize4(uri, options) {
       if (typeof uri === "string") {
         uri = /** @type {T} */
         serialize(parse5(uri, options), options);
@@ -3595,55 +3595,55 @@ var require_fast_uri = __commonJS({
       }
       return uri;
     }
-    function resolve5(baseURI, relativeURI, options) {
+    function resolve6(baseURI, relativeURI, options) {
       const schemelessOptions = options ? Object.assign({ scheme: "null" }, options) : { scheme: "null" };
       const resolved = resolveComponent(parse5(baseURI, schemelessOptions), parse5(relativeURI, schemelessOptions), schemelessOptions, true);
       schemelessOptions.skipEscape = true;
       return serialize(resolved, schemelessOptions);
     }
-    function resolveComponent(base, relative, options, skipNormalization) {
+    function resolveComponent(base, relative3, options, skipNormalization) {
       const target = {};
       if (!skipNormalization) {
         base = parse5(serialize(base, options), options);
-        relative = parse5(serialize(relative, options), options);
+        relative3 = parse5(serialize(relative3, options), options);
       }
       options = options || {};
-      if (!options.tolerant && relative.scheme) {
-        target.scheme = relative.scheme;
-        target.userinfo = relative.userinfo;
-        target.host = relative.host;
-        target.port = relative.port;
-        target.path = removeDotSegments(relative.path || "");
-        target.query = relative.query;
+      if (!options.tolerant && relative3.scheme) {
+        target.scheme = relative3.scheme;
+        target.userinfo = relative3.userinfo;
+        target.host = relative3.host;
+        target.port = relative3.port;
+        target.path = removeDotSegments(relative3.path || "");
+        target.query = relative3.query;
       } else {
-        if (relative.userinfo !== void 0 || relative.host !== void 0 || relative.port !== void 0) {
-          target.userinfo = relative.userinfo;
-          target.host = relative.host;
-          target.port = relative.port;
-          target.path = removeDotSegments(relative.path || "");
-          target.query = relative.query;
+        if (relative3.userinfo !== void 0 || relative3.host !== void 0 || relative3.port !== void 0) {
+          target.userinfo = relative3.userinfo;
+          target.host = relative3.host;
+          target.port = relative3.port;
+          target.path = removeDotSegments(relative3.path || "");
+          target.query = relative3.query;
         } else {
-          if (!relative.path) {
+          if (!relative3.path) {
             target.path = base.path;
-            if (relative.query !== void 0) {
-              target.query = relative.query;
+            if (relative3.query !== void 0) {
+              target.query = relative3.query;
             } else {
               target.query = base.query;
             }
           } else {
-            if (relative.path[0] === "/") {
-              target.path = removeDotSegments(relative.path);
+            if (relative3.path[0] === "/") {
+              target.path = removeDotSegments(relative3.path);
             } else {
               if ((base.userinfo !== void 0 || base.host !== void 0 || base.port !== void 0) && !base.path) {
-                target.path = "/" + relative.path;
+                target.path = "/" + relative3.path;
               } else if (!base.path) {
-                target.path = relative.path;
+                target.path = relative3.path;
               } else {
-                target.path = base.path.slice(0, base.path.lastIndexOf("/") + 1) + relative.path;
+                target.path = base.path.slice(0, base.path.lastIndexOf("/") + 1) + relative3.path;
               }
               target.path = removeDotSegments(target.path);
             }
-            target.query = relative.query;
+            target.query = relative3.query;
           }
           target.userinfo = base.userinfo;
           target.host = base.host;
@@ -3651,7 +3651,7 @@ var require_fast_uri = __commonJS({
         }
         target.scheme = base.scheme;
       }
-      target.fragment = relative.fragment;
+      target.fragment = relative3.fragment;
       return target;
     }
     function equal(uriA, uriB, options) {
@@ -3821,8 +3821,8 @@ var require_fast_uri = __commonJS({
     }
     var fastUri = {
       SCHEMES,
-      normalize,
-      resolve: resolve5,
+      normalize: normalize4,
+      resolve: resolve6,
       resolveComponent,
       equal,
       serialize,
@@ -16692,7 +16692,7 @@ var Protocol = class {
           return;
         }
         const pollInterval = task2.pollInterval ?? this._options?.defaultTaskPollInterval ?? 1e3;
-        await new Promise((resolve5) => setTimeout(resolve5, pollInterval));
+        await new Promise((resolve6) => setTimeout(resolve6, pollInterval));
         options?.signal?.throwIfAborted();
       }
     } catch (error2) {
@@ -16709,7 +16709,7 @@ var Protocol = class {
    */
   request(request, resultSchema, options) {
     const { relatedRequestId, resumptionToken, onresumptiontoken, task, relatedTask } = options ?? {};
-    return new Promise((resolve5, reject) => {
+    return new Promise((resolve6, reject) => {
       const earlyReject = (error2) => {
         reject(error2);
       };
@@ -16787,7 +16787,7 @@ var Protocol = class {
           if (!parseResult.success) {
             reject(parseResult.error);
           } else {
-            resolve5(parseResult.data);
+            resolve6(parseResult.data);
           }
         } catch (error2) {
           reject(error2);
@@ -17048,12 +17048,12 @@ var Protocol = class {
       }
     } catch {
     }
-    return new Promise((resolve5, reject) => {
+    return new Promise((resolve6, reject) => {
       if (signal.aborted) {
         reject(new McpError(ErrorCode.InvalidRequest, "Request cancelled"));
         return;
       }
-      const timeoutId = setTimeout(resolve5, interval);
+      const timeoutId = setTimeout(resolve6, interval);
       signal.addEventListener("abort", () => {
         clearTimeout(timeoutId);
         reject(new McpError(ErrorCode.InvalidRequest, "Request cancelled"));
@@ -17923,12 +17923,12 @@ var StdioServerTransport = class {
     this.onclose?.();
   }
   send(message) {
-    return new Promise((resolve5) => {
+    return new Promise((resolve6) => {
       const json = serializeMessage(message);
       if (this._stdout.write(json)) {
-        resolve5();
+        resolve6();
       } else {
-        this._stdout.once("drain", resolve5);
+        this._stdout.once("drain", resolve6);
       }
     });
   }
@@ -18109,7 +18109,7 @@ var LspClient = class {
 Install with: ${this.serverConfig.installHint}`
       );
     }
-    return new Promise((resolve5, reject) => {
+    return new Promise((resolve6, reject) => {
       this.process = (0, import_child_process2.spawn)(this.serverConfig.command, this.serverConfig.args, {
         cwd: this.workspaceRoot,
         stdio: ["pipe", "pipe", "pipe"]
@@ -18132,7 +18132,7 @@ Install with: ${this.serverConfig.installHint}`
       });
       this.initialize().then(() => {
         this.initialized = true;
-        resolve5();
+        resolve6();
       }).catch(reject);
     });
   }
@@ -18228,13 +18228,13 @@ Install with: ${this.serverConfig.installHint}`
     const message = `Content-Length: ${Buffer.byteLength(content)}\r
 \r
 ${content}`;
-    return new Promise((resolve5, reject) => {
+    return new Promise((resolve6, reject) => {
       const timeoutHandle = setTimeout(() => {
         this.pendingRequests.delete(id);
         reject(new Error(`LSP request '${method}' timed out after ${timeout}ms`));
       }, timeout);
       this.pendingRequests.set(id, {
-        resolve: resolve5,
+        resolve: resolve6,
         reject,
         timeout: timeoutHandle
       });
@@ -18303,7 +18303,7 @@ ${content}`;
       }
     });
     this.openDocuments.add(uri);
-    await new Promise((resolve5) => setTimeout(resolve5, 100));
+    await new Promise((resolve6) => setTimeout(resolve6, 100));
   }
   /**
    * Close a document
@@ -18798,7 +18798,7 @@ async function runLspAggregatedDiagnostics(directory, extensions = [".ts", ".tsx
         continue;
       }
       await client.openDocument(file);
-      await new Promise((resolve5) => setTimeout(resolve5, LSP_DIAGNOSTICS_WAIT_MS));
+      await new Promise((resolve6) => setTimeout(resolve6, LSP_DIAGNOSTICS_WAIT_MS));
       const diagnostics = client.getDiagnostics(file);
       for (const diagnostic of diagnostics) {
         allDiagnostics.push({
@@ -19048,7 +19048,7 @@ var lspDiagnosticsTool = {
     const { file, severity } = args;
     return withLspClient(file, "diagnostics", async (client) => {
       await client.openDocument(file);
-      await new Promise((resolve5) => setTimeout(resolve5, LSP_DIAGNOSTICS_WAIT_MS));
+      await new Promise((resolve6) => setTimeout(resolve6, LSP_DIAGNOSTICS_WAIT_MS));
       let diagnostics = client.getDiagnostics(file);
       if (severity) {
         const severityMap = {
@@ -20258,7 +20258,7 @@ var SessionLock = class {
   }
 };
 function sleep(ms) {
-  return new Promise((resolve5) => setTimeout(resolve5, ms));
+  return new Promise((resolve6) => setTimeout(resolve6, ms));
 }
 
 // src/tools/python-repl/socket-client.ts
@@ -20288,7 +20288,7 @@ var JsonRpcError = class extends Error {
   }
 };
 async function sendSocketRequest(socketPath, method, params, timeout = 6e4) {
-  return new Promise((resolve5, reject) => {
+  return new Promise((resolve6, reject) => {
     const id = (0, import_crypto.randomUUID)();
     const request = {
       jsonrpc: "2.0",
@@ -20352,7 +20352,7 @@ async function sendSocketRequest(socketPath, method, params, timeout = 6e4) {
             ));
             return;
           }
-          resolve5(response.result);
+          resolve6(response.result);
         } catch (e) {
           reject(new Error(
             `Failed to parse JSON-RPC response: ${e.message}`
@@ -20670,7 +20670,7 @@ async function deleteBridgeMeta(sessionId) {
   }
 }
 function sleep2(ms) {
-  return new Promise((resolve5) => setTimeout(resolve5, ms));
+  return new Promise((resolve6) => setTimeout(resolve6, ms));
 }
 
 // src/tools/python-repl/tool.ts
@@ -21105,10 +21105,405 @@ var pythonReplTool = {
   }
 };
 
-// src/hooks/swarm/index.ts
+// src/tools/skills-tools.ts
+var import_path10 = require("path");
+var import_os2 = require("os");
+
+// src/hooks/learner/loader.ts
+var import_fs7 = require("fs");
 var import_crypto2 = require("crypto");
-var import_fs8 = require("fs");
 var import_path9 = require("path");
+
+// src/hooks/learner/finder.ts
+var import_fs6 = require("fs");
+var import_path8 = require("path");
+
+// src/hooks/learner/constants.ts
+var import_path7 = require("path");
+var import_os = require("os");
+var AGENTS_SKILLS_DIR = (0, import_path7.join)((0, import_os.homedir)(), ".agents", "skills");
+var USER_SKILLS_DIR = (0, import_path7.join)(AGENTS_SKILLS_DIR, "droid-learned");
+var PROJECT_SKILLS_SUBDIR = (0, import_path7.join)(".agents", "skills", "droid-learned");
+var LEGACY_USER_SKILLS_DIRS = [
+  (0, import_path7.join)((0, import_os.homedir)(), ".factory", "skills", "droid-learned"),
+  (0, import_path7.join)((0, import_os.homedir)(), ".factory", "skills", "omc-learned"),
+  (0, import_path7.join)((0, import_os.homedir)(), ".omd", "skills")
+];
+var LEGACY_PROJECT_SKILLS_SUBDIR = (0, import_path7.join)(".omd", "skills");
+var MAX_RECURSION_DEPTH = 10;
+var SKILL_EXTENSION = ".md";
+var DEBUG_ENABLED = process.env.OMC_DEBUG === "1";
+
+// src/hooks/learner/finder.ts
+function findSkillFilesRecursive(dir, results, depth = 0) {
+  if (!(0, import_fs6.existsSync)(dir)) return;
+  if (depth > MAX_RECURSION_DEPTH) return;
+  try {
+    const entries = (0, import_fs6.readdirSync)(dir, { withFileTypes: true });
+    for (const entry of entries) {
+      const fullPath = (0, import_path8.join)(dir, entry.name);
+      if (entry.isDirectory()) {
+        findSkillFilesRecursive(fullPath, results, depth + 1);
+      } else if (entry.isFile() && entry.name.endsWith(SKILL_EXTENSION)) {
+        results.push(fullPath);
+      }
+    }
+  } catch (error2) {
+    if (DEBUG_ENABLED) {
+      console.error("[learner] Error scanning directory:", error2);
+    }
+  }
+}
+function safeRealpathSync(filePath) {
+  try {
+    return (0, import_fs6.realpathSync)(filePath);
+  } catch {
+    return filePath;
+  }
+}
+function isWithinBoundary(realPath, boundary) {
+  const normalizedReal = (0, import_path8.normalize)(realPath);
+  const normalizedBoundary = (0, import_path8.normalize)(safeRealpathSync(boundary));
+  return normalizedReal === normalizedBoundary || normalizedReal.startsWith(normalizedBoundary + import_path8.sep);
+}
+function findSkillFiles(projectRoot, options) {
+  const candidates = [];
+  const seenRealPaths = /* @__PURE__ */ new Set();
+  const scope = options?.scope ?? "all";
+  const scanDirs = (dirs, scopeType) => {
+    const seenIdentities = /* @__PURE__ */ new Set();
+    for (const dir of dirs) {
+      const files = [];
+      findSkillFilesRecursive(dir, files);
+      for (const filePath of files) {
+        const realPath = safeRealpathSync(filePath);
+        if (seenRealPaths.has(realPath)) continue;
+        if (!isWithinBoundary(realPath, dir)) {
+          if (DEBUG_ENABLED) {
+            console.warn("[learner] Symlink escape blocked:", filePath);
+          }
+          continue;
+        }
+        const identity = (0, import_path8.relative)(dir, filePath).replace(/\\/g, "/");
+        if (seenIdentities.has(identity)) continue;
+        seenIdentities.add(identity);
+        seenRealPaths.add(realPath);
+        candidates.push({
+          path: filePath,
+          realPath,
+          scope: scopeType,
+          sourceDir: dir
+        });
+      }
+    }
+  };
+  if (projectRoot && (scope === "project" || scope === "all")) {
+    scanDirs(
+      [
+        (0, import_path8.join)(projectRoot, PROJECT_SKILLS_SUBDIR),
+        (0, import_path8.join)(projectRoot, LEGACY_PROJECT_SKILLS_SUBDIR)
+      ],
+      "project"
+    );
+  }
+  if (scope === "user" || scope === "all") {
+    scanDirs([USER_SKILLS_DIR, ...LEGACY_USER_SKILLS_DIRS], "user");
+  }
+  return candidates;
+}
+
+// src/hooks/learner/parser.ts
+function parseSkillFile(rawContent) {
+  const frontmatterRegex = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/;
+  const match = rawContent.match(frontmatterRegex);
+  if (!match) {
+    return {
+      metadata: {},
+      content: rawContent,
+      valid: false,
+      errors: ["Missing YAML frontmatter"]
+    };
+  }
+  const yamlContent = match[1];
+  const content = match[2].trim();
+  const errors = [];
+  try {
+    const metadata = parseYamlMetadata(yamlContent);
+    if (!metadata.id && metadata.name) {
+      metadata.id = metadata.name.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
+    }
+    if (!metadata.source) {
+      metadata.source = "manual";
+    }
+    if (!metadata.name) errors.push("Missing required field: name");
+    if (!metadata.description) errors.push("Missing required field: description");
+    if (!metadata.triggers || metadata.triggers.length === 0) {
+      errors.push("Missing required field: triggers");
+    }
+    return {
+      metadata,
+      content,
+      valid: errors.length === 0,
+      errors
+    };
+  } catch (e) {
+    return {
+      metadata: {},
+      content: rawContent,
+      valid: false,
+      errors: [`YAML parse error: ${e}`]
+    };
+  }
+}
+function parseYamlMetadata(yamlContent) {
+  const lines = yamlContent.split("\n");
+  const metadata = {};
+  let i = 0;
+  while (i < lines.length) {
+    const line = lines[i];
+    const colonIndex = line.indexOf(":");
+    if (colonIndex === -1) {
+      i++;
+      continue;
+    }
+    const key = line.slice(0, colonIndex).trim();
+    const rawValue = line.slice(colonIndex + 1).trim();
+    switch (key) {
+      case "id":
+        metadata.id = parseStringValue(rawValue);
+        break;
+      case "name":
+        metadata.name = parseStringValue(rawValue);
+        break;
+      case "description":
+        metadata.description = parseStringValue(rawValue);
+        break;
+      case "source":
+        metadata.source = parseStringValue(rawValue);
+        break;
+      case "createdAt":
+        metadata.createdAt = parseStringValue(rawValue);
+        break;
+      case "sessionId":
+        metadata.sessionId = parseStringValue(rawValue);
+        break;
+      case "quality":
+        metadata.quality = parseInt(rawValue, 10) || void 0;
+        break;
+      case "usageCount":
+        metadata.usageCount = parseInt(rawValue, 10) || 0;
+        break;
+      case "triggers":
+      case "tags": {
+        const { value, consumed } = parseArrayValue(rawValue, lines, i);
+        if (key === "triggers") {
+          metadata.triggers = Array.isArray(value) ? value : [value];
+        } else {
+          metadata.tags = Array.isArray(value) ? value : [value];
+        }
+        i += consumed - 1;
+        break;
+      }
+    }
+    i++;
+  }
+  return metadata;
+}
+function parseStringValue(value) {
+  if (!value) return "";
+  if (value.startsWith('"') && value.endsWith('"') || value.startsWith("'") && value.endsWith("'")) {
+    return value.slice(1, -1);
+  }
+  return value;
+}
+function parseArrayValue(rawValue, lines, currentIndex) {
+  if (rawValue.startsWith("[")) {
+    const content = rawValue.slice(1, rawValue.lastIndexOf("]")).trim();
+    if (!content) return { value: [], consumed: 1 };
+    const items = content.split(",").map((s) => parseStringValue(s.trim())).filter(Boolean);
+    return { value: items, consumed: 1 };
+  }
+  if (!rawValue || rawValue === "") {
+    const items = [];
+    let consumed = 1;
+    for (let j = currentIndex + 1; j < lines.length; j++) {
+      const nextLine = lines[j];
+      const arrayMatch = nextLine.match(/^\s+-\s*(.*)$/);
+      if (arrayMatch) {
+        const itemValue = parseStringValue(arrayMatch[1].trim());
+        if (itemValue) items.push(itemValue);
+        consumed++;
+      } else if (nextLine.trim() === "") {
+        consumed++;
+      } else {
+        break;
+      }
+    }
+    if (items.length > 0) {
+      return { value: items, consumed };
+    }
+  }
+  return { value: parseStringValue(rawValue), consumed: 1 };
+}
+
+// src/hooks/learner/loader.ts
+function createContentHash(content) {
+  return (0, import_crypto2.createHash)("sha256").update(content).digest("hex").slice(0, 16);
+}
+function loadAllSkills(projectRoot) {
+  const candidates = findSkillFiles(projectRoot);
+  const seenIds = /* @__PURE__ */ new Map();
+  for (const candidate of candidates) {
+    try {
+      const rawContent = (0, import_fs7.readFileSync)(candidate.path, "utf-8");
+      const { metadata, content, valid, errors } = parseSkillFile(rawContent);
+      if (!valid) {
+        if (DEBUG_ENABLED) {
+          console.warn(`Invalid skill file ${candidate.path}: ${errors.join(", ")}`);
+        }
+        continue;
+      }
+      const skillId = metadata.id;
+      const relativePath = (0, import_path9.normalize)((0, import_path9.relative)(candidate.sourceDir, candidate.path));
+      const skill = {
+        path: candidate.path,
+        relativePath,
+        scope: candidate.scope,
+        metadata,
+        content,
+        contentHash: createContentHash(content),
+        priority: candidate.scope === "project" ? 1 : 0
+      };
+      const existing = seenIds.get(skillId);
+      if (!existing || skill.priority > existing.priority) {
+        seenIds.set(skillId, skill);
+      }
+    } catch (e) {
+      if (DEBUG_ENABLED) {
+        console.warn(`Error loading skill ${candidate.path}:`, e);
+      }
+    }
+  }
+  return Array.from(seenIds.values()).sort((a, b) => b.priority - a.priority);
+}
+
+// src/tools/skills-tools.ts
+var ALLOWED_BOUNDARIES = [process.cwd(), (0, import_os2.homedir)()];
+function validateProjectRoot(input) {
+  const normalized = (0, import_path10.normalize)((0, import_path10.resolve)(input));
+  if (input.includes("..")) {
+    throw new Error("Invalid project root: path traversal not allowed");
+  }
+  const isWithinAllowed = ALLOWED_BOUNDARIES.some((boundary) => {
+    const normalizedBoundary = (0, import_path10.normalize)(boundary);
+    return normalized === normalizedBoundary || normalized.startsWith(normalizedBoundary + import_path10.sep);
+  });
+  if (!isWithinAllowed) {
+    throw new Error("Invalid project root: path is outside allowed directories");
+  }
+  return normalized;
+}
+var loadLocalSchema = {
+  projectRoot: external_exports.string().max(500).optional().describe("Project root directory (defaults to cwd)")
+};
+var loadGlobalSchema = {};
+var listSkillsSchema = {
+  projectRoot: external_exports.string().max(500).optional().describe("Project root directory (defaults to cwd)")
+};
+function formatSkillOutput(skills) {
+  if (skills.length === 0) {
+    return "No skills found in the searched directories.";
+  }
+  const lines = [];
+  for (const skill of skills) {
+    lines.push(`### ${skill.metadata.id}`);
+    lines.push(`- **Name:** ${skill.metadata.name}`);
+    lines.push(`- **Description:** ${skill.metadata.description}`);
+    lines.push(`- **Triggers:** ${skill.metadata.triggers.join(", ")}`);
+    if (skill.metadata.tags?.length) {
+      lines.push(`- **Tags:** ${skill.metadata.tags.join(", ")}`);
+    }
+    lines.push(`- **Scope:** ${skill.scope}`);
+    lines.push(`- **Path:** ${skill.relativePath}`);
+    lines.push("");
+  }
+  return lines.join("\n");
+}
+var loadLocalTool = {
+  name: "load_omc_skills_local",
+  description: "Load and list project-local skills from .agents/skills/droid-learned/ with .omd/skills/ as a legacy fallback. Returns skill metadata (id, name, description, triggers, tags) for all discovered project-scoped skills.",
+  schema: loadLocalSchema,
+  handler: async (args) => {
+    const projectRoot = args.projectRoot ? validateProjectRoot(args.projectRoot) : process.cwd();
+    const allSkills = loadAllSkills(projectRoot);
+    const projectSkills = allSkills.filter((s) => s.scope === "project");
+    return {
+      content: [{
+        type: "text",
+        text: `## Project Skills (${projectSkills.length})
+
+${formatSkillOutput(projectSkills)}`
+      }]
+    };
+  }
+};
+var loadGlobalTool = {
+  name: "load_omc_skills_global",
+  description: "Load and list global user skills from ~/.agents/skills/droid-learned/ with ~/.factory/skills/{droid,omc}-learned/ and ~/.omd/skills/ as legacy fallbacks. Returns skill metadata for all discovered user-scoped skills.",
+  schema: loadGlobalSchema,
+  handler: async (_args) => {
+    const allSkills = loadAllSkills(null);
+    const userSkills = allSkills.filter((s) => s.scope === "user");
+    return {
+      content: [{
+        type: "text",
+        text: `## Global User Skills (${userSkills.length})
+
+${formatSkillOutput(userSkills)}`
+      }]
+    };
+  }
+};
+var listSkillsTool = {
+  name: "list_omc_skills",
+  description: "List all available skills (both project-local and global user skills). Project skills take priority over user skills with the same ID.",
+  schema: listSkillsSchema,
+  handler: async (args) => {
+    const projectRoot = args.projectRoot ? validateProjectRoot(args.projectRoot) : process.cwd();
+    const skills = loadAllSkills(projectRoot);
+    const projectSkills = skills.filter((s) => s.scope === "project");
+    const userSkills = skills.filter((s) => s.scope === "user");
+    let output = `## All Available Skills (${skills.length} total)
+
+`;
+    if (projectSkills.length > 0) {
+      output += `### Project Skills (${projectSkills.length})
+
+${formatSkillOutput(projectSkills)}
+`;
+    }
+    if (userSkills.length > 0) {
+      output += `### User Skills (${userSkills.length})
+
+${formatSkillOutput(userSkills)}`;
+    }
+    if (skills.length === 0) {
+      output = "## No Skills Found\n\nNo skill files were discovered in any searched directories.\n\nSearched:\n- Project: .agents/skills/droid-learned/\n- User: ~/.agents/skills/droid-learned/\n- Legacy project: .omd/skills/\n- Legacy user: ~/.factory/skills/{droid,omc}-learned/ and ~/.omd/skills/";
+    }
+    return {
+      content: [{
+        type: "text",
+        text: output
+      }]
+    };
+  }
+};
+var skillsTools = [loadLocalTool, loadGlobalTool, listSkillsTool];
+
+// src/hooks/swarm/index.ts
+var import_crypto3 = require("crypto");
+var import_fs10 = require("fs");
+var import_path13 = require("path");
 
 // src/hooks/swarm/types.ts
 var DEFAULT_SWARM_CONFIG = {
@@ -21123,8 +21518,8 @@ var DEFAULT_SWARM_CONFIG = {
 var DB_SCHEMA_VERSION = 1;
 
 // src/hooks/swarm/state.ts
-var import_fs6 = require("fs");
-var import_path7 = require("path");
+var import_fs8 = require("fs");
+var import_path11 = require("path");
 var import_node_sqlite = require("node:sqlite");
 var db = null;
 var inTransaction = false;
@@ -21183,22 +21578,22 @@ function runImmediateTransaction(executor, fn, onPoison) {
   }
 }
 function normalizeProjectCwd(cwd) {
-  const resolved = (0, import_path7.resolve)(cwd);
+  const resolved = (0, import_path11.resolve)(cwd);
   if (process.platform !== "win32") {
     return resolved;
   }
   return resolved.replace(/^([a-z]):/, (_match, drive) => `${drive.toUpperCase()}:`);
 }
 function getDbPath(cwd) {
-  return (0, import_path7.join)(cwd, ".omd", "state", "swarm.db");
+  return (0, import_path11.join)(cwd, ".omd", "state", "swarm.db");
 }
 function swarmDbExists(cwd) {
-  return (0, import_fs6.existsSync)(getDbPath(normalizeProjectCwd(cwd)));
+  return (0, import_fs8.existsSync)(getDbPath(normalizeProjectCwd(cwd)));
 }
 function ensureStateDir(cwd) {
-  const stateDir = (0, import_path7.join)(cwd, ".omd", "state");
-  if (!(0, import_fs6.existsSync)(stateDir)) {
-    (0, import_fs6.mkdirSync)(stateDir, { recursive: true });
+  const stateDir = (0, import_path11.join)(cwd, ".omd", "state");
+  if (!(0, import_fs8.existsSync)(stateDir)) {
+    (0, import_fs8.mkdirSync)(stateDir, { recursive: true });
   }
 }
 async function initDb(cwd) {
@@ -21269,13 +21664,13 @@ function deleteDb(cwd) {
   try {
     closeDb();
     const dbPath = getDbPath(cwd);
-    if ((0, import_fs6.existsSync)(dbPath)) {
-      (0, import_fs6.unlinkSync)(dbPath);
+    if ((0, import_fs8.existsSync)(dbPath)) {
+      (0, import_fs8.unlinkSync)(dbPath);
     }
     const walPath = dbPath + "-wal";
     const shmPath = dbPath + "-shm";
-    if ((0, import_fs6.existsSync)(walPath)) (0, import_fs6.unlinkSync)(walPath);
-    if ((0, import_fs6.existsSync)(shmPath)) (0, import_fs6.unlinkSync)(shmPath);
+    if ((0, import_fs8.existsSync)(walPath)) (0, import_fs8.unlinkSync)(walPath);
+    if ((0, import_fs8.existsSync)(shmPath)) (0, import_fs8.unlinkSync)(shmPath);
     return true;
   } catch (error2) {
     console.error("Failed to delete swarm database:", error2);
@@ -21463,10 +21858,10 @@ function writeSwarmSummary(cwd) {
       tasks_done: stats.doneTasks,
       active: state.active
     };
-    const stateDir = (0, import_path7.join)(cwd, ".omd", "state");
-    (0, import_fs6.mkdirSync)(stateDir, { recursive: true });
-    const summaryPath = (0, import_path7.join)(stateDir, "swarm-summary.json");
-    (0, import_fs6.writeFileSync)(summaryPath, JSON.stringify(summary, null, 2), "utf-8");
+    const stateDir = (0, import_path11.join)(cwd, ".omd", "state");
+    (0, import_fs8.mkdirSync)(stateDir, { recursive: true });
+    const summaryPath = (0, import_path11.join)(stateDir, "swarm-summary.json");
+    (0, import_fs8.writeFileSync)(summaryPath, JSON.stringify(summary, null, 2), "utf-8");
     return true;
   } catch (error2) {
     console.error("Failed to write swarm summary:", error2);
@@ -21742,8 +22137,8 @@ function allTasksComplete() {
 }
 
 // src/hooks/mode-registry/index.ts
-var import_fs7 = require("fs");
-var import_path8 = require("path");
+var import_fs9 = require("fs");
+var import_path12 = require("path");
 var STALE_MARKER_THRESHOLD = 60 * 60 * 1e3;
 var MODE_CONFIGS = {
   autopilot: {
@@ -21795,25 +22190,25 @@ var MODE_CONFIGS = {
 };
 var EXCLUSIVE_MODES = ["autopilot", "ultrapilot", "swarm", "pipeline"];
 function getStateDir(cwd) {
-  return (0, import_path8.join)(cwd, ".omd", "state");
+  return (0, import_path12.join)(cwd, ".omd", "state");
 }
 function getStateFilePath(cwd, mode) {
   const config2 = MODE_CONFIGS[mode];
-  return (0, import_path8.join)(getStateDir(cwd), config2.stateFile);
+  return (0, import_path12.join)(getStateDir(cwd), config2.stateFile);
 }
 function getMarkerFilePath(cwd, mode) {
   const config2 = MODE_CONFIGS[mode];
   if (!config2.markerFile) return null;
-  return (0, import_path8.join)(getStateDir(cwd), config2.markerFile);
+  return (0, import_path12.join)(getStateDir(cwd), config2.markerFile);
 }
 function isJsonModeActive(cwd, mode) {
   const config2 = MODE_CONFIGS[mode];
   const stateFile = getStateFilePath(cwd, mode);
-  if (!(0, import_fs7.existsSync)(stateFile)) {
+  if (!(0, import_fs9.existsSync)(stateFile)) {
     return false;
   }
   try {
-    const content = (0, import_fs7.readFileSync)(stateFile, "utf-8");
+    const content = (0, import_fs9.readFileSync)(stateFile, "utf-8");
     const state = JSON.parse(content);
     if (config2.activeProperty) {
       return state[config2.activeProperty] === true;
@@ -21825,16 +22220,16 @@ function isJsonModeActive(cwd, mode) {
 }
 function isSqliteModeActive(cwd, mode) {
   const markerPath = getMarkerFilePath(cwd, mode);
-  if (markerPath && (0, import_fs7.existsSync)(markerPath)) {
+  if (markerPath && (0, import_fs9.existsSync)(markerPath)) {
     try {
-      const content = (0, import_fs7.readFileSync)(markerPath, "utf-8");
+      const content = (0, import_fs9.readFileSync)(markerPath, "utf-8");
       const marker = JSON.parse(content);
       if (marker.startedAt) {
         const startTime = new Date(marker.startedAt).getTime();
         const age = Date.now() - startTime;
         if (age > STALE_MARKER_THRESHOLD) {
           console.warn(`Stale ${mode} marker detected (${Math.round(age / 6e4)} min old). Auto-removing.`);
-          (0, import_fs7.unlinkSync)(markerPath);
+          (0, import_fs9.unlinkSync)(markerPath);
           return false;
         }
       }
@@ -21844,7 +22239,7 @@ function isSqliteModeActive(cwd, mode) {
     }
   }
   const dbPath = getStateFilePath(cwd, mode);
-  return (0, import_fs7.existsSync)(dbPath);
+  return (0, import_fs9.existsSync)(dbPath);
 }
 function isModeActive(mode, cwd) {
   const config2 = MODE_CONFIGS[mode];
@@ -21875,16 +22270,16 @@ function createModeMarker(mode, cwd, metadata) {
     return false;
   }
   try {
-    const dir = (0, import_path8.dirname)(markerPath);
-    if (!(0, import_fs7.existsSync)(dir)) {
-      (0, import_fs7.mkdirSync)(dir, { recursive: true });
+    const dir = (0, import_path12.dirname)(markerPath);
+    if (!(0, import_fs9.existsSync)(dir)) {
+      (0, import_fs9.mkdirSync)(dir, { recursive: true });
     }
     const content = JSON.stringify({
       mode,
       startedAt: (/* @__PURE__ */ new Date()).toISOString(),
       ...metadata
     }, null, 2);
-    (0, import_fs7.writeFileSync)(markerPath, content);
+    (0, import_fs9.writeFileSync)(markerPath, content);
     return true;
   } catch (error2) {
     console.error(`Failed to create marker file for ${mode}:`, error2);
@@ -21897,8 +22292,8 @@ function removeModeMarker(mode, cwd) {
     return true;
   }
   try {
-    if ((0, import_fs7.existsSync)(markerPath)) {
-      (0, import_fs7.unlinkSync)(markerPath);
+    if ((0, import_fs9.existsSync)(markerPath)) {
+      (0, import_fs9.unlinkSync)(markerPath);
     }
     return true;
   } catch (error2) {
@@ -21966,7 +22361,7 @@ async function startSwarm(config2) {
   currentCwd2 = resolvedCwd;
   setSwarmCwd(resolvedCwd);
   clearAllData();
-  const sessionId = (0, import_crypto2.randomUUID)();
+  const sessionId = (0, import_crypto3.randomUUID)();
   if (!initSession(sessionId, agentCount)) {
     console.error("Failed to initialize swarm session");
     cleanupOnFailure(resolvedCwd);
@@ -22222,13 +22617,16 @@ var swarmTool = {
   handler: handleSwarm
 };
 
-// src/mcp/standalone-server.ts
+// src/mcp/omc-tools-server.ts
 var allTools = [
   ...lspTools,
   ...astTools,
   pythonReplTool,
+  ...skillsTools,
   swarmTool
 ];
+
+// src/mcp/standalone-server.ts
 function zodToJsonSchema2(schema) {
   const rawShape = schema instanceof external_exports.ZodObject ? schema.shape : schema;
   const properties = {};
@@ -22313,7 +22711,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     };
   }
   try {
-    const result = await tool.handler(args ?? {});
+    const schema = tool.schema instanceof external_exports.ZodObject ? tool.schema : external_exports.object(tool.schema);
+    const result = await tool.handler(schema.parse(args ?? {}));
     return {
       content: result.content,
       isError: false

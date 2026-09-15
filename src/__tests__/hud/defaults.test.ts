@@ -2,6 +2,12 @@ import { describe, it, expect } from 'vitest';
 import { DEFAULT_HUD_CONFIG, PRESET_CONFIGS } from '../../hud/types.js';
 
 describe('HUD Default Configuration', () => {
+  it('does not expose OAuth rate limits in defaults or presets', () => {
+    for (const elements of [DEFAULT_HUD_CONFIG.elements, ...Object.values(PRESET_CONFIGS)]) {
+      expect(elements).not.toHaveProperty('rateLimits');
+    }
+  });
+
   describe('DEFAULT_HUD_CONFIG', () => {
     it('should have cwd disabled by default for backward compatibility', () => {
       expect(DEFAULT_HUD_CONFIG.elements.cwd).toBe(false);

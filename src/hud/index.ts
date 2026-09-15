@@ -16,7 +16,6 @@ import {
   readAutopilotStateForHud,
   readTeamStateForHud,
 } from './omd-state.js';
-import { getUsage } from './usage-api.js';
 import { render } from './render.js';
 import type { HudRenderContext, SessionHealth, StatuslineStdin } from './types.js';
 import { extractTokens, createSnapshot, type TokenSnapshot } from '../analytics/token-extractor.js';
@@ -300,11 +299,6 @@ async function main(): Promise<void> {
     const hudState = readHudState(cwd);
     const backgroundTasks = hudState?.backgroundTasks || [];
 
-    // Fetch rate limits from OAuth API (if available)
-    const rateLimits = config.elements.rateLimits !== false
-      ? await getUsage()
-      : null;
-
     // Build render context
     const context: HudRenderContext = {
       contextPercent: getContextPercent(stdin),
@@ -319,7 +313,6 @@ async function main(): Promise<void> {
       backgroundTasks: getRunningTasks(hudState),
       cwd,
       lastSkill: transcriptData.lastActivatedSkill || null,
-      rateLimits,
       pendingPermission: transcriptData.pendingPermission || null,
       thinkingState: transcriptData.thinkingState || null,
       sessionHealth: await calculateSessionHealth(

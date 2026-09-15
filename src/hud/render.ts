@@ -14,7 +14,6 @@ import { renderSkills, renderLastSkill } from './elements/skills.js';
 import { renderContext, renderContextWithBar } from './elements/context.js';
 import { renderBackground } from './elements/background.js';
 import { renderPrd } from './elements/prd.js';
-import { renderRateLimits, renderRateLimitsWithBar } from './elements/limits.js';
 import { renderPermission } from './elements/permission.js';
 import { renderThinking } from './elements/thinking.js';
 import { renderSession } from './elements/session.js';
@@ -138,14 +137,6 @@ export async function render(context: HudRenderContext, config: HudConfig): Prom
   // [OMD] label
   if (enabledElements.omdLabel) {
     elements.push(bold('[OMD]'));
-  }
-
-  // Rate limits (5h and weekly)
-  if (enabledElements.rateLimits && context.rateLimits) {
-    const limits = enabledElements.useBars
-      ? renderRateLimitsWithBar(context.rateLimits)
-      : renderRateLimits(context.rateLimits);
-    if (limits) elements.push(limits);
   }
 
   // Permission status indicator (heuristic-based)

@@ -1,5 +1,11 @@
 import { describe, it, expect } from 'vitest';
-import { omdToolsServer, omcToolNames, getOmcToolNames } from '../mcp/omc-tools-server.js';
+import { Client } from '@modelcontextprotocol/sdk/client/index.js';
+import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
+import { fileURLToPath } from 'node:url';
+import { omcToolNames, getOmcToolNames } from '../mcp/tool-names.js';
+import { allTools } from '../mcp/omc-tools-server.js';
+import { pythonReplTool } from '../tools/python-repl/tool.js';
+import { createDroidSession } from '../index.js';
 
 describe('omc-tools-server', () => {
   describe('omcToolNames', () => {
@@ -19,6 +25,11 @@ describe('omc-tools-server', () => {
 
     it('should have python_repl tool', () => {
       expect(omcToolNames).toContain('mcp__t__python_repl');
+      expect(allTools.find(t => t.name === 'python_repl')).toBe(pythonReplTool);
+    });
+
+    it('should have the swarm tool', () => {
+      expect(omcToolNames).toContain('mcp__t__swarm');
     });
 
     it('should use correct MCP naming format', () => {
@@ -64,9 +75,48 @@ describe('omc-tools-server', () => {
     });
   });
 
-  describe('omdToolsServer', () => {
-    it('should be defined', () => {
-      expect(omdToolsServer).toBeDefined();
+  describe('standalone MCP wiring', () => {
+    it('keeps bridge tool permissions without registering an in-process server', () => {
+      const session = createDroidSession({ skipConfigLoad: true, skipContextInjection: true });
+      expect(session.queryOptions.options.mcpServers).not.toHaveProperty('t');
+      expect(session.queryOptions.options.allowedTools).toEqual(expect.arrayContaining(omcToolNames));
+    });
+
+    it('lists all 19 tools over stdio and dispatches skill calls', async () => {
+      const client = new Client({ name: 'omd-test', version: '1.0.0' });
+      const transport = new StdioClientTransport({
+        command: process.execPath,
+        args: ['--import', 'tsx', fileURLToPath(new URL('../mcp/standalone-server.ts', import.meta.url))],
+        stderr: 'pipe',
+      });
+
+      try {
+        await client.connect(transport);
+        const { tools } = await client.listTools();
+        expect(tools.map(t => `mcp__t__${t.name}`)).toEqual(omcToolNames);
+        expect(tools.filter(t => t.name.includes('omc_skills'))).toHaveLength(3);
+
+        for (const projectRoot of [false, 0, 'a'.repeat(502)]) {
+          const invalid = await client.callTool({
+            name: 'load_omc_skills_local',
+            arguments: { projectRoot },
+          });
+          expect(invalid.isError).toBe(true);
+        }
+
+        const result = await client.callTool({
+          name: 'load_omc_skills_local',
+          arguments: { projectRoot: '../outside-project' },
+        });
+        expect(result.isError).toBe(true);
+        expect(result.content).toEqual([{
+          type: 'text',
+          text: 'Error: Invalid project root: path traversal not allowed',
+        }]);
+      } finally {
+        await client.close();
+        await transport.close();
+      }
     });
   });
 });

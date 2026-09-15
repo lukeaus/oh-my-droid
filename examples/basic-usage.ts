@@ -2,14 +2,11 @@
  * Basic Usage Example
  *
  * This example demonstrates how to use Oh-My-Droid
- * with the Factory Droid SDK.
+ * to prepare prompts and configuration for Factory Droid.
  */
 
 // Note: In real usage, import from 'oh-my-droid'
 import { createDroidSession, enhancePrompt } from '../src/index.js';
-
-// For demonstration - in real usage, import from '@anthropic-ai/claude-agent-sdk'
-// import { query } from '@anthropic-ai/claude-agent-sdk';
 
 async function main() {
   console.log('=== Oh-My-Droid Example ===\n');
@@ -52,23 +49,13 @@ async function main() {
   console.log('Enhanced prompt:');
   console.log(session.processPrompt(searchPrompt) + '\n');
 
-  // Example 4: Using with Claude Agent SDK (pseudo-code)
-  console.log('Example 4: Using with Claude Agent SDK');
+  // Example 4: Factory Droid CLI (printed command, not executed)
+  console.log('Example 4: Using the Factory Droid CLI');
   console.log(`
-// Real usage with Claude Agent SDK:
-import { query } from '@anthropic-ai/claude-agent-sdk';
+# With the oh-my-droid plugin installed:
+droid exec "ultrawork implement user authentication"
 
-const session = createDroidSession();
-
-for await (const message of query({
-  prompt: session.processPrompt("ultrawork implement user authentication"),
-  ...session.queryOptions
-})) {
-  // Handle messages from the agent
-  if (message.type === 'assistant') {
-    console.log(message.content);
-  }
-}
+# Custom tools are discovered through the plugin's standalone MCP bridge.
 `);
 
   // Example 5: Direct prompt enhancement

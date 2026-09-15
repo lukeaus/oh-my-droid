@@ -3,7 +3,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { mkdirSync, writeFileSync, unlinkSync, existsSync, rmSync, statSync } from 'fs';
+import { mkdirSync, writeFileSync, existsSync, rmSync } from 'fs';
 import { join } from 'path';
 import { tmpdir } from 'os';
 import {
@@ -11,7 +11,10 @@ import {
   isDaemonRunning,
   getDaemonStatus,
   formatDaemonState,
+  pollLoop,
 } from '../../features/rate-limit-wait/daemon.js';
+import * as monitor from '../../features/rate-limit-wait/rate-limit-monitor.js';
+import * as tmux from '../../features/rate-limit-wait/tmux-detector.js';
 import type { DaemonState, DaemonConfig } from '../../features/rate-limit-wait/types.js';
 
 describe('daemon', () => {
@@ -28,11 +31,71 @@ describe('daemon', () => {
   });
 
   afterEach(() => {
+    vi.restoreAllMocks();
     try {
       rmSync(testDir, { recursive: true, force: true });
     } catch {
       // Ignore cleanup errors
     }
+  });
+
+  it.each([true, false])('preserves tracked panes on unsupported quota status (blocked: %s)', async (blocked) => {
+    const state: DaemonState = {
+      isRunning: true,
+      pid: null,
+      startedAt: null,
+      lastPollAt: null,
+      rateLimitStatus: {
+        fiveHourLimited: true,
+        weeklyLimited: false,
+        isLimited: true,
+        fiveHourResetsAt: null,
+        weeklyResetsAt: null,
+        nextResetAt: null,
+        timeUntilResetMs: null,
+        lastCheckedAt: new Date(),
+      },
+      blockedPanes: blocked ? [{
+        id: '%0',
+        session: 'main',
+        windowIndex: 0,
+        windowName: 'dev',
+        paneIndex: 0,
+        isActive: true,
+        analysis: { hasDroid: true, hasRateLimitMessage: true, isBlocked: true, confidence: 1 },
+        firstDetectedAt: new Date(),
+        resumeAttempted: false,
+      }] : [],
+      resumedPaneIds: ['%1'],
+      totalResumeAttempts: 0,
+      successfulResumes: 0,
+      errorCount: 0,
+    };
+    writeFileSync(testConfig.stateFilePath!, JSON.stringify(state));
+    vi.spyOn(monitor, 'checkRateLimitStatus').mockResolvedValue(null);
+    vi.spyOn(tmux, 'isTmuxAvailable').mockReturnValue(false);
+    const resume = vi.spyOn(tmux, 'sendResumeSequence').mockReturnValue(true);
+    const endPoll = new Error('End test after one poll');
+    vi.spyOn(globalThis, 'setTimeout').mockImplementation(() => { throw endPoll; });
+
+    await expect(pollLoop({
+      stateFilePath: testConfig.stateFilePath!,
+      pidFilePath: testConfig.pidFilePath!,
+      logFilePath: testConfig.logFilePath!,
+      pollIntervalMs: 1000,
+      paneLinesToCapture: 15,
+      verbose: false,
+    })).rejects.toBe(endPoll);
+
+    expect(resume).not.toHaveBeenCalled();
+    expect(readDaemonState(testConfig)).toMatchObject({
+      rateLimitStatus: null,
+      blockedPanes: state.blockedPanes,
+      resumedPaneIds: ['%1'],
+      totalResumeAttempts: 0,
+      successfulResumes: 0,
+      errorCount: 0,
+    });
   });
 
   describe('readDaemonState', () => {
@@ -246,7 +309,7 @@ describe('daemon', () => {
             paneIndex: 0,
             isActive: true,
             analysis: {
-              hasClaudeCode: true,
+              hasDroid: true,
               hasRateLimitMessage: true,
               isBlocked: true,
               confidence: 0.9,

@@ -471,8 +471,8 @@ program
       const warnings: string[] = [];
       const errors: string[] = [];
 
-      if (!process.env.ANTHROPIC_API_KEY) {
-        warnings.push('ANTHROPIC_API_KEY environment variable not set');
+      if (!process.env.FACTORY_API_KEY) {
+        warnings.push('FACTORY_API_KEY environment variable not set');
       }
 
       if (config.mcpServers?.exa?.enabled && !process.env.EXA_API_KEY && !config.mcpServers.exa.apiKey) {
@@ -710,7 +710,7 @@ program
     const result = installDroid({
       force: options.force,
       verbose: !options.quiet,
-      skipClaudeCheck: options.skipClaudeCheck
+      skipDroidCheck: options.skipDroidCheck
     });
 
     if (result.success) {
@@ -779,7 +779,7 @@ program
   });
 
 /**
- * Wait command - Rate limit wait and auto-resume
+ * Wait command - Legacy daemon status and blocked-session detection
  *
  * Zero learning curve design:
  * - `omd wait` alone shows status and suggests next action
@@ -789,10 +789,10 @@ program
  */
 const waitCmd = program
   .command('wait')
-  .description('Rate limit wait and auto-resume (just run "omd wait" to get started)')
+  .description('Inspect wait status (Factory quota monitoring and auto-resume unavailable)')
   .option('--json', 'Output as JSON')
-  .option('--start', 'Start the auto-resume daemon')
-  .option('--stop', 'Stop the auto-resume daemon')
+  .option('--start', 'Start the legacy wait daemon (quota monitoring unavailable)')
+  .option('--stop', 'Stop the legacy wait daemon')
   .action(async (options) => {
     await waitCommand(options);
   });
@@ -807,7 +807,7 @@ waitCmd
 
 waitCmd
   .command('daemon <action>')
-  .description('Start or stop the auto-resume daemon')
+  .description('Start or stop the legacy wait daemon (quota monitoring unavailable)')
   .option('-v, --verbose', 'Enable verbose logging')
   .option('-f, --foreground', 'Run in foreground (blocking)')
   .option('-i, --interval <seconds>', 'Poll interval in seconds', '60')
@@ -846,7 +846,7 @@ program
     const result = installDroid({
       force: false,
       verbose: false,
-      skipClaudeCheck: true
+      skipDroidCheck: true
     });
 
     if (result.success) {

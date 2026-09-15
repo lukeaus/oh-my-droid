@@ -55,7 +55,7 @@ export interface InstallResult {
 export interface InstallOptions {
   force?: boolean;
   verbose?: boolean;
-  skipClaudeCheck?: boolean;
+  skipDroidCheck?: boolean;
 }
 
 /**
@@ -74,7 +74,7 @@ export function checkNodeVersion(): { valid: boolean; current: number; required:
  * Check if Factory Droid is installed
  * Uses 'where' on Windows, 'which' on Unix
  */
-export function isClaudeInstalled(): boolean {
+export function isDroidInstalled(): boolean {
   try {
     const command = isWindows() ? 'where droid' : 'which droid';
     execSync(command, { encoding: 'utf-8', stdio: 'pipe' });
@@ -159,7 +159,7 @@ function loadCommandDefinitions(): Record<string, string> {
 /**
  * Load FACTORY.md content from /docs/FACTORY.md
  */
-function loadClaudeMdContent(): string {
+function loadFactoryMdContent(): string {
   const factoryMdPath = join(getPackageDir(), 'docs', 'FACTORY.md');
 
   if (!existsSync(factoryMdPath)) {
@@ -211,10 +211,10 @@ export function install(options: InstallOptions = {}): InstallResult {
   }
 
   // Check Droid installation (optional)
-  if (!options.skipClaudeCheck && !isClaudeInstalled()) {
+  if (!options.skipDroidCheck && !isDroidInstalled()) {
     log('Warning: Factory Droid not found. Install it first:');
     if (isWindows()) {
-      log('  Visit https://docs.anthropic.com/factory-droid for Windows installation');
+      log('  Visit https://docs.factory.ai for Windows installation');
     } else {
       log('  curl -fsSL https://droid.ai/install.sh | bash');
     }
@@ -309,7 +309,7 @@ export function install(options: InstallOptions = {}): InstallResult {
             writeFileSync(backupPath, existingContent);
             log(`Backed up existing FACTORY.md to ${backupPath}`);
           }
-          writeFileSync(factoryMdPath, loadClaudeMdContent());
+          writeFileSync(factoryMdPath, loadFactoryMdContent());
           log('Created FACTORY.md');
         } else {
           log('FACTORY.md already exists, skipping');

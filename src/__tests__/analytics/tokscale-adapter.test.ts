@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import {
+  TOKSCALE_SOURCES,
   getTokscaleAdapter,
   lookupPricingWithFallback,
   isTokscaleAvailable,
@@ -9,6 +10,10 @@ import {
 const LOOKUP_TIMEOUT_MS = 30_000;
 
 describe('tokscale-adapter', () => {
+  it('requests only Droid session sources', () => {
+    expect(TOKSCALE_SOURCES).toEqual(['droid']);
+  });
+
   beforeEach(() => {
     // Reset the cached adapter before each test
     resetAdapterCache();
