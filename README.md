@@ -1,6 +1,6 @@
 # oh-my-droid
 
-[![GitHub stars](https://img.shields.io/github/stars/MeroZemory/oh-my-droid?style=flat&color=yellow)](https://github.com/MeroZemory/oh-my-droid/stargazers)
+[![GitHub stars](https://img.shields.io/github/stars/lukeaus/oh-my-droid?style=flat&color=yellow)](https://github.com/lukeaus/oh-my-droid/stargazers)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 **Multi-agent orchestration for Factory Droid. Zero learning curve.**
@@ -9,6 +9,8 @@
 
 Based on [oh-my-claudecode](https://github.com/Yeachan-Heo/oh-my-claudecode) by Yeachan Heo.
 
+Forked from [MeroZemory/oh-my-droid](https://github.com/MeroZemory/oh-my-droid).
+
 ---
 
 ## Quick Start
@@ -16,7 +18,7 @@ Based on [oh-my-claudecode](https://github.com/Yeachan-Heo/oh-my-claudecode) by 
 **Step 1: Install**
 
 ```bash
-droid plugin marketplace add https://github.com/MeroZemory/oh-my-droid
+droid plugin marketplace add https://github.com/lukeaus/oh-my-droid
 droid plugin install oh-my-droid@oh-my-droid
 ```
 
