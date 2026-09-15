@@ -13,6 +13,7 @@ const __dirname = dirname(__filename);
 
 // Dynamic import for the shared stdin module (pathToFileURL required on Windows)
 const { readStdin } = await import(pathToFileURL(join(__dirname, 'lib', 'stdin.mjs')).href);
+const { normalizeHookInput } = await import(pathToFileURL(join(__dirname, 'lib', 'hook-input.mjs')).href);
 
 function readJsonFile(path) {
   try {
@@ -112,17 +113,16 @@ function countIncompleteTodos(todosDir) {
 async function main() {
   try {
     const input = await readStdin();
-    let data = {};
-    try { data = JSON.parse(input); } catch {}
+    const data = normalizeHookInput(input);
 
-    const directory = data.directory || process.cwd();
-    const sessionId = data.sessionId || data.session_id || '';
+    const directory = data.cwd;
+    const sessionId = data.session_id || '';
     const messages = [];
 
     // Check for updates (non-blocking)
-    const packageJsonPath = join(directory, 'package.json');
+    const packageJsonPath = directory ? join(directory, 'package.json') : '';
     let currentVersion = '3.8.4'; // fallback
-    const packageJson = readJsonFile(packageJsonPath);
+    const packageJson = packageJsonPath ? readJsonFile(packageJsonPath) : null;
     if (packageJson?.version) {
       currentVersion = packageJson.version;
     }
@@ -144,7 +144,9 @@ To update, run: droid /plugin install oh-my-droid
     }
 
     // Check for ultrawork state
-    const ultraworkState = readJsonFile(join(directory, '.omd', 'state', 'ultrawork-state.json'))
+    const ultraworkState = (directory
+      ? readJsonFile(join(directory, '.omd', 'state', 'ultrawork-state.json'))
+      : null)
       || readJsonFile(join(homedir(), '.omd', 'state', 'ultrawork-state.json'));
 
     // Only restore if session matches (prevents cross-project contamination)

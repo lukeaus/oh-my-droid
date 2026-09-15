@@ -34,7 +34,7 @@
     "LICENSE"
   ],
   "scripts": {
-    "build": "tsc && node scripts/build-skill-bridge.mjs && node scripts/build-mcp-server.mjs && node scripts/build-hud.mjs",
+    "build": "tsc && node scripts/build-skill-bridge.mjs && node scripts/build-mcp-server.mjs && node scripts/build-hud.mjs && node scripts/build-hook-runtime.mjs",
     "build:bridge": "node scripts/build-skill-bridge.mjs",
     "dev": "tsc --watch",
     "start": "node dist/index.js",

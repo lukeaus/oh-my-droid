@@ -87,7 +87,7 @@ Hooks intercept Factory Droid events to enable:
 
 | Directory | Purpose |
 |-----------|---------|
-| `setup/` | Initial setup and configuration |
+| `setup/` | State maintenance helpers (state pruning, swarm DB vacuum) consumed by `session-end/` |
 
 ## For AI Agents
 
@@ -210,10 +210,14 @@ writeState('autopilot-state', state);
 
 | Event | When Fired | Common Uses |
 |-------|------------|-------------|
-| `UserPromptSubmit` | Before prompt processing | Keyword detection, mode activation |
-| `Stop` | Before session ends | Continuation enforcement |
-| `PreToolUse` | Before tool execution | Permission validation |
-| `PostToolUse` | After tool execution | Error recovery, rules injection |
+| `UserPromptSubmit` | Before prompt processing | Keyword detection, mode activation, skill injection |
+| `SessionStart` | On session startup / restore | Context restoration, directory initialization |
+| `PreToolUse` | Before tool execution | Permission validation, delegation checks |
+| `PostToolUse` | After tool execution | Error recovery, rules injection, verification |
+| `SubagentStop` | On subagent completion | Agent tracking and task metrics |
+| `PreCompact` | Before conversation compaction | State checkpointing, wisdom persistence |
+| `Stop` | When session attempts to stop | Persistent mode continuation enforcement |
+| `SessionEnd` | On session exit/termination | Metric export, state cleanup, database maintenance |
 
 ## State Files
 

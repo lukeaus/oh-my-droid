@@ -43,7 +43,7 @@ oh-my-droid enhances Factory Droid with:
 | `docs/` | User documentation and guides | `docs/AGENTS.md` |
 | `templates/` | Hook and rule templates (coding-style, testing, security, performance, git-workflow) | - |
 | `benchmark/` | Performance testing framework | - |
-| `bridge/` | Pre-bundled MCP server for plugin distribution | - |
+| `bridge/` | Pre-bundled runtimes for plugin distribution (MCP server, HUD, hook runtime, skill bridge) | - |
 
 ## For AI Agents
 
@@ -94,6 +94,8 @@ oh-my-droid enhances Factory Droid with:
 | `skills/*/SKILL.md` | `commands/*.md` (mirror), `scripts/build-skill-bridge.mjs` |
 | `commands/*.md` | `skills/*/SKILL.md` (mirror) |
 | `src/hooks/*` | `src/hooks/index.ts`, `src/hooks/bridge.ts`, related skill/command |
+| `src/hooks/{session-end,subagent-tracker,pre-compact,permission-handler,setup}/*` | rebuild `bridge/hooks.cjs` (`npm run build`) and commit it |
+| `src/hooks/learner/bridge.ts` | rebuild `bridge/skill-bridge.cjs` (`npm run build`) and commit it |
 | Agent prompt | Tiered variants (`-low`, `-medium`, `-high`) |
 | Tool definition | `src/tools/index.ts`, `src/mcp/omc-tools-server.ts`, `docs/REFERENCE.md` |
 | `src/hud/*` | `commands/hud.md`, `skills/hud/SKILL.md` |

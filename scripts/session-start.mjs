@@ -9,6 +9,7 @@
 import { existsSync, readFileSync, readdirSync } from 'fs';
 import { join } from 'path';
 import { homedir } from 'os';
+import { normalizeHookInput } from './lib/hook-input.mjs';
 
 // Read all stdin
 async function readStdin() {
@@ -77,11 +78,10 @@ function checkHudInstallation() {
 async function main() {
   try {
     const input = await readStdin();
-    let data = {};
-    try { data = JSON.parse(input); } catch {}
+    const data = normalizeHookInput(input);
 
-    const directory = data.directory || process.cwd();
-    const sessionId = data.sessionId || data.session_id || '';
+    const directory = data.cwd;
+    const sessionId = data.session_id || '';
     const messages = [];
 
     // Check HUD installation (one-time setup guidance)
@@ -93,7 +93,9 @@ async function main() {
     }
 
     // Check for ultrawork state
-    const ultraworkState = readJsonFile(join(directory, '.omd', 'state', 'ultrawork-state.json'))
+    const ultraworkState = (directory
+      ? readJsonFile(join(directory, '.omd', 'state', 'ultrawork-state.json'))
+      : null)
       || readJsonFile(join(homedir(), '.omd', 'state', 'ultrawork-state.json'));
 
     // Only restore if session matches (prevents cross-project contamination)
@@ -114,7 +116,9 @@ Continue working in ultrawork mode until all tasks are complete.
     }
 
     // Check for ralph loop state
-    const ralphState = readJsonFile(join(directory, '.omd', 'state', 'ralph-state.json'));
+    const ralphState = directory
+      ? readJsonFile(join(directory, '.omd', 'state', 'ralph-state.json'))
+      : null;
     if (ralphState?.active) {
       messages.push(`<session-restore>
 
@@ -151,8 +155,8 @@ Please continue working on these tasks.
     }
 
     // Check for notepad Priority Context
-    const notepadPath = join(directory, '.omd', 'notepad.md');
-    if (existsSync(notepadPath)) {
+    const notepadPath = directory ? join(directory, '.omd', 'notepad.md') : '';
+    if (notepadPath && existsSync(notepadPath)) {
       try {
         const notepadContent = readFileSync(notepadPath, 'utf-8');
         const priorityMatch = notepadContent.match(/## Priority Context\n([\s\S]*?)(?=## |$)/);

@@ -43,19 +43,13 @@ import {
 
 // New async hook imports
 import {
-  processSubagentStart,
   processSubagentStop,
-  type SubagentStartInput,
   type SubagentStopInput
 } from './subagent-tracker/index.js';
 import {
   processPreCompact,
   type PreCompactInput
 } from './pre-compact/index.js';
-import {
-  processSetup,
-  type SetupInput
-} from './setup/index.js';
 import {
   handlePermissionRequest,
   type PermissionRequestInput
@@ -119,12 +113,9 @@ export type HookType =
   | 'pre-tool-use'
   | 'post-tool-use'
   | 'autopilot'
-  | 'subagent-start'       // NEW: Track agent spawns
-  | 'subagent-stop'        // NEW: Verify agent completion
-  | 'pre-compact'          // NEW: Save state before compaction
-  | 'setup-init'           // NEW: One-time initialization
-  | 'setup-maintenance'    // NEW: Periodic maintenance
-  | 'permission-request';  // NEW: Smart auto-approval
+  | 'subagent-stop'
+  | 'pre-compact'
+  | 'permission-request';
 
 /**
  * Extract prompt text from various input formats
@@ -438,7 +429,7 @@ function processPreToolUse(input: HookInput): HookOutput {
 
   // Warn about pkill -f self-termination risk (issue #210)
   // Matches: pkill -f, pkill -9 -f, pkill --full, etc.
-  if (input.toolName === 'Bash') {
+  if (input.toolName === 'Execute' || input.toolName === 'Bash') {
     const command = (input.toolInput as { command?: string })?.command ?? '';
     if (/\bpkill\b.*\s-f\b/.test(command) || /\bpkill\b.*--full\b/.test(command)) {
       return {
@@ -570,28 +561,11 @@ export async function processHook(
       case 'session-end':
         return await handleSessionEnd(input as unknown as SessionEndInput);
 
-      case 'subagent-start':
-        return processSubagentStart(input as unknown as SubagentStartInput);
-
       case 'subagent-stop':
         return processSubagentStop(input as unknown as SubagentStopInput);
 
       case 'pre-compact':
         return await processPreCompact(input as unknown as PreCompactInput);
-
-      case 'setup-init':
-        return await processSetup({
-          ...input,
-          trigger: 'init',
-          hook_event_name: 'Setup'
-        } as unknown as SetupInput);
-
-      case 'setup-maintenance':
-        return await processSetup({
-          ...input,
-          trigger: 'maintenance',
-          hook_event_name: 'Setup'
-        } as unknown as SetupInput);
 
       case 'permission-request':
         return await handlePermissionRequest(input as unknown as PermissionRequestInput);

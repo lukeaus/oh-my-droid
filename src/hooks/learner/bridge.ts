@@ -4,8 +4,8 @@
  * Exports a focused API for skill-injector.mjs to use via esbuild bundle.
  * This module bridges the TypeScript learner infrastructure with the standalone hook script.
  *
- * Bundled to: dist/hooks/skill-bridge.cjs
- * Usage: const bridge = require('../dist/hooks/skill-bridge.cjs');
+ * Bundled to: bridge/skill-bridge.cjs
+ * Usage: const bridge = require('../bridge/skill-bridge.cjs');
  */
 
 import { existsSync, readFileSync, writeFileSync, mkdirSync, readdirSync, realpathSync } from 'fs';
@@ -13,7 +13,7 @@ import { join, dirname, basename, relative } from 'path';
 import { homedir } from 'os';
 
 // ponytail: path constants duplicated from learner/constants.ts so this module
-// bundles standalone as dist/hooks/skill-bridge.cjs. Keep in sync if paths change.
+// bundles standalone as bridge/skill-bridge.cjs. Keep in sync if paths change.
 export const AGENTS_SKILLS_DIR = join(homedir(), '.agents', 'skills');
 export const USER_SKILLS_DIR = join(AGENTS_SKILLS_DIR, 'droid-learned');
 export const PROJECT_SKILLS_SUBDIR = join('.agents', 'skills', 'droid-learned');
