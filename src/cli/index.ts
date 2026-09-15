@@ -268,11 +268,8 @@ program
 program
   .command('tui')
   .description('Launch tokscale interactive TUI for token visualization')
-  .option('--light', 'Use light theme')
-  .option('--models', 'Show models view')
-  .option('--daily', 'Show daily view')
-  .option('--stats', 'Show stats view')
-  .option('--no-droid', 'Show all providers (not just Claude)')
+  .option('--light', 'Print a static table instead of the TUI')
+  .option('--no-droid', 'Show all clients (not just droid)')
   .action(async (options) => {
     const available = await isTokscaleCLIAvailable();
 
@@ -282,15 +279,9 @@ program
       process.exit(1);
     }
 
-    const view = options.models ? 'models'
-               : options.daily ? 'daily'
-               : options.stats ? 'stats'
-               : 'overview';
-
     try {
       await launchTokscaleTUI({
         light: options.light,
-        view,
         droid: options.droid
       });
     } catch (error) {

@@ -2,7 +2,6 @@ import { spawn } from 'child_process';
 
 export interface TokscaleLaunchOptions {
   light?: boolean;
-  view?: 'overview' | 'models' | 'daily' | 'stats';
   droid?: boolean; // Default true for OMC
 }
 
@@ -29,17 +28,19 @@ export async function isTokscaleCLIAvailable(): Promise<boolean> {
 export async function launchTokscaleTUI(options: TokscaleLaunchOptions = {}): Promise<void> {
   const args = ['tokscale@latest'];
 
-  // Always use --claude flag for OMC (Droid-focused) unless explicitly disabled
+  // Explicit `tui` subcommand: bare tokscale falls back to a static report
+  // when stdout is not a TTY. --light only exists at top level (not on `tui`).
+  if (!options.light) {
+    args.push('tui');
+  }
+
+  // Filter by droid client for OMC unless explicitly disabled
   if (options.droid !== false) {
-    args.push('--droid');
+    args.push('-c', 'droid');
   }
 
   if (options.light) {
     args.push('--light');
-  }
-
-  if (options.view) {
-    args.push(options.view);
   }
 
   const proc = spawn('bunx', args, {
