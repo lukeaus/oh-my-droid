@@ -54,15 +54,20 @@ That's it. Everything else is automatic.
 
 ### Execution Modes
 
-| Mode                 | Speed                 | Use For                          |
-| -------------------- | --------------------- | -------------------------------- |
-| **Autopilot**  | Fast                  | Full autonomous workflows        |
-| **Ultrawork**  | Parallel              | Maximum parallelism for any task |
-| **Ralph**      | Persistent            | Tasks that must complete fully   |
-| **Ultrapilot** | 3-5x faster           | Multi-component systems          |
-| **Ecomode**    | Fast + 30-50% cheaper | Budget-conscious projects        |
-| **Swarm**      | Coordinated           | Parallel independent tasks       |
-| **Pipeline**   | Sequential            | Multi-stage processing           |
+| Mode | Speed | Use For | Magic Keyword |
+| ---- | ----- | ------- | ------------- |
+| **Autopilot** | Fast | Full autonomous workflows | `autopilot` |
+| **Ultrawork** | Parallel | Maximum parallelism for any task | `ulw` / `uw` |
+| **Ralph** | Persistent | Tasks that must complete fully | `ralph` |
+| **Ultrapilot** | 3-5x faster | Multi-component systems | `ultrapilot` |
+| **Ecomode** | Fast + 30-50% cheaper | Budget-conscious projects | `eco` |
+| **Swarm** | Coordinated | Parallel independent tasks | `swarm N` |
+| **Pipeline** | Sequential | Multi-stage processing | `pipeline` |
+| **Plan** | Interview | Planning workflow | `plan` |
+| **Ralplan** | Consensus | Iterative planning | `ralplan` |
+| **Team** | Coordinated | Multi-agent team | `team` |
+
+**ralph includes ultrawork:** When you activate ralph mode, it automatically includes ultrawork's parallel execution. No need to combine keywords.
 
 ### Intelligent Orchestration
 
@@ -72,28 +77,9 @@ That's it. Everything else is automatic.
 
 ### Developer Experience
 
-- **Magic keywords** - `ralph`, `ulw`, `eco`, `plan` for explicit control
 - **HUD statusline** - Real-time orchestration metrics in your status bar
 - **Skill learning** - Extract reusable patterns from your sessions
 - **Analytics & cost tracking** - Understand token usage across all sessions
-
----
-
-## Magic Keywords
-
-Optional shortcuts for power users. Natural language works fine without them.
-
-| Keyword       | Effect                       | Example                         |
-| ------------- | ---------------------------- | ------------------------------- |
-| `autopilot` | Full autonomous execution    | `autopilot: build a todo app` |
-| `ralph`     | Persistence mode             | `ralph: refactor auth`        |
-| `ulw`       | Maximum parallelism          | `ulw fix all errors`          |
-| `eco`       | Token-efficient execution    | `eco: migrate database`       |
-| `plan`      | Planning interview           | `plan the API`                |
-| `ralplan`   | Iterative planning consensus | `ralplan this feature`        |
-| `team`      | Coordinated agent team       | `team build the API`          |
-
-**ralph includes ultrawork:** When you activate ralph mode, it automatically includes ultrawork's parallel execution. No need to combine keywords.
 
 ---
 
