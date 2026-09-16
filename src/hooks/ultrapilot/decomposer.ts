@@ -268,7 +268,8 @@ export function parseDecompositionResult(response: string): DecompositionResult 
     parsed = JSON.parse(jsonStr);
   } catch (e) {
     throw new Error(
-      `Could not parse decomposition result: invalid JSON - ${e instanceof Error ? e.message : 'unknown error'}`
+      `Could not parse decomposition result: invalid JSON - ${e instanceof Error ? e.message : 'unknown error'}`,
+      { cause: e }
     );
   }
 

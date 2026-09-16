@@ -17,84 +17,19 @@ import {
 import { allTools } from './omc-tools-server.js';
 import { z } from 'zod';
 
-// Convert Zod schema to JSON Schema for MCP
+// JSON Schema from a Zod schema (native in zod 4)
 function zodToJsonSchema(schema: z.ZodRawShape | z.ZodObject<z.ZodRawShape>): {
   type: 'object';
   properties: Record<string, unknown>;
   required: string[];
 } {
-  // Handle both ZodObject and raw shape
-  const rawShape = schema instanceof z.ZodObject ? schema.shape : schema;
-
-  const properties: Record<string, unknown> = {};
-  const required: string[] = [];
-
-  for (const [key, value] of Object.entries(rawShape)) {
-    const zodType = value as z.ZodTypeAny;
-    properties[key] = zodTypeToJsonSchema(zodType);
-
-    // Check if required (not optional) - with safety check
-    const isOptional = zodType && typeof zodType.isOptional === 'function' && zodType.isOptional();
-    if (!isOptional) {
-      required.push(key);
-    }
-  }
-
+  const zodObj = schema instanceof z.ZodObject ? schema : z.object(schema);
+  const jsonSchema = z.toJSONSchema(zodObj);
   return {
     type: 'object',
-    properties,
-    required
+    properties: (jsonSchema.properties ?? {}) as Record<string, unknown>,
+    required: jsonSchema.required ?? []
   };
-}
-
-function zodTypeToJsonSchema(zodType: z.ZodTypeAny): Record<string, unknown> {
-  const result: Record<string, unknown> = {};
-
-  // Safety check for undefined zodType
-  if (!zodType || !zodType._def) {
-    return { type: 'string' };
-  }
-
-  // Handle optional wrapper
-  if (zodType instanceof z.ZodOptional) {
-    return zodTypeToJsonSchema(zodType._def.innerType);
-  }
-
-  // Handle default wrapper
-  if (zodType instanceof z.ZodDefault) {
-    const inner = zodTypeToJsonSchema(zodType._def.innerType);
-    inner.default = zodType._def.defaultValue();
-    return inner;
-  }
-
-  // Get description if available
-  const description = zodType._def?.description;
-  if (description) {
-    result.description = description;
-  }
-
-  // Handle basic types
-  if (zodType instanceof z.ZodString) {
-    result.type = 'string';
-  } else if (zodType instanceof z.ZodNumber) {
-    result.type = zodType._def?.checks?.some((c: { kind: string }) => c.kind === 'int')
-      ? 'integer'
-      : 'number';
-  } else if (zodType instanceof z.ZodBoolean) {
-    result.type = 'boolean';
-  } else if (zodType instanceof z.ZodArray) {
-    result.type = 'array';
-    result.items = zodType._def?.type ? zodTypeToJsonSchema(zodType._def.type) : { type: 'string' };
-  } else if (zodType instanceof z.ZodEnum) {
-    result.type = 'string';
-    result.enum = zodType._def?.values;
-  } else if (zodType instanceof z.ZodObject) {
-    return zodToJsonSchema(zodType.shape);
-  } else {
-    result.type = 'string';
-  }
-
-  return result;
 }
 
 // Create the MCP server

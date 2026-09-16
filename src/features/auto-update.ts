@@ -331,7 +331,8 @@ export async function performUpdate(options?: {
           throw new Error(
             'Auto-update via npm failed. Please run manually:\n' +
             '  npm install -g oh-my-droid@latest\n' +
-            `Error: ${npmError instanceof Error ? npmError.message : npmError}`
+            `Error: ${npmError instanceof Error ? npmError.message : npmError}`,
+            { cause: npmError }
           );
         }
       }
