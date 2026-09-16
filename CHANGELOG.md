@@ -24,6 +24,18 @@ Planned release: **4.0.0**. See [migration instructions](docs/MIGRATION.md).
 
 - **Agent Team Mode** — Coordinate named agents as a team with inter-agent messaging, shared context, file ownership, and leader-managed lifecycle. Invoke via `/team` or magic keywords (team, collaborate, together). Includes typed control mailbox, spawn graph persistence, permission broker, per-member transcripts, and HUD statusline integration.
 
+### Changed
+
+- **Reasoning terminology and API migration** (#37):
+  - `ReasoningEffort` replaces `ThinkingBudget`; category `thinkingBudget` becomes `reasoningEffort`, and `getCategoryThinkingBudget()` becomes `getCategoryReasoningEffort()`. Category values (`low`, `medium`, `high`, `max`) are unchanged and remain advisory metadata, not settings enforced by the dispatcher.
+  - `FullAgentConfig.thinking` (the provider-specific `type`/`budgetTokens` object) is replaced by optional `FullAgentConfig.reasoningEffort`.
+  - HUD types `ThinkingState`/`ThinkingFormat` become `ReasoningState`/`ReasoningFormat`, and `thinkingState` becomes `reasoningState`. Element keys `thinking`/`thinkingFormat` become `reasoning`/`reasoningFormat`. Saved legacy keys are normalized when read, with canonical keys taking precedence.
+  - The HUD indicator now says `reasoning`; it remains a 30-second transcript-recency heuristic, not a display of configured model effort. External transcript fields `thinking` and `redacted_thinking` are unchanged.
+
+### Removed
+
+- **Unused think-mode hook** (#37) — Removed `src/hooks/think-mode/` and its exports; it was never wired into Factory. There is no replacement hook. `THINKING_BUDGET_TOKENS` and `getCategoryThinkingBudgetTokens()` are also removed without token-budget replacements. The `ultrathink`, `think hard`, and `think deeply` keywords still inject prompt guidance, and provider recovery hooks remain. Set actual model effort through Factory `--reasoning-effort` or `reasoningEffort`; supported values depend on the model.
+
 ### Fixed
 
 - **Factory Runtime Cleanup** (#33) — Corrected tokscale usage collection to select Droid, validated `FACTORY_API_KEY` instead of Anthropic credentials, replaced dead documentation URLs, and aligned the documented hook allowlist with `.omd/`, `.factory/`, `/.factory/`, `FACTORY.md$`, and `AGENTS.md$`.

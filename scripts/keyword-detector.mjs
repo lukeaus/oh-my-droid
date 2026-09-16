@@ -28,19 +28,19 @@ import { join } from 'path';
 import { homedir } from 'os';
 import { normalizeHookInput } from './lib/hook-input.mjs';
 
-const ULTRATHINK_MESSAGE = `<think-mode>
+const ULTRATHINK_MESSAGE = `<reasoning-guidance>
 
-**ULTRATHINK MODE ENABLED** - Extended reasoning activated.
+**ULTRATHINK GUIDANCE** - Prompt guidance for thorough reasoning, not a reasoning-effort setting.
 
-You are now in deep thinking mode. Take your time to:
+Take your time to:
 1. Thoroughly analyze the problem from multiple angles
 2. Consider edge cases and potential issues
 3. Think through the implications of each approach
 4. Reason step-by-step before acting
 
-Use your extended thinking capabilities to provide the most thorough and well-reasoned response.
+Provide a thorough, well-reasoned response. This guidance does not change the model or configured reasoning effort.
 
-</think-mode>
+</reasoning-guidance>
 
 ---
 `;

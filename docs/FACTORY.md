@@ -291,9 +291,9 @@ Plan-scoped wisdom capture for learnings, decisions, issues, and problems.
 
 ### Delegation Categories
 
-Semantic task categorization that auto-maps to model tier, temperature, and thinking budget.
+Semantic task categorization that returns a complexity tier, temperature, and reasoning effort. Temperature and reasoning effort are advisory metadata, not model settings enforced by the dispatcher.
 
-| Category | Tier | Temperature | Thinking | Use For |
+| Category | Tier | Temperature | Reasoning effort | Use For |
 |----------|------|-------------|----------|---------|
 | `visual-engineering` | HIGH | 0.7 | high | UI/UX, frontend, design systems |
 | `ultrabrain` | HIGH | 0.3 | max | Complex reasoning, architecture, deep debugging |
@@ -302,6 +302,8 @@ Semantic task categorization that auto-maps to model tier, temperature, and thin
 | `writing` | MEDIUM | 0.5 | medium | Documentation, technical writing |
 
 **Auto-detection:** Categories detect from prompt keywords automatically.
+
+**Actual model effort:** Configure Factory `--reasoning-effort` or `reasoningEffort` with a value supported by the selected model (for example, `none`, `low`, `medium`, `high`, `xhigh`, or `max`). These levels are not token budgets. The `ultrathink`, `think hard`, and `think deeply` keywords still inject prompt guidance; they do not change model settings.
 
 ### State Management
 

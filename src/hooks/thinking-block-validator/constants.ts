@@ -30,7 +30,6 @@ export const THINKING_PART_TYPES = [
 
 /**
  * Model patterns that support extended thinking
- * Aligns with think-mode/switcher.ts patterns
  */
 export const THINKING_MODEL_PATTERNS = [
   "thinking",

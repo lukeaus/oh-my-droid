@@ -289,27 +289,27 @@ SYNTHESIZE findings before proceeding.`;
 };
 
 /**
- * Ultrathink mode enhancement
- * Activates extended thinking and deep reasoning
+ * Ultrathink prompt enhancement
+ * Adds prompt guidance for thorough reasoning
  */
 const ultrathinkEnhancement: MagicKeyword = {
   triggers: ['ultrathink', 'think', 'reason', 'ponder'],
-  description: 'Activates extended thinking mode for deep reasoning',
+  description: 'Adds reasoning guidance without changing configured reasoning effort',
   action: (prompt: string) => {
     // Check if ultrathink-related triggers are present
-    const hasThinkCommand = /\b(ultrathink|think|reason|ponder)\b/i.test(removeCodeBlocks(prompt));
+    const hasReasoningCommand = /\b(ultrathink|think|reason|ponder)\b/i.test(removeCodeBlocks(prompt));
 
-    if (!hasThinkCommand) {
+    if (!hasReasoningCommand) {
       return prompt;
     }
 
     const cleanPrompt = removeTriggerWords(prompt, ['ultrathink', 'think', 'reason', 'ponder']);
 
-    return `[ULTRATHINK MODE - EXTENDED REASONING ACTIVATED]
+    return `[ULTRATHINK GUIDANCE - PROMPT ONLY]
 
 ${cleanPrompt}
 
-## Deep Thinking Instructions
+## Reasoning Instructions
 - Take your time to think through this problem thoroughly
 - Consider multiple approaches before settling on a solution
 - Identify edge cases, risks, and potential issues

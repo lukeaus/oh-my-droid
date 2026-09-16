@@ -11,7 +11,7 @@
 /**
  * Opus prompt prefix for enhanced reasoning
  */
-export const OPUS_PROMPT_PREFIX = `<thinking_mode>deep</thinking_mode>
+export const OPUS_PROMPT_PREFIX = `<reasoning_mode>deep</reasoning_mode>
 
 You are operating at the highest capability tier. Apply sophisticated reasoning:
 

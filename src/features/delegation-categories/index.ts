@@ -2,7 +2,7 @@
  * Delegation Categories
  *
  * Category-based delegation system that layers on top of ComplexityTier.
- * Provides semantic grouping with automatic tier, temperature, and thinking budget.
+ * Provides semantic grouping with tier selection and advisory temperature and reasoning effort.
  *
  * Usage:
  * ```typescript
@@ -24,7 +24,7 @@ import type {
   CategoryConfig,
   ResolvedCategory,
   CategoryContext,
-  ThinkingBudget,
+  ReasoningEffort,
 } from './types.js';
 import type { ComplexityTier } from '../model-routing/types.js';
 
@@ -35,60 +35,50 @@ export const CATEGORY_CONFIGS: Record<DelegationCategory, CategoryConfig> = {
   'visual-engineering': {
     tier: 'HIGH',
     temperature: 0.7,
-    thinkingBudget: 'high',
+    reasoningEffort: 'high',
     description: 'UI/visual reasoning, frontend work, design systems',
     promptAppend: 'Focus on visual design, user experience, and aesthetic quality. Consider accessibility, responsive design, and visual hierarchy.',
   },
   'ultrabrain': {
     tier: 'HIGH',
     temperature: 0.3,
-    thinkingBudget: 'max',
+    reasoningEffort: 'max',
     description: 'Complex reasoning, architecture decisions, deep debugging',
     promptAppend: 'Think deeply and systematically. Consider all edge cases, implications, and long-term consequences. Reason through the problem step by step.',
   },
   'artistry': {
     tier: 'MEDIUM',
     temperature: 0.9,
-    thinkingBudget: 'medium',
+    reasoningEffort: 'medium',
     description: 'Creative writing, novel approaches, innovative solutions',
     promptAppend: 'Be creative and explore unconventional solutions. Think outside the box while maintaining practical feasibility.',
   },
   'quick': {
     tier: 'LOW',
     temperature: 0.1,
-    thinkingBudget: 'low',
+    reasoningEffort: 'low',
     description: 'Simple lookups, straightforward tasks, basic operations',
     promptAppend: 'Be concise and efficient. Focus on accuracy and speed.',
   },
   'writing': {
     tier: 'MEDIUM',
     temperature: 0.5,
-    thinkingBudget: 'medium',
+    reasoningEffort: 'medium',
     description: 'Documentation, technical writing, content creation',
     promptAppend: 'Focus on clarity, completeness, and proper structure. Use appropriate technical terminology while remaining accessible.',
   },
   'unspecified-low': {
     tier: 'LOW',
     temperature: 0.3,
-    thinkingBudget: 'low',
+    reasoningEffort: 'low',
     description: 'Default for simple tasks when category is not specified',
   },
   'unspecified-high': {
     tier: 'HIGH',
     temperature: 0.5,
-    thinkingBudget: 'high',
+    reasoningEffort: 'high',
     description: 'Default for complex tasks when category is not specified',
   },
-};
-
-/**
- * Thinking budget token limits (approximate)
- */
-export const THINKING_BUDGET_TOKENS: Record<ThinkingBudget, number> = {
-  low: 1000,
-  medium: 5000,
-  high: 10000,
-  max: 32000,
 };
 
 /**
@@ -273,24 +263,13 @@ export function getCategoryTemperature(category: DelegationCategory): number {
 }
 
 /**
- * Get thinking budget from category
+ * Get reasoning effort from category
  *
  * @param category - Delegation category
- * @returns Thinking budget level
+ * @returns Reasoning effort level
  */
-export function getCategoryThinkingBudget(category: DelegationCategory): ThinkingBudget {
-  return CATEGORY_CONFIGS[category].thinkingBudget;
-}
-
-/**
- * Get thinking budget in tokens
- *
- * @param category - Delegation category
- * @returns Token budget
- */
-export function getCategoryThinkingBudgetTokens(category: DelegationCategory): number {
-  const budget = CATEGORY_CONFIGS[category].thinkingBudget;
-  return THINKING_BUDGET_TOKENS[budget];
+export function getCategoryReasoningEffort(category: DelegationCategory): ReasoningEffort {
+  return CATEGORY_CONFIGS[category].reasoningEffort;
 }
 
 /**
@@ -329,5 +308,5 @@ export type {
   CategoryConfig,
   ResolvedCategory,
   CategoryContext,
-  ThinkingBudget,
+  ReasoningEffort,
 } from './types.js';

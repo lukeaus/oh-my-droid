@@ -1,5 +1,5 @@
 <!-- Parent: ../AGENTS.md -->
-<!-- Generated: 2026-01-28 | Updated: 2026-07-24 -->
+<!-- Generated: 2026-01-28 | Updated: 2026-09-15 -->
 
 # features
 
@@ -37,7 +37,7 @@ This directory contains self-contained feature modules that enhance orchestratio
 | `boulder-state/` | Plan state and progress persistence |
 | `verification/` | Verification protocol with evidence tracking |
 | `notepad-wisdom/` | Plan-scoped knowledge capture |
-| `delegation-categories/` | Task categorization for model/temp selection |
+| `delegation-categories/` | Task categorization with advisory temperature/reasoning effort |
 | `task-decomposer/` | Task breakdown for parallelization |
 | `state-manager/` | Standardized state file locations |
 | `context-injector/` | Context enhancement for prompts |
@@ -117,14 +117,13 @@ addDecision('my-plan', 'Using JWT for authentication');
 
 #### Delegation Categories
 
-Semantic categorization for model selection:
+Semantic categorization for tier selection and advisory metadata (does not override Factory settings):
 
 ```typescript
-import { categorizeTask, getCategoryConfig } from './delegation-categories';
+import { getCategoryForTask } from './delegation-categories';
 
-const category = categorizeTask(prompt); // 'ultrabrain' | 'visual-engineering' | etc.
-const config = getCategoryConfig(category);
-// { tier: 'HIGH', temperature: 0.3, thinking: 'max' }
+const config = getCategoryForTask({ taskPrompt: prompt });
+// { tier: 'HIGH', temperature: 0.3, reasoningEffort: 'max', ... }
 ```
 
 ### Modification Checklist

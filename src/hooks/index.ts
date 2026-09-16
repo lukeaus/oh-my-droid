@@ -119,32 +119,6 @@ export {
 // See exports from './recovery/index.js' above
 
 export {
-  // Think Mode
-  createThinkModeHook,
-  detectThinkKeyword,
-  detectUltrathinkKeyword,
-  extractPromptText as extractThinkPromptText,
-  removeCodeBlocks as removeThinkCodeBlocks,
-  getHighVariant,
-  isAlreadyHighVariant,
-  getThinkingConfig,
-  getClaudeThinkingConfig,
-  clearThinkModeState,
-  getThinkModeState,
-  isThinkModeActive,
-  processThinkMode,
-  shouldActivateThinkMode,
-  shouldActivateUltrathink,
-  THINKING_CONFIGS,
-  type ThinkModeState,
-  type ModelRef,
-  type MessageWithModel,
-  type ThinkModeInput,
-  type ClaudeThinkingConfig,
-  type ThinkingConfig
-} from './think-mode/index.js';
-
-export {
   // Rules Injector
   createRulesInjectorHook,
   getRulesForPath,

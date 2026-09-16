@@ -726,7 +726,7 @@ Note: Composition is where OMC really shines - combine behaviors for exactly the
 
 **Semantic task categorization with auto-detection:**
 
-| Category | Tier | Temp | Thinking | Auto-Detected From |
+| Category | Tier | Temp | Reasoning effort | Auto-Detected From |
 |----------|------|------|----------|-------------------|
 | `visual-engineering` | HIGH | 0.7 | high | "UI", "component", "style" |
 | `ultrabrain` | HIGH | 0.3 | max | "debug", "architecture" |
@@ -745,10 +745,10 @@ User: "debug the race condition in auth"
      Category: ultrabrain
             |
             v
-     Settings: HIGH tier, temp=0.3, max thinking
+     Metadata: HIGH tier, temp=0.3, reasoningEffort=max
 ```
 
-Note: Categories auto-tune the model parameters for optimal performance on different task types.
+Note: Temperature and reasoning effort are advisory category metadata, not model settings enforced by the dispatcher. Configure actual effort through Factory `--reasoning-effort` or `reasoningEffort`; supported values depend on the model. There are no token-budget equivalents.
 
 ---
 <!-- .slide: data-background="#1a1a2e" -->

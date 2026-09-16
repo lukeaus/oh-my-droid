@@ -13,7 +13,7 @@
 import { createReadStream, existsSync, statSync, openSync, readSync, closeSync } from 'fs';
 import { createInterface } from 'readline';
 import { basename } from 'path';
-import type { TranscriptData, ActiveAgent, TodoItem, SkillInvocation, PendingPermission, ThinkingState } from './types.js';
+import type { TranscriptData, ActiveAgent, TodoItem, SkillInvocation, PendingPermission } from './types.js';
 
 // Performance constants
 const MAX_TAIL_BYTES = 512 * 1024; // 500KB - enough for recent activity
@@ -43,14 +43,14 @@ const PERMISSION_THRESHOLD_MS = 3000; // 3 seconds
 const pendingPermissionMap = new Map<string, PendingPermission>();
 
 /**
- * Content block types that indicate extended thinking mode.
+ * Content block types that indicate reasoning activity.
  */
-const THINKING_PART_TYPES = ['thinking', 'reasoning'] as const;
+const REASONING_PART_TYPES = ['thinking', 'reasoning'] as const;
 
 /**
- * Time threshold for considering thinking "active".
+ * Time threshold for considering reasoning "active".
  */
-const THINKING_RECENCY_MS = 30_000; // 30 seconds
+const REASONING_RECENCY_MS = 30_000; // 30 seconds
 
 /**
  * Parse a Factory Droid transcript JSONL file.
@@ -149,10 +149,10 @@ export async function parseTranscript(
     }
   }
 
-  // Determine if thinking is currently active based on recency
-  if (result.thinkingState?.lastSeen) {
-    const age = now - result.thinkingState.lastSeen.getTime();
-    result.thinkingState.active = age <= THINKING_RECENCY_MS;
+  // Determine if reasoning is currently active based on recency
+  if (result.reasoningState?.lastSeen) {
+    const age = now - result.reasoningState.lastSeen.getTime();
+    result.reasoningState.active = age <= REASONING_RECENCY_MS;
   }
 
   // Get running agents first, then recent completed (up to 10 total)
@@ -276,9 +276,9 @@ function processEntry(
   if (!content || !Array.isArray(content)) return;
 
   for (const block of content) {
-    // Check if this is a thinking block
-    if (THINKING_PART_TYPES.includes(block.type as typeof THINKING_PART_TYPES[number])) {
-      result.thinkingState = {
+    // Check if this is a reasoning activity block
+    if (REASONING_PART_TYPES.includes(block.type as typeof REASONING_PART_TYPES[number])) {
+      result.reasoningState = {
         active: true,
         lastSeen: timestamp
       };

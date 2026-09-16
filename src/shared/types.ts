@@ -14,6 +14,9 @@ export type ModelIdentifier = 'inherit' | (string & {});
  */
 export type ModelType = 'sonnet' | 'opus' | 'haiku' | 'inherit';
 
+/** Model-dependent Factory reasoning effort; advisory metadata does not override settings. */
+export type ReasoningEffort = 'none' | 'low' | 'medium' | 'high' | 'xhigh' | 'max';
+
 export interface AgentConfig {
   name: string;
   description: string;

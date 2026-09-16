@@ -1,19 +1,21 @@
 # Delegation Categories
 
-Category-based delegation system that layers on top of the ComplexityTier system. Provides semantic grouping with automatic tier, temperature, and thinking budget configuration.
+Category-based delegation system that layers on top of the ComplexityTier system. Provides semantic grouping with tier selection and advisory temperature and reasoning effort metadata.
 
 ## Overview
 
 Categories provide a high-level semantic interface for delegation while maintaining full compatibility with the underlying ComplexityTier system. Each category maps to:
-- **Complexity Tier**: LOW, MEDIUM, or HIGH (which determines the model)
-- **Temperature**: Controls randomness/creativity (0-1)
-- **Thinking Budget**: Token budget for extended thinking
+- **Complexity Tier**: LOW, MEDIUM, or HIGH (the concrete model comes from the user's `subagentModelSettings`)
+- **Temperature**: Advisory sampling metadata (0-1)
+- **Reasoning Effort**: Advisory, model-dependent effort level
 - **Prompt Appendix**: Category-specific guidance
+
+`reasoningEffort` uses Factory's model-dependent vocabulary: `none`, `low`, `medium`, `high`, `xhigh`, `max`. These recommendations do not override `model: inherit` or Factory settings. There is no token-budget conversion. Configure actual effort through Factory's `--reasoning-effort` option or `/settings`, using values supported by the selected model.
 
 ## Categories
 
 ### visual-engineering
-**Tier:** HIGH | **Temperature:** 0.7 | **Thinking:** high (10k tokens)
+**Tier:** HIGH | **Temperature:** 0.7 | **Reasoning effort:** high
 
 For UI/visual reasoning, frontend work, design systems, and aesthetic decisions.
 
@@ -26,11 +28,11 @@ For UI/visual reasoning, frontend work, design systems, and aesthetic decisions.
 **Example:**
 ```typescript
 const config = resolveCategory('visual-engineering');
-// -> tier: HIGH, temperature: 0.7, model: opus
+// -> tier: HIGH, temperature: 0.7, reasoningEffort: high
 ```
 
 ### ultrabrain
-**Tier:** HIGH | **Temperature:** 0.3 | **Thinking:** max (32k tokens)
+**Tier:** HIGH | **Temperature:** 0.3 | **Reasoning effort:** max
 
 For complex reasoning, architecture decisions, deep debugging, and systematic analysis.
 
@@ -43,11 +45,11 @@ For complex reasoning, architecture decisions, deep debugging, and systematic an
 **Example:**
 ```typescript
 const config = resolveCategory('ultrabrain');
-// -> tier: HIGH, temperature: 0.3, model: opus, max thinking
+// -> tier: HIGH, temperature: 0.3, reasoningEffort: max
 ```
 
 ### artistry
-**Tier:** MEDIUM | **Temperature:** 0.9 | **Thinking:** medium (5k tokens)
+**Tier:** MEDIUM | **Temperature:** 0.9 | **Reasoning effort:** medium
 
 For creative writing, novel approaches, and innovative solutions.
 
@@ -60,11 +62,11 @@ For creative writing, novel approaches, and innovative solutions.
 **Example:**
 ```typescript
 const config = resolveCategory('artistry');
-// -> tier: MEDIUM, temperature: 0.9, model: sonnet
+// -> tier: MEDIUM, temperature: 0.9, reasoningEffort: medium
 ```
 
 ### quick
-**Tier:** LOW | **Temperature:** 0.1 | **Thinking:** low (1k tokens)
+**Tier:** LOW | **Temperature:** 0.1 | **Reasoning effort:** low
 
 For simple lookups, straightforward tasks, and basic operations.
 
@@ -77,11 +79,11 @@ For simple lookups, straightforward tasks, and basic operations.
 **Example:**
 ```typescript
 const config = resolveCategory('quick');
-// -> tier: LOW, temperature: 0.1, model: haiku
+// -> tier: LOW, temperature: 0.1, reasoningEffort: low
 ```
 
 ### writing
-**Tier:** MEDIUM | **Temperature:** 0.5 | **Thinking:** medium (5k tokens)
+**Tier:** MEDIUM | **Temperature:** 0.5 | **Reasoning effort:** medium
 
 For documentation, technical writing, and content creation.
 
@@ -94,7 +96,7 @@ For documentation, technical writing, and content creation.
 **Example:**
 ```typescript
 const config = resolveCategory('writing');
-// -> tier: MEDIUM, temperature: 0.5, model: sonnet
+// -> tier: MEDIUM, temperature: 0.5, reasoningEffort: medium
 ```
 
 ### unspecified-low / unspecified-high
@@ -114,7 +116,7 @@ const config = resolveCategory('ultrabrain');
 
 console.log(config.tier);            // 'HIGH'
 console.log(config.temperature);     // 0.3
-console.log(config.thinkingBudget);  // 'max'
+console.log(config.reasoningEffort);  // 'max'
 console.log(config.promptAppend);    // Category-specific guidance
 ```
 
@@ -168,8 +170,7 @@ import {
   getCategoryDescription,
   getCategoryTier,
   getCategoryTemperature,
-  getCategoryThinkingBudget,
-  getCategoryThinkingBudgetTokens,
+  getCategoryReasoningEffort,
 } from './delegation-categories';
 
 // Validation
@@ -188,8 +189,7 @@ const desc = getCategoryDescription('ultrabrain');
 // Extract specific properties
 const tier = getCategoryTier('ultrabrain');        // 'HIGH'
 const temp = getCategoryTemperature('artistry');   // 0.9
-const budget = getCategoryThinkingBudget('quick'); // 'low'
-const tokens = getCategoryThinkingBudgetTokens('ultrabrain'); // 32000
+const effort = getCategoryReasoningEffort('quick'); // 'low'
 ```
 
 ## Backward Compatibility
@@ -220,9 +220,9 @@ console.log(config2.tier);  // 'HIGH'
 CategoryContext
   └─> detectCategoryFromPrompt()
        └─> resolveCategory()
-            └─> CategoryConfig { tier, temperature, thinkingBudget }
+            └─> CategoryConfig { tier, temperature, reasoningEffort }
                  └─> ComplexityTier (LOW/MEDIUM/HIGH)
-                      └─> Model Selection (haiku/sonnet/opus)
+                      └─> Inherited Model (subagentModelSettings)
 ```
 
 Categories are a **semantic layer** that maps to the underlying tier system. The tier system handles model selection, so categories don't bypass or replace it—they enhance it.
@@ -232,16 +232,10 @@ Categories are a **semantic layer** that maps to the underlying tier system. The
 Run the test suite:
 
 ```bash
-npx tsx src/features/delegation-categories/test-categories.ts
+npx vitest run src/__tests__/delegation-categories.test.ts
 ```
 
-Tests cover:
-- Category resolution
-- Validation
-- Auto-detection from prompts
-- Explicit category/tier handling
-- Backward compatibility
-- Prompt enhancement
+Tests cover category effort values (including `max`), explicit category resolution, and shared agent metadata types. `test-categories.ts` also demonstrates detection, tier handling, and prompt enhancement.
 
 ## Integration Points
 
@@ -254,7 +248,7 @@ This system integrates with:
 
 1. **Layer, Don't Replace**: Categories sit on top of tiers, not instead of
 2. **Semantic Grouping**: Categories provide meaningful names for common patterns
-3. **Full Configuration**: Each category bundles tier + temperature + thinking budget
+3. **Full Configuration**: Each category bundles tier + temperature + reasoning effort
 4. **Backward Compatible**: Direct tier specification still works
 5. **Auto-Detection**: Keyword matching for convenience, explicit control when needed
 

@@ -314,7 +314,7 @@ async function main(): Promise<void> {
       cwd,
       lastSkill: transcriptData.lastActivatedSkill || null,
       pendingPermission: transcriptData.pendingPermission || null,
-      thinkingState: transcriptData.thinkingState || null,
+      reasoningState: transcriptData.reasoningState || null,
       sessionHealth: await calculateSessionHealth(
         transcriptData.sessionStart,
         getContextPercent(stdin),

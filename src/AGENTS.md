@@ -1,5 +1,5 @@
 <!-- Parent: ../AGENTS.md -->
-<!-- Generated: 2026-01-28 | Updated: 2026-07-24 -->
+<!-- Generated: 2026-01-28 | Updated: 2026-09-15 -->
 
 # src
 
@@ -11,7 +11,7 @@ This directory contains all TypeScript source code organized into modules:
 
 - **droids/** - 32 specialized AI agent definitions with tiered variants
 - **tools/** - 15 LSP/AST/REPL tools plus MCP swarm coordination
-- **hooks/** - 31 event-driven behaviors for execution modes
+- **hooks/** - Event-driven behaviors for execution modes
 - **features/** - Core features (model routing, state management, verification)
 - **config/** - Configuration loading and validation
 - **commands/** - Command expansion utilities
@@ -22,7 +22,7 @@ This directory contains all TypeScript source code organized into modules:
 | File | Description |
 |------|-------------|
 | `index.ts` | Main entry point - exports `createDroidSession()` |
-| `shared/types.ts` | Shared TypeScript types used across modules |
+| `shared/types.ts` | Shared types, including model-dependent `ReasoningEffort` metadata |
 
 ## Subdirectories
 
@@ -30,7 +30,7 @@ This directory contains all TypeScript source code organized into modules:
 |-----------|---------|
 | `droids/` | 32 agent definitions with prompts and tools (see `droids/AGENTS.md`) |
 | `tools/` | 15 LSP, AST, and Python REPL tools plus swarm MCP coordination (see `tools/AGENTS.md`) |
-| `hooks/` | 31 hooks for execution modes (see `hooks/AGENTS.md`) |
+| `hooks/` | Hooks for execution modes (see `hooks/AGENTS.md`) |
 | `features/` | Core features like model routing, state (see `features/AGENTS.md`) |
 | `config/` | Configuration loading (`loader.ts`) |
 | `commands/` | Command expansion utilities |

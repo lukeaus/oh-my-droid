@@ -208,20 +208,18 @@ export {
   getCategoryDescription,
   getCategoryTier,
   getCategoryTemperature,
-  getCategoryThinkingBudget,
-  getCategoryThinkingBudgetTokens,
+  getCategoryReasoningEffort,
   getCategoryForTask,
   detectCategoryFromPrompt,
   enhancePromptWithCategory,
   // Constants
   CATEGORY_CONFIGS,
-  THINKING_BUDGET_TOKENS,
   // Types
   type DelegationCategory,
   type CategoryConfig,
   type ResolvedCategory,
   type CategoryContext,
-  type ThinkingBudget
+  type ReasoningEffort
 } from './delegation-categories/index.js';
 
 // State Manager - unified state file management
