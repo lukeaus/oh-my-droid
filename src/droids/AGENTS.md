@@ -1,11 +1,12 @@
 <!-- Parent: ../AGENTS.md -->
-<!-- Generated: 2026-01-28 | Updated: 2026-01-31 -->
+<!-- Generated: 2026-01-28 | Updated: 2026-09-15 -->
 
 # agents
 
 Agent definitions in three scope tiers. Every agent is `model: inherit`, so the
 model comes from the user's `subagentModelSettings`; the tier is what the
-dispatcher passes as `complexity`.
+dispatcher passes as `complexity`. Optional `reasoningEffort` is advisory metadata,
+not a token budget or an override of Factory settings. Supported values are model-dependent.
 
 ## Purpose
 
@@ -35,6 +36,7 @@ This directory defines all agents available in oh-my-droid:
 | `qa-tester.ts` | CLI/service testing with tmux |
 | `scientist.ts` | Data analysis & hypothesis testing |
 | `index.ts` | Exports all agents and utilities |
+| `types.ts` | Agent metadata; `FullAgentConfig.reasoningEffort` uses shared `ReasoningEffort` |
 
 ## For AI Agents
 

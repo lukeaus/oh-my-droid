@@ -13,7 +13,7 @@ Implementation of semantic category-based delegation system that layers on top o
    - `CategoryConfig` interface
    - `ResolvedCategory` interface
    - `CategoryContext` for resolution
-   - `ThinkingBudget` type
+   - Shared `ReasoningEffort` type (re-exported from `src/shared/types.ts`)
 
 2. **`src/features/delegation-categories/index.ts`**
    - Category configuration definitions
@@ -21,7 +21,7 @@ Implementation of semantic category-based delegation system that layers on top o
    - `getCategoryForTask()` - Auto-detection and explicit control
    - `detectCategoryFromPrompt()` - Keyword-based detection
    - `enhancePromptWithCategory()` - Prompt enhancement
-   - Utility functions for tier/temperature/thinking budget extraction
+   - Utility functions for tier/temperature/reasoning effort extraction
    - Full TypeScript type exports
 
 3. **`src/features/delegation-categories/test-categories.ts`**
@@ -43,7 +43,7 @@ Implementation of semantic category-based delegation system that layers on top o
 
 ## Categories Implemented
 
-| Category | Tier | Temp | Thinking | Use Case |
+| Category | Tier | Temp | Reasoning effort | Use Case |
 |----------|------|------|----------|----------|
 | `visual-engineering` | HIGH | 0.7 | high | UI/design/frontend |
 | `ultrabrain` | HIGH | 0.3 | max | Complex reasoning/debugging |
@@ -60,7 +60,7 @@ Categories don't bypass the tier system—they enhance it by providing semantic 
 
 ```typescript
 const config = resolveCategory('ultrabrain');
-// Returns: { tier: 'HIGH', temperature: 0.3, thinkingBudget: 'max', ... }
+// Returns: { tier: 'HIGH', temperature: 0.3, reasoningEffort: 'max', ... }
 ```
 
 ### 2. Auto-Detection
@@ -95,13 +95,13 @@ const enhanced = enhancePromptWithCategory(
 ```
 
 ### 5. Full Configuration Bundle
-Each category bundles tier + temperature + thinking budget.
+Each category bundles tier + temperature + reasoning effort. Temperature and reasoning effort are advisory metadata; the dispatcher does not enforce them. Configure actual effort through Factory `--reasoning-effort` or `reasoningEffort`, using values supported by the selected model. Effort levels have no fixed token-budget equivalents.
 
 ```typescript
 const config = resolveCategory('artistry');
 // config.tier = 'MEDIUM'
 // config.temperature = 0.9 (high creativity)
-// config.thinkingBudget = 'medium'
+// config.reasoningEffort = 'medium'
 ```
 
 ## Verification
@@ -125,7 +125,7 @@ npx tsx src/features/delegation-categories/test-categories.ts
 - ✅ Explicit category control
 - ✅ Explicit tier control (backward compatibility)
 - ✅ Prompt enhancement
-- ✅ Utility functions (tier/temp/thinking extraction)
+- ✅ Utility functions (tier/temp/reasoning effort extraction)
 - ✅ Tier mapping verification
 
 ## Architecture
@@ -141,7 +141,7 @@ User Request
          (keyword matching)        │
                                    ▼
                             CategoryConfig
-                            { tier, temp, thinking }
+                            { tier, temp, reasoningEffort }
                                    │
                                    ▼
                             ComplexityTier
@@ -163,7 +163,7 @@ Categories integrate with:
 
 2. **Task Delegation**
    - Categories can be specified when delegating
-   - Temperature and thinking budget configurable
+   - Temperature and reasoning effort available as advisory metadata
    - Prompt enhancement optional
 
 3. **Orchestration**
@@ -210,7 +210,7 @@ delegateToAgent({
 ## Acceptance Criteria
 
 - ✅ `DelegationCategory` type defined with all 7 categories
-- ✅ `resolveCategory()` returns `{ tier, temperature, thinkingBudget, promptAppend }`
+- ✅ `resolveCategory()` returns `{ tier, temperature, reasoningEffort, promptAppend }`
 - ✅ Categories resolve to ComplexityTier (not bypass it)
 - ✅ Direct tier specification still works (backward compatible)
 - ✅ TypeScript compiles without errors
@@ -244,7 +244,7 @@ To use categories in production:
 3. **Integrate with orchestrator:**
    - Add category detection
    - Map categories to agents
-   - Use temperature and thinking budget
+   - Treat temperature and reasoning effort as advisory metadata
 
 4. **Monitor usage:**
    - Track which categories are used most
@@ -259,7 +259,7 @@ To use categories in production:
    - Full backward compatibility
 
 2. **Semantic Over Structural**
-   - "ultrabrain" is more intuitive than "HIGH tier + low temp + max thinking"
+   - "ultrabrain" is more intuitive than "HIGH tier + low temp + max reasoning effort"
    - Categories bundle related configuration
    - Auto-detection uses semantic keywords
 

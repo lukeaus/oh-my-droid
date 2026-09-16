@@ -15,7 +15,7 @@ import { renderContext, renderContextWithBar } from './elements/context.js';
 import { renderBackground } from './elements/background.js';
 import { renderPrd } from './elements/prd.js';
 import { renderPermission } from './elements/permission.js';
-import { renderThinking } from './elements/thinking.js';
+import { renderReasoning } from './elements/reasoning.js';
 import { renderSession } from './elements/session.js';
 import { renderAutopilot } from './elements/autopilot.js';
 import { renderTeam } from './elements/team.js';
@@ -145,10 +145,10 @@ export async function render(context: HudRenderContext, config: HudConfig): Prom
     if (permission) elements.push(permission);
   }
 
-  // Extended thinking indicator
-  if (enabledElements.thinking && context.thinkingState) {
-    const thinking = renderThinking(context.thinkingState, enabledElements.thinkingFormat || 'text');
-    if (thinking) elements.push(thinking);
+  // Recent reasoning activity indicator
+  if (enabledElements.reasoning && context.reasoningState) {
+    const reasoning = renderReasoning(context.reasoningState, enabledElements.reasoningFormat || 'text');
+    if (reasoning) elements.push(reasoning);
   }
 
   // Session health indicator

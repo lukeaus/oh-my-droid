@@ -5,9 +5,9 @@
  * Ported from oh-my-opencode's agent type system.
  */
 
-import type { ModelIdentifier, ModelType } from '../shared/types.js';
+import type { ModelIdentifier, ModelType, ReasoningEffort } from '../shared/types.js';
 
-export type { ModelIdentifier, ModelType };
+export type { ModelIdentifier, ModelType, ReasoningEffort };
 
 /**
  * Cost tier for agent usage
@@ -88,11 +88,8 @@ export interface FullAgentConfig extends AgentConfig {
   temperature?: number;
   /** Max tokens */
   maxTokens?: number;
-  /** Thinking configuration (for Claude models) */
-  thinking?: {
-    type: 'enabled' | 'disabled';
-    budgetTokens?: number;
-  };
+  /** Advisory reasoning effort; does not override inherited Factory settings. */
+  reasoningEffort?: ReasoningEffort;
   /** Tool restrictions */
   toolRestrictions?: string[];
 }

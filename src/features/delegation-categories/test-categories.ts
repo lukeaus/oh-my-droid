@@ -13,8 +13,7 @@ import {
   getCategoryForTask,
   getCategoryTier,
   getCategoryTemperature,
-  getCategoryThinkingBudget,
-  getCategoryThinkingBudgetTokens,
+  getCategoryReasoningEffort,
   enhancePromptWithCategory,
   CATEGORY_CONFIGS,
 } from './index.js';
@@ -28,7 +27,7 @@ for (const category of getAllCategories()) {
   console.log(`  ${category}:`);
   console.log(`    tier: ${resolved.tier}`);
   console.log(`    temperature: ${resolved.temperature}`);
-  console.log(`    thinkingBudget: ${resolved.thinkingBudget}`);
+  console.log(`    reasoningEffort: ${resolved.reasoningEffort}`);
   console.log(`    description: ${resolved.description}`);
 }
 console.log();
@@ -92,8 +91,7 @@ console.log('6. Testing tier extraction:');
 console.log(`  getCategoryTier('ultrabrain'): ${getCategoryTier('ultrabrain')}`);
 console.log(`  getCategoryTier('quick'): ${getCategoryTier('quick')}`);
 console.log(`  getCategoryTemperature('artistry'): ${getCategoryTemperature('artistry')}`);
-console.log(`  getCategoryThinkingBudget('ultrabrain'): ${getCategoryThinkingBudget('ultrabrain')}`);
-console.log(`  getCategoryThinkingBudgetTokens('ultrabrain'): ${getCategoryThinkingBudgetTokens('ultrabrain')}`);
+console.log(`  getCategoryReasoningEffort('ultrabrain'): ${getCategoryReasoningEffort('ultrabrain')}`);
 console.log();
 
 // Test 7: Prompt enhancement

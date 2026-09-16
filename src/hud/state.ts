@@ -8,7 +8,7 @@
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'fs';
 import { join } from 'path';
 import { homedir } from 'os';
-import type { OmcHudState, BackgroundTask, HudConfig } from './types.js';
+import type { OmcHudState, BackgroundTask, HudConfig, HudElementConfig, ReasoningFormat } from './types.js';
 import { DEFAULT_HUD_CONFIG, PRESET_CONFIGS } from './types.js';
 import { cleanupStaleBackgroundTasks, markOrphanedTasksAsStale } from './background-cleanup.js';
 
@@ -155,14 +155,20 @@ export function readHudConfig(): HudConfig {
 
   try {
     const content = readFileSync(configFile, 'utf-8');
-    const config = JSON.parse(content) as Partial<HudConfig>;
+    const config = JSON.parse(content) as Omit<Partial<HudConfig>, 'elements'> & {
+      elements?: Partial<HudElementConfig> & { thinking?: boolean; thinkingFormat?: ReasoningFormat };
+    };
+    // Normalize legacy saved preferences only at the persistence boundary.
+    const { thinking, thinkingFormat, ...elements } = config.elements ?? {};
 
     // Merge with defaults to ensure all fields exist
     return {
       preset: config.preset ?? DEFAULT_HUD_CONFIG.preset,
       elements: {
         ...DEFAULT_HUD_CONFIG.elements,
-        ...config.elements,
+        ...elements,
+        reasoning: elements.reasoning ?? thinking ?? DEFAULT_HUD_CONFIG.elements.reasoning,
+        reasoningFormat: elements.reasoningFormat ?? thinkingFormat ?? DEFAULT_HUD_CONFIG.elements.reasoningFormat,
       },
       thresholds: {
         ...DEFAULT_HUD_CONFIG.thresholds,

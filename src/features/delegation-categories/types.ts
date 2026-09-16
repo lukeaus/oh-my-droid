@@ -2,10 +2,13 @@
  * Delegation Categories Types
  *
  * Category-based delegation system that layers on top of ComplexityTier.
- * Categories provide semantic grouping with tier, temperature, and thinking budget.
+ * Categories provide semantic grouping with tier, temperature, and reasoning effort.
  */
 
+import type { ReasoningEffort } from '../../shared/types.js';
 import type { ComplexityTier } from '../model-routing/types.js';
+
+export type { ReasoningEffort } from '../../shared/types.js';
 
 /**
  * Semantic categories for delegation that map to complexity tiers + configuration
@@ -20,11 +23,6 @@ export type DelegationCategory =
   | 'unspecified-high';
 
 /**
- * Thinking budget levels
- */
-export type ThinkingBudget = 'low' | 'medium' | 'high' | 'max';
-
-/**
  * Configuration for a delegation category
  */
 export interface CategoryConfig {
@@ -32,8 +30,8 @@ export interface CategoryConfig {
   tier: ComplexityTier;
   /** Temperature for model sampling (0-1) */
   temperature: number;
-  /** Thinking budget level */
-  thinkingBudget: ThinkingBudget;
+  /** Advisory, model-dependent reasoning effort; does not override Factory settings. */
+  reasoningEffort: ReasoningEffort;
   /** Optional prompt appendix for this category */
   promptAppend?: string;
   /** Human-readable description */

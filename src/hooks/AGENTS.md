@@ -1,9 +1,9 @@
 <!-- Parent: ../AGENTS.md -->
-<!-- Generated: 2026-01-28 | Updated: 2026-01-31 -->
+<!-- Generated: 2026-01-28 | Updated: 2026-09-15 -->
 
 # hooks
 
-31 event-driven hooks that power execution modes and behaviors.
+Event-driven hooks that power execution modes and behaviors.
 
 ## Purpose
 
@@ -12,7 +12,7 @@ Hooks intercept Factory Droid events to enable:
 - **Validation**: thinking blocks, empty messages, comments
 - **Recovery**: edit errors, session recovery, context window
 - **Enhancement**: rules injection, directory READMEs, notepad
-- **Detection**: keywords, think mode, slash commands
+- **Detection**: keywords, slash commands
 
 ## Key Files
 
@@ -65,10 +65,11 @@ Hooks intercept Factory Droid events to enable:
 
 ### Detection Hooks
 
+The live keyword script (`scripts/keyword-detector.mjs`) emits reasoning prompt guidance via `additionalContext`; it does not change models or configured reasoning effort. No TypeScript think-mode hook is installed. Provider `thinking`/`redacted_thinking` recovery vocabulary remains unchanged.
+
 | Directory | Purpose |
 |-----------|---------|
 | `keyword-detector/` | Magic keyword detection |
-| `think-mode/` | Extended thinking detection |
 | `auto-slash-command/` | Slash command expansion |
 | `non-interactive-env/` | Non-interactive environment detection |
 | `plugin-patterns/` | Plugin pattern detection |

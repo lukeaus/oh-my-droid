@@ -260,6 +260,7 @@ When agents are running, the HUD shows detailed information on separate lines:
 | `agents:2` | Running subagent count |
 | `bg:3/5` | Background task slots |
 | `todos:2/5` | Todo completion |
+| `reasoning` | Recent reasoning activity inferred from the transcript (30-second recency heuristic), not the configured effort level |
 
 ## Color Coding
 
@@ -288,6 +289,8 @@ You can manually edit the config file. Each option can be set individually - any
     "agents": true,
     "backgroundTasks": true,
     "todos": true,
+    "reasoning": true,
+    "reasoningFormat": "text",
     "showCache": true,
     "showCost": true,
     "maxOutputLines": 4
@@ -299,6 +302,8 @@ You can manually edit the config file. Each option can be set individually - any
   }
 }
 ```
+
+Saved `elements.thinking` and `elements.thinkingFormat` keys remain readable as legacy aliases for `reasoning` and `reasoningFormat`. When both are present, the canonical reasoning keys win. This compatibility applies to saved config, not the TypeScript API.
 
 ## Troubleshooting
 

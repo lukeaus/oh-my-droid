@@ -3,6 +3,7 @@ import { execFileSync } from 'child_process';
 import { mkdtempSync, mkdirSync, writeFileSync, existsSync, rmSync } from 'fs';
 import { join } from 'path';
 import { tmpdir } from 'os';
+import { ULTRATHINK_MESSAGE } from '../installer/hooks.js';
 
 /**
  * Factory Droid omits `cwd` for sessions with no project root. Hooks must not
@@ -92,6 +93,47 @@ describe('hooks handle a missing cwd', () => {
       runHook(scriptPath, { prompt: 'cancelomc', session_id: 'kd_2' }, homeDir);
 
       expect(existsSync(globalState('ultrawork'))).toBe(false);
+    });
+
+    describe.each(['scripts', 'templates/hooks'])('%s reasoning guidance', location => {
+      const keywordScript = join(process.cwd(), location, 'keyword-detector.mjs');
+
+      it.each(['ultrathink', 'think hard', 'think deeply'])('keeps %s as additionalContext, not model/message mutation', keyword => {
+        const output = runHook(keywordScript, {
+          prompt: `${keyword} about this`, session_id: 'reasoning', model: 'inherit',
+          message: { model: 'inherit', content: [{ type: 'text', text: 'original' }] },
+        }, homeDir);
+        expect(output).toEqual({
+          continue: true,
+          hookSpecificOutput: {
+            hookEventName: 'UserPromptSubmit',
+            additionalContext: expect.stringContaining('<reasoning-guidance>'),
+          },
+        });
+        const guidance = (output.hookSpecificOutput as { additionalContext: string }).additionalContext;
+        expect(guidance).toContain('does not change the model or configured reasoning effort');
+        expect(guidance).not.toContain('<think-mode>');
+        expect(guidance.replace(/\s+/g, ' ').trim()).toBe(ULTRATHINK_MESSAGE.replace(/\s+/g, ' ').trim());
+        expect(existsSync(globalState('ultrathink'))).toBe(false);
+      });
+
+      it('ignores code and keeps cancellation ahead of reasoning guidance', () => {
+        expect(runHook(keywordScript, { prompt: '`ultrathink`' }, homeDir)).toEqual({ continue: true });
+        const output = runHook(keywordScript, { prompt: 'cancelomc ultrathink' }, homeDir);
+        const guidance = (output.hookSpecificOutput as { additionalContext: string }).additionalContext;
+        expect(guidance).toContain('Skill: cancel');
+        expect(guidance).not.toContain('<reasoning-guidance>');
+      });
+
+      it('combines guidance with existing skill priority', () => {
+        const output = runHook(keywordScript, { prompt: 'ultrathink research tdd' }, homeDir);
+        const guidance = (output.hookSpecificOutput as { additionalContext: string }).additionalContext;
+        expect(guidance).toContain('<reasoning-guidance>');
+        expect(guidance).toContain('Skill: tdd');
+        expect(guidance).toContain('Skill: research');
+        expect(guidance.indexOf('Skill: tdd')).toBeLessThan(guidance.indexOf('Skill: research'));
+        expect(guidance).not.toContain('Skill: ultrathink');
+      });
     });
   });
 });

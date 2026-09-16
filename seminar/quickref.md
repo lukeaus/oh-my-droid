@@ -79,13 +79,15 @@
 - "stop" / "cancel" → Intelligently cancels active operation
 
 ## Delegation Categories (Auto-Detection)
-| Category | Model | Temp | Thinking | Use For |
+| Category | Model | Temp | Reasoning effort | Use For |
 |----------|-------|------|----------|---------|
 | `visual-engineering` | Opus | 0.7 | high | UI/UX, frontend, design |
 | `ultrabrain` | Opus | 0.3 | max | Complex reasoning, architecture |
 | `artistry` | Sonnet | 0.9 | medium | Creative solutions |
 | `quick` | Haiku | 0.1 | low | Simple lookups |
 | `writing` | Sonnet | 0.5 | medium | Documentation |
+
+Category temperature and reasoning effort are advisory metadata, not settings enforced by the dispatcher. Configure actual effort through Factory `--reasoning-effort` or `reasoningEffort`; supported values depend on the model, with no token-budget equivalents.
 
 ## Plan Notepads (Wisdom Capture)
 **Location:** `.omd/notepads/{plan-name}/`

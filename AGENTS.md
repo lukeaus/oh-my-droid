@@ -14,7 +14,7 @@ oh-my-droid enhances Factory Droid with:
 
 - **32 specialized agents** across multiple domains in three scope tiers (light/medium/heavy)
 - **38 skills** for workflow automation and specialized behaviors
-- **31 hooks** for event-driven execution modes and enhancements
+- **Hooks** for event-driven execution modes and enhancements
 - **19 MCP tools** including 12 LSP, 2 AST, Python REPL, swarm, and 3 skill tools
 - **Execution modes**: autopilot, ultrawork, ralph, ultrapilot, swarm, pipeline, ecomode
 - **MCP integration** with plugin-scoped tool discovery and skill loading
@@ -186,7 +186,7 @@ import { allCustomTools, lspTools, astTools } from './tools';
 │                  oh-my-droid (OMC)                     │
 │  ┌─────────────┬─────────────┬─────────────┬─────────────┐  │
 │  │   Skills    │   Agents    │    Tools    │   Hooks     │  │
-│  │ (38 skills) │ (33 agents) │(LSP/AST/REPL)│ (31 hooks)  │  │
+│  │ (38 skills) │ (33 agents) │(LSP/AST/REPL)│   (hooks)   │  │
 │  └─────────────┴─────────────┴─────────────┴─────────────┘  │
 │  ┌─────────────────────────────────────────────────────────┐│
 │  │              Features Layer                             ││
@@ -333,7 +333,7 @@ npm run lint            # ESLint
 npm run sync-metadata   # Sync agent/skill metadata
 ```
 
-## Hook System (31)
+## Hook System
 
 Key hooks in `src/hooks/`:
 
@@ -345,7 +345,6 @@ Key hooks in `src/hooks/`:
 - `learner/` - Skill extraction
 - `recovery/` - Error recovery
 - `rules-injector/` - Rule file injection
-- `think-mode/` - Enhanced reasoning
 
 ## Configuration
 

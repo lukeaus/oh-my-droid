@@ -1246,8 +1246,8 @@ var PERMISSION_TOOLS = [
 ];
 var PERMISSION_THRESHOLD_MS = 3e3;
 var pendingPermissionMap = /* @__PURE__ */ new Map();
-var THINKING_PART_TYPES = ["thinking", "reasoning"];
-var THINKING_RECENCY_MS = 3e4;
+var REASONING_PART_TYPES = ["thinking", "reasoning"];
+var REASONING_RECENCY_MS = 3e4;
 async function parseTranscript(transcriptPath, options) {
   pendingPermissionMap.clear();
   const result = {
@@ -1310,9 +1310,9 @@ async function parseTranscript(transcriptPath, options) {
       break;
     }
   }
-  if (result.thinkingState?.lastSeen) {
-    const age = now - result.thinkingState.lastSeen.getTime();
-    result.thinkingState.active = age <= THINKING_RECENCY_MS;
+  if (result.reasoningState?.lastSeen) {
+    const age = now - result.reasoningState.lastSeen.getTime();
+    result.reasoningState.active = age <= REASONING_RECENCY_MS;
   }
   const running = Array.from(agentMap.values()).filter((a) => a.status === "running");
   const completed = Array.from(agentMap.values()).filter((a) => a.status === "completed");
@@ -1377,8 +1377,8 @@ function processEntry(entry, agentMap, latestTodos, result, maxAgentMapSize = 50
   const content = entry.message?.content;
   if (!content || !Array.isArray(content)) return;
   for (const block of content) {
-    if (THINKING_PART_TYPES.includes(block.type)) {
-      result.thinkingState = {
+    if (REASONING_PART_TYPES.includes(block.type)) {
+      result.reasoningState = {
         active: true,
         lastSeen: timestamp
       };
@@ -1507,8 +1507,8 @@ var DEFAULT_HUD_CONFIG = {
     lastSkill: true,
     permissionStatus: false,
     // Disabled: heuristic-based, causes false positives
-    thinking: true,
-    thinkingFormat: "text",
+    reasoning: true,
+    reasoningFormat: "text",
     // Text format for backward compatibility
     sessionHealth: true,
     useBars: false,
@@ -1644,11 +1644,14 @@ function readHudConfig() {
   try {
     const content = (0, import_fs2.readFileSync)(configFile, "utf-8");
     const config = JSON.parse(content);
+    const { thinking, thinkingFormat, ...elements } = config.elements ?? {};
     return {
       preset: config.preset ?? DEFAULT_HUD_CONFIG.preset,
       elements: {
         ...DEFAULT_HUD_CONFIG.elements,
-        ...config.elements
+        ...elements,
+        reasoning: elements.reasoning ?? thinking ?? DEFAULT_HUD_CONFIG.elements.reasoning,
+        reasoningFormat: elements.reasoningFormat ?? thinkingFormat ?? DEFAULT_HUD_CONFIG.elements.reasoningFormat
       },
       thresholds: {
         ...DEFAULT_HUD_CONFIG.thresholds,
@@ -2343,9 +2346,9 @@ function renderPermission(pending) {
   return `${YELLOW6}APPROVE?${RESET} ${DIM4}${pending.toolName.toLowerCase()}${RESET}:${pending.targetSummary}`;
 }
 
-// src/hud/elements/thinking.ts
+// src/hud/elements/reasoning.ts
 var CYAN6 = "\x1B[36m";
-function renderThinking(state, format = "text") {
+function renderReasoning(state, format = "text") {
   if (!state?.active) return null;
   switch (format) {
     case "bubble":
@@ -2355,7 +2358,7 @@ function renderThinking(state, format = "text") {
     case "face":
       return "\u{1F914}";
     case "text":
-      return `${CYAN6}thinking${RESET}`;
+      return `${CYAN6}reasoning${RESET}`;
     default:
       return "\u{1F4AD}";
   }
@@ -2685,9 +2688,9 @@ async function render(context, config) {
     const permission = renderPermission(context.pendingPermission);
     if (permission) elements.push(permission);
   }
-  if (enabledElements.thinking && context.thinkingState) {
-    const thinking = renderThinking(context.thinkingState, enabledElements.thinkingFormat || "text");
-    if (thinking) elements.push(thinking);
+  if (enabledElements.reasoning && context.reasoningState) {
+    const reasoning = renderReasoning(context.reasoningState, enabledElements.reasoningFormat || "text");
+    if (reasoning) elements.push(reasoning);
   }
   if (enabledElements.sessionHealth && context.sessionHealth) {
     const session = renderSession(context.sessionHealth);
@@ -2973,7 +2976,7 @@ async function main() {
       cwd,
       lastSkill: transcriptData.lastActivatedSkill || null,
       pendingPermission: transcriptData.pendingPermission || null,
-      thinkingState: transcriptData.thinkingState || null,
+      reasoningState: transcriptData.reasoningState || null,
       sessionHealth: await calculateSessionHealth(
         transcriptData.sessionStart,
         getContextPercent(stdin),

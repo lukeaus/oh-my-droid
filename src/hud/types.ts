@@ -90,7 +90,7 @@ export interface PendingPermission {
   timestamp: Date;
 }
 
-export interface ThinkingState {
+export interface ReasoningState {
   active: boolean;
   lastSeen?: Date;
 }
@@ -117,7 +117,7 @@ export interface TranscriptData {
   sessionStart?: Date;
   lastActivatedSkill?: SkillInvocation;
   pendingPermission?: PendingPermission;
-  thinkingState?: ThinkingState;
+  reasoningState?: ReasoningState;
 }
 
 // ============================================================================
@@ -188,8 +188,8 @@ export interface HudRenderContext {
   /** Pending permission state (heuristic-based) */
   pendingPermission: PendingPermission | null;
 
-  /** Extended thinking state */
-  thinkingState: ThinkingState | null;
+  /** Recent reasoning activity (30-second heuristic), not configured effort */
+  reasoningState: ReasoningState | null;
 
   /** Session health metrics */
   sessionHealth: SessionHealth | null;
@@ -214,13 +214,13 @@ export type HudPreset = 'minimal' | 'focused' | 'full' | 'opencode' | 'dense' | 
 export type AgentsFormat = 'count' | 'codes' | 'codes-duration' | 'detailed' | 'descriptions' | 'tasks' | 'multiline';
 
 /**
- * Thinking indicator format options:
+ * Reasoning indicator format options:
  * - bubble: 💭 (thought bubble emoji)
  * - brain: 🧠 (brain emoji)
  * - face: 🤔 (thinking face emoji)
- * - text: "thinking" (full text)
+ * - text: "reasoning" (full text)
  */
-export type ThinkingFormat = 'bubble' | 'brain' | 'face' | 'text';
+export type ReasoningFormat = 'bubble' | 'brain' | 'face' | 'text';
 
 /**
  * CWD path format options:
@@ -247,8 +247,8 @@ export interface HudElementConfig {
   backgroundTasks: boolean;
   todos: boolean;
   permissionStatus: boolean;  // Show pending permission indicator
-  thinking: boolean;          // Show extended thinking indicator
-  thinkingFormat: ThinkingFormat;  // Thinking indicator format
+  reasoning: boolean;          // Show recent reasoning activity
+  reasoningFormat: ReasoningFormat;  // Reasoning indicator format
   sessionHealth: boolean;     // Show session health/duration
   useBars: boolean;           // Show visual progress bars instead of/alongside percentages
   showCache: boolean;         // Show cache hit rate in analytics displays
@@ -293,8 +293,8 @@ export const DEFAULT_HUD_CONFIG: HudConfig = {
     todos: true,
     lastSkill: true,
     permissionStatus: false,  // Disabled: heuristic-based, causes false positives
-    thinking: true,
-    thinkingFormat: 'text',   // Text format for backward compatibility
+    reasoning: true,
+    reasoningFormat: 'text',   // Text format for backward compatibility
     sessionHealth: true,
     useBars: false,  // Disabled by default for backwards compatibility
     showCache: true,
@@ -328,8 +328,8 @@ export const PRESET_CONFIGS: Record<HudPreset, Partial<HudElementConfig>> = {
     backgroundTasks: false,
     todos: true,
     permissionStatus: false,
-    thinking: false,
-    thinkingFormat: 'text',
+    reasoning: false,
+    reasoningFormat: 'text',
     sessionHealth: false,
     useBars: false,
     showCache: false,
@@ -352,8 +352,8 @@ export const PRESET_CONFIGS: Record<HudPreset, Partial<HudElementConfig>> = {
     backgroundTasks: false,
     todos: true,
     permissionStatus: false,
-    thinking: false,
-    thinkingFormat: 'text',
+    reasoning: false,
+    reasoningFormat: 'text',
     sessionHealth: false,
     useBars: false,
     showCache: true,
@@ -377,8 +377,8 @@ export const PRESET_CONFIGS: Record<HudPreset, Partial<HudElementConfig>> = {
     backgroundTasks: true,
     todos: true,
     permissionStatus: false,
-    thinking: true,
-    thinkingFormat: 'text',
+    reasoning: true,
+    reasoningFormat: 'text',
     sessionHealth: true,
     useBars: true,
     showCache: true,
@@ -402,8 +402,8 @@ export const PRESET_CONFIGS: Record<HudPreset, Partial<HudElementConfig>> = {
     backgroundTasks: true,
     todos: true,
     permissionStatus: false,
-    thinking: true,
-    thinkingFormat: 'text',
+    reasoning: true,
+    reasoningFormat: 'text',
     sessionHealth: true,
     useBars: true,
     showCache: true,
@@ -427,8 +427,8 @@ export const PRESET_CONFIGS: Record<HudPreset, Partial<HudElementConfig>> = {
     backgroundTasks: false,
     todos: true,
     permissionStatus: false,
-    thinking: true,
-    thinkingFormat: 'text',
+    reasoning: true,
+    reasoningFormat: 'text',
     sessionHealth: true,
     useBars: false,
     showCache: true,
@@ -452,8 +452,8 @@ export const PRESET_CONFIGS: Record<HudPreset, Partial<HudElementConfig>> = {
     backgroundTasks: true,
     todos: true,
     permissionStatus: false,
-    thinking: true,
-    thinkingFormat: 'text',
+    reasoning: true,
+    reasoningFormat: 'text',
     sessionHealth: true,
     useBars: true,
     showCache: true,

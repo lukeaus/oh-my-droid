@@ -6,36 +6,22 @@ How to integrate delegation categories into task delegation and orchestration.
 
 ### 1. Basic Task Delegation with Category
 
+Categories expose routing and prompt guidance plus advisory metadata. They do not configure Factory or override inherited subagent settings.
+
 ```typescript
-import { getCategoryForTask } from './features/delegation-categories';
-import { TIER_MODELS } from './features/model-routing';
+import { getCategoryForTask, enhancePromptWithCategory } from './features/delegation-categories';
 
-async function delegateTask(taskPrompt: string, category?: string) {
-  // Resolve category (with auto-detection fallback)
-  const resolved = getCategoryForTask({
-    taskPrompt,
-    explicitCategory: category as any,
-  });
+const taskPrompt = 'Investigate a complex concurrency issue';
+const resolved = getCategoryForTask({ taskPrompt, explicitCategory: 'ultrabrain' });
+const finalPrompt = enhancePromptWithCategory(taskPrompt, resolved.category);
 
-  console.log(`Delegating as ${resolved.category}:`);
-  console.log(`  Model: ${TIER_MODELS[resolved.tier]}`);
-  console.log(`  Temperature: ${resolved.temperature}`);
-  console.log(`  Thinking: ${resolved.thinkingBudget}`);
-
-  // Enhance prompt with category guidance
-  const finalPrompt = resolved.promptAppend
-    ? `${taskPrompt}\n\n${resolved.promptAppend}`
-    : taskPrompt;
-
-  // Delegate to agent with category configuration
-  return await delegateToAgent({
-    prompt: finalPrompt,
-    model: TIER_MODELS[resolved.tier],
-    temperature: resolved.temperature,
-    // Add thinking budget to API call config
-  });
-}
+console.log(resolved.tier);            // 'HIGH'
+console.log(resolved.temperature);     // 0.3 (advisory)
+console.log(resolved.reasoningEffort); // 'max' (advisory)
+console.log(finalPrompt);              // Task plus category guidance
 ```
+
+The application-specific delegation helpers in the examples below are pseudocode, not Factory SDK methods. Models remain `inherit`; Factory resolves them from the user's `subagentModelSettings`.
 
 ### 2. Integration with Existing Model Routing
 
@@ -160,29 +146,23 @@ function delegateWithTemperatureOverride(
 }
 ```
 
-### Thinking Budget Integration
+### Reasoning Effort
 
 ```typescript
-import { getCategoryThinkingBudgetTokens } from './features/delegation-categories';
+import { getCategoryReasoningEffort } from './features/delegation-categories';
 
-async function delegateWithThinking(
-  taskPrompt: string,
-  category: DelegationCategory
-) {
-  const thinkingTokens = getCategoryThinkingBudgetTokens(category);
-
-  // Use thinking budget in API call
-  const response = await factoryAPI.call({
-    prompt: taskPrompt,
-    thinking: {
-      type: 'enabled',
-      budget: thinkingTokens,
-    },
-  });
-
-  return response;
-}
+const effort = getCategoryReasoningEffort('ultrabrain'); // 'max'
 ```
+
+This is advisory metadata, not an API configuration or a token budget. The shared `ReasoningEffort` type is `none | low | medium | high | xhigh | max`; supported values depend on the selected model. `max` is preserved, not converted to `high` or tokens.
+
+For actual configuration, use Factory's `/settings` or its CLI option with a supported value, for example:
+
+```bash
+droid exec --reasoning-effort high "Investigate the concurrency issue"
+```
+
+Category metadata and keyword guidance do not change that setting. See [Factory CLI reference](https://docs.factory.ai/reference/cli-reference).
 
 ## Testing Integration
 
@@ -275,7 +255,7 @@ delegateTo(agent, taskPrompt, detected);
 3. **Trust Auto-Detection**: The keyword matching is reliable for common patterns
 4. **Override When Needed**: Explicit category/tier always wins
 5. **Enhance Prompts**: Use `promptAppend` for category-specific guidance
-6. **Monitor Costs**: HIGH tier categories (ultrabrain, visual-engineering) use Opus
+6. **Monitor Costs**: cost depends on the models selected in Factory settings, not category effort metadata
 
 ## Troubleshooting
 
