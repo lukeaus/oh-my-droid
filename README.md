@@ -67,6 +67,8 @@ That's it. Everything else is automatic.
 | **Ralplan** | Consensus | Iterative planning | `ralplan` |
 | **Team** | Coordinated | Multi-agent team | `team` |
 
+Magic Keywords are optional shortcuts for power users. Natural language works fine without them.
+
 **ralph includes ultrawork:** When you activate ralph mode, it automatically includes ultrawork's parallel execution. No need to combine keywords.
 
 ### Intelligent Orchestration
