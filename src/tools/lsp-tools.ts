@@ -27,6 +27,9 @@ import {
 } from './lsp/index.js';
 import { runDirectoryDiagnostics, LSP_DIAGNOSTICS_WAIT_MS } from './diagnostics/index.js';
 
+const severityEnum = z.enum(['error', 'warning', 'info', 'hint']);
+const diagnosticsStrategyEnum = z.enum(['tsc', 'lsp', 'auto']);
+
 export interface ToolDefinition<T extends z.ZodRawShape> {
   name: string;
   description: string;
@@ -207,13 +210,13 @@ export const lspWorkspaceSymbolsTool: ToolDefinition<{
  */
 export const lspDiagnosticsTool: ToolDefinition<{
   file: z.ZodString;
-  severity: z.ZodOptional<z.ZodEnum<['error', 'warning', 'info', 'hint']>>;
+  severity: z.ZodOptional<typeof severityEnum>;
 }> = {
   name: 'lsp_diagnostics',
   description: 'Get language server diagnostics (errors, warnings, hints) for a file. Useful for finding issues without running the compiler.',
   schema: {
     file: z.string().describe('Path to the source file'),
-    severity: z.enum(['error', 'warning', 'info', 'hint']).optional().describe('Filter by severity level')
+    severity: severityEnum.optional().describe('Filter by severity level')
   },
   handler: async (args) => {
     const { file, severity } = args;
@@ -441,13 +444,13 @@ export const lspCodeActionResolveTool: ToolDefinition<{
  */
 export const lspDiagnosticsDirectoryTool: ToolDefinition<{
   directory: z.ZodString;
-  strategy: z.ZodOptional<z.ZodEnum<['tsc', 'lsp', 'auto']>>;
+  strategy: z.ZodOptional<typeof diagnosticsStrategyEnum>;
 }> = {
   name: 'lsp_diagnostics_directory',
   description: 'Run project-level diagnostics on a directory using tsc --noEmit (preferred) or LSP iteration (fallback). Useful for checking the entire codebase for errors.',
   schema: {
     directory: z.string().describe('Project directory to check'),
-    strategy: z.enum(['tsc', 'lsp', 'auto']).optional().describe('Strategy to use: "tsc" (TypeScript compiler), "lsp" (Language Server iteration), or "auto" (default: auto-detect)')
+    strategy: diagnosticsStrategyEnum.optional().describe('Strategy to use: "tsc" (TypeScript compiler), "lsp" (Language Server iteration), or "auto" (default: auto-detect)')
   },
   handler: async (args) => {
     const { directory, strategy = 'auto' } = args;

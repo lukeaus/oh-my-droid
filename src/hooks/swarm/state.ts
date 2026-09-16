@@ -88,6 +88,8 @@ export function runImmediateTransaction<T>(
         executor.exec('ROLLBACK');
       } catch (rollbackError) {
         onPoison();
+        // Both errors are preserved in AggregateError.errors; .cause is not used here.
+        // eslint-disable-next-line preserve-caught-error
         throw new AggregateError(
           [callbackError, rollbackError],
           'Transaction callback failed and rollback also failed'
@@ -108,6 +110,8 @@ export function runImmediateTransaction<T>(
         // original commit error and keep the connection usable.
         if (!isNoActiveTransactionError(rollbackError)) {
           onPoison();
+          // Both errors are preserved in AggregateError.errors; .cause is not used here.
+          // eslint-disable-next-line preserve-caught-error
           throw new AggregateError(
             [commitError, rollbackError],
             'Transaction commit failed and rollback also failed'

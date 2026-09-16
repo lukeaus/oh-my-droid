@@ -50,6 +50,52 @@ vi.mock('../hooks/notepad/index.js', () => ({
   setPriorityContext: vi.fn(),
 }));
 
+// Mock additional bridge dependencies (hoisted to module scope; vitest 5 rejects nested vi.mock)
+vi.mock('../hud/background-tasks.js', () => ({
+  addBackgroundTask: vi.fn(),
+  completeBackgroundTask: vi.fn(),
+}));
+vi.mock('../hooks/ralph/index.js', () => ({
+  readRalphState: vi.fn(() => null),
+  incrementRalphIteration: vi.fn(),
+  clearRalphState: vi.fn(),
+  createRalphLoopHook: vi.fn(() => ({ startLoop: vi.fn() })),
+  readVerificationState: vi.fn(() => null),
+  startVerification: vi.fn(),
+  getArchitectVerificationPrompt: vi.fn(),
+  clearVerificationState: vi.fn(),
+}));
+vi.mock('../hooks/keyword-detector/index.js', () => ({
+  detectKeywordsWithType: vi.fn(() => []),
+  removeCodeBlocks: vi.fn((t: string) => t),
+}));
+vi.mock('../hooks/todo-continuation/index.js', () => ({
+  checkIncompleteTodos: vi.fn(async () => ({ count: 0 })),
+}));
+vi.mock('../hooks/persistent-mode/index.js', () => ({
+  checkPersistentModes: vi.fn(async () => ({ shouldContinue: true })),
+  createHookOutput: vi.fn(() => ({ continue: true })),
+}));
+vi.mock('../hooks/ultrawork/index.js', () => ({
+  activateUltrawork: vi.fn(),
+  readUltraworkState: vi.fn(() => null),
+}));
+vi.mock('../hooks/autopilot/index.js', () => ({
+  readAutopilotState: vi.fn(() => null),
+  isAutopilotActive: vi.fn(() => false),
+  getPhasePrompt: vi.fn(),
+  transitionPhase: vi.fn(),
+  formatCompactSummary: vi.fn(),
+}));
+vi.mock('../installer/hooks.js', () => ({
+  ULTRAWORK_MESSAGE: 'ultrawork',
+  ULTRATHINK_MESSAGE: 'ultrathink',
+  SEARCH_MESSAGE: 'search',
+  ANALYZE_MESSAGE: 'analyze',
+  TODO_CONTINUATION_PROMPT: 'continue',
+  RALPH_MESSAGE: 'ralph',
+}));
+
 import { existsSync, readFileSync } from 'fs';
 const mockExistsSync = vi.mocked(existsSync);
 const mockReadFileSync = vi.mocked(readFileSync);
@@ -438,52 +484,6 @@ describe('delegation-enforcement-levels', () => {
     let processHook: typeof import('../hooks/bridge.js').processHook;
 
     beforeEach(async () => {
-      // Mock additional bridge dependencies
-      vi.mock('../hud/background-tasks.js', () => ({
-        addBackgroundTask: vi.fn(),
-        completeBackgroundTask: vi.fn(),
-      }));
-      vi.mock('../hooks/ralph/index.js', () => ({
-        readRalphState: vi.fn(() => null),
-        incrementRalphIteration: vi.fn(),
-        clearRalphState: vi.fn(),
-        createRalphLoopHook: vi.fn(() => ({ startLoop: vi.fn() })),
-        readVerificationState: vi.fn(() => null),
-        startVerification: vi.fn(),
-        getArchitectVerificationPrompt: vi.fn(),
-        clearVerificationState: vi.fn(),
-      }));
-      vi.mock('../hooks/keyword-detector/index.js', () => ({
-        detectKeywordsWithType: vi.fn(() => []),
-        removeCodeBlocks: vi.fn((t: string) => t),
-      }));
-      vi.mock('../hooks/todo-continuation/index.js', () => ({
-        checkIncompleteTodos: vi.fn(async () => ({ count: 0 })),
-      }));
-      vi.mock('../hooks/persistent-mode/index.js', () => ({
-        checkPersistentModes: vi.fn(async () => ({ shouldContinue: true })),
-        createHookOutput: vi.fn(() => ({ continue: true })),
-      }));
-      vi.mock('../hooks/ultrawork/index.js', () => ({
-        activateUltrawork: vi.fn(),
-        readUltraworkState: vi.fn(() => null),
-      }));
-      vi.mock('../hooks/autopilot/index.js', () => ({
-        readAutopilotState: vi.fn(() => null),
-        isAutopilotActive: vi.fn(() => false),
-        getPhasePrompt: vi.fn(),
-        transitionPhase: vi.fn(),
-        formatCompactSummary: vi.fn(),
-      }));
-      vi.mock('../installer/hooks.js', () => ({
-        ULTRAWORK_MESSAGE: 'ultrawork',
-        ULTRATHINK_MESSAGE: 'ultrathink',
-        SEARCH_MESSAGE: 'search',
-        ANALYZE_MESSAGE: 'analyze',
-        TODO_CONTINUATION_PROMPT: 'continue',
-        RALPH_MESSAGE: 'ralph',
-      }));
-
       const bridge = await import('../hooks/bridge.js');
       processHook = bridge.processHook;
     });

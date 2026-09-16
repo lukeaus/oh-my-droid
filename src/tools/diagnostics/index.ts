@@ -58,8 +58,8 @@ export async function runDirectoryDiagnostics(
  * Format tsc results into standard format
  */
 function formatTscResult(result: TscResult): DirectoryDiagnosticResult {
-  let diagnostics = '';
-  let summary = '';
+  let diagnostics: string;
+  let summary: string;
 
   if (result.diagnostics.length === 0) {
     diagnostics = 'No diagnostics found. All files are clean!';
@@ -102,8 +102,8 @@ function formatTscResult(result: TscResult): DirectoryDiagnosticResult {
  * Format LSP aggregation results into standard format
  */
 function formatLspResult(result: LspAggregationResult): DirectoryDiagnosticResult {
-  let diagnostics = '';
-  let summary = '';
+  let diagnostics: string;
+  let summary: string;
 
   if (result.diagnostics.length === 0) {
     diagnostics = `Checked ${result.filesChecked} files. No diagnostics found!`;

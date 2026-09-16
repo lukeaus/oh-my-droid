@@ -331,8 +331,6 @@ function detectTaskType(task: string): TaskType {
 }
 
 function estimateComplexity(task: string, type: TaskType): number {
-  let score = 0.3; // Base complexity
-
   // Task type complexity
   const typeComplexity: Record<TaskType, number> = {
     'fullstack-app': 0.9,
@@ -347,7 +345,7 @@ function estimateComplexity(task: string, type: TaskType): number {
     unknown: 0.5
   };
 
-  score = typeComplexity[type];
+  let score = typeComplexity[type];
 
   // Length factor
   if (task.length > 200) score += 0.1;
