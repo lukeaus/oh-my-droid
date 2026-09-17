@@ -3,7 +3,6 @@
  *
  * Constants for rule file discovery and matching.
  *
- * Ported from oh-my-opencode's rules-injector hook.
  */
 
 import { join } from 'path';

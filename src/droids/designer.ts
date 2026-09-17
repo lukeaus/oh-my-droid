@@ -3,7 +3,6 @@
  *
  * Designer-turned-developer who crafts stunning UI/UX.
  *
- * Ported from oh-my-opencode's agent definitions.
  */
 
 import type { AgentConfig, AgentPromptMetadata } from './types.js';

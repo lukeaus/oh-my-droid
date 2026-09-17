@@ -3,7 +3,6 @@
  *
  * Constants for validation patterns, messages, and model detection.
  *
- * Ported from oh-my-opencode's thinking-block-validator hook.
  */
 
 /**

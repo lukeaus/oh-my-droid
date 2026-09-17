@@ -4,7 +4,6 @@
  * Shared utilities for agent creation and management.
  * Includes prompt builders and configuration helpers.
  *
- * Ported from oh-my-opencode's agent utils.
  */
 
 import { readFileSync } from 'fs';

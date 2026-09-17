@@ -4,7 +4,6 @@
  * Optimized for quick searches and broad exploration of internal codebases.
  * Uses parallel search strategies for maximum speed.
  *
- * Ported from oh-my-opencode's explore agent.
  */
 
 import type { AgentConfig, AgentPromptMetadata } from './types.js';

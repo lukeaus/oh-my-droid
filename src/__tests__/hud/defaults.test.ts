@@ -3,7 +3,7 @@ import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'fs'
 import { tmpdir } from 'os';
 import { join } from 'path';
 import { DEFAULT_HUD_CONFIG, PRESET_CONFIGS } from '../../hud/types.js';
-import { readHudConfig, writeHudConfig } from '../../hud/state.js';
+import { applyPreset, readHudConfig, writeHudConfig } from '../../hud/state.js';
 
 describe('HUD Default Configuration', () => {
   it('does not expose OAuth rate limits in defaults or presets', () => {
@@ -23,7 +23,7 @@ describe('HUD Default Configuration', () => {
   });
 
   describe('PRESET_CONFIGS', () => {
-    const presets = ['minimal', 'analytics', 'focused', 'full', 'opencode', 'dense'] as const;
+    const presets = ['minimal', 'analytics', 'focused', 'full', 'dense'] as const;
 
     presets.forEach(preset => {
       it(`${preset} preset should use text reasoningFormat`, () => {
@@ -74,5 +74,16 @@ describe('saved HUD reasoning preferences', () => {
     expect(readHudConfig()).toEqual(DEFAULT_HUD_CONFIG);
     writeFileSync(configPath, '{');
     expect(readHudConfig()).toEqual(DEFAULT_HUD_CONFIG);
+  });
+
+  it('falls back to the default preset for retired saved presets', () => {
+    writeFileSync(configPath, JSON.stringify({ preset: 'opencode' }));
+    expect(readHudConfig().preset).toBe(DEFAULT_HUD_CONFIG.preset);
+  });
+
+  it('coerces retired presets to the default instead of persisting them', () => {
+    const config = applyPreset('opencode' as never);
+    expect(config.preset).toBe(DEFAULT_HUD_CONFIG.preset);
+    expect(readHudConfig().preset).toBe(DEFAULT_HUD_CONFIG.preset);
   });
 });

@@ -3,7 +3,6 @@
  *
  * Discovers and executes slash commands from various sources.
  *
- * Adapted from oh-my-opencode's auto-slash-command hook.
  */
 
 import { existsSync, readdirSync, readFileSync } from 'fs';

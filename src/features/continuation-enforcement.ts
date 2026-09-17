@@ -12,7 +12,6 @@ import type { HookDefinition, HookContext, HookResult } from '../shared/types.js
 
 /**
  * Messages to remind agents to continue
- * ENHANCED: Using exact pattern from oh-my-opencode's todo-continuation-enforcer
  */
 const CONTINUATION_REMINDERS = [
   '[SYSTEM REMINDER - TODO CONTINUATION] Incomplete tasks remain in your todo list. Continue working on the next pending task. Proceed without asking for permission. Mark each task complete when finished. Do not stop until all tasks are done.',
@@ -67,7 +66,6 @@ export function createContinuationHook(): HookDefinition {
 
 /**
  * System prompt addition for continuation enforcement
- * ENHANCED: Much stronger persistence language from oh-my-opencode patterns
  */
 export const continuationSystemPromptAddition = `
 ## CONTINUATION ENFORCEMENT - THE BOULDER NEVER STOPS

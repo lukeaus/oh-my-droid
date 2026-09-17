@@ -3,7 +3,6 @@
  *
  * Constants for finding and injecting README files from directories.
  *
- * Ported from oh-my-opencode's directory-readme-injector hook.
  */
 
 import { join } from 'node:path';

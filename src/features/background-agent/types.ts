@@ -3,7 +3,6 @@
  *
  * Type definitions for background task management.
  *
- * Adapted from oh-my-opencode's background-agent feature.
  */
 
 /**

@@ -4,7 +4,6 @@
  * Detects comments and docstrings in code changes and prompts the agent
  * to justify or remove unnecessary comments.
  *
- * Adapted from oh-my-opencode's comment-checker hook.
  * Instead of using an external CLI binary, this implementation does
  * comment detection directly in TypeScript.
  */

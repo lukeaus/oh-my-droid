@@ -2,7 +2,6 @@
  * Oh-My-Droid
  *
  * A multi-agent orchestration system for the Factory Droid CLI.
- * Inspired by oh-my-opencode, reimagined for Factory Droid.
  *
  * Main features:
  * - Droid: Primary orchestrator that delegates to specialized subagents

@@ -2,7 +2,6 @@
  * Background Notification Hook Types
  *
  * Type definitions for background task notification handling.
- * Adapted from oh-my-opencode's background-notification hook.
  */
 
 import type { BackgroundTask } from '../../features/background-agent/index.js';

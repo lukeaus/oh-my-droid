@@ -3,7 +3,6 @@
  *
  * Persistent storage for tracking injected rules per session.
  *
- * Ported from oh-my-opencode's rules-injector hook.
  */
 
 import {

@@ -7,7 +7,6 @@
  * This hook tracks tool usage and appends reminder messages to tool outputs
  * when users haven't been using agents effectively.
  *
- * Ported from oh-my-opencode's agent-usage-reminder hook.
  * Adapted for Factory Droid's shell-based hook system.
  */
 

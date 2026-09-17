@@ -1,6 +1,5 @@
 /**
  * Hook Scripts for Factory Droid
- * Hook system inspired by oh-my-opencode, adapted for Factory Droid's native hooks
  *
  * Factory Droid hooks are configured in settings.json and run as shell commands.
  * These scripts receive JSON input via stdin and output JSON to modify behavior.
@@ -97,7 +96,6 @@ function hookCommand(scriptName: string): string {
 
 /**
  * Ultrawork message - injected when ultrawork/ulw keyword detected
- * Ported from oh-my-opencode's keyword-detector/constants.ts
  */
 export const ULTRAWORK_MESSAGE = `<ultrawork-mode>
 
@@ -194,7 +192,6 @@ THE USER ASKED FOR X. DELIVER EXACTLY X. NOT A SUBSET. NOT A DEMO. NOT A STARTIN
 
 /**
  * Ultrathink reasoning prompt guidance
- * Ported from oh-my-opencode's think-mode hook
  */
 export const ULTRATHINK_MESSAGE = `<reasoning-guidance>
 
@@ -216,7 +213,6 @@ Provide a thorough, well-reasoned response. This guidance does not change the mo
 
 /**
  * Search mode message
- * Ported from oh-my-opencode's keyword-detector
  */
 export const SEARCH_MESSAGE = `<search-mode>
 MAXIMIZE SEARCH EFFORT. Launch multiple background agents IN PARALLEL:
@@ -232,7 +228,6 @@ NEVER stop at first result - be exhaustive.
 
 /**
  * Analyze mode message
- * Ported from oh-my-opencode's keyword-detector
  */
 export const ANALYZE_MESSAGE = `<analyze-mode>
 ANALYSIS MODE. Gather context before diving deep:
@@ -254,7 +249,6 @@ SYNTHESIZE findings before proceeding.
 
 /**
  * Todo continuation prompt
- * Ported from oh-my-opencode's todo-continuation-enforcer
  */
 export const TODO_CONTINUATION_PROMPT = `[SYSTEM REMINDER - TODO CONTINUATION]
 

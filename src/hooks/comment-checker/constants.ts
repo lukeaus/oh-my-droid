@@ -3,7 +3,6 @@
  *
  * Keywords and patterns for comment detection and filtering.
  *
- * Adapted from oh-my-opencode's comment-checker hook.
  */
 
 /**

@@ -4,7 +4,6 @@
  * Detects magic keywords in user prompts and returns the appropriate
  * mode message to inject into context.
  *
- * Ported from oh-my-opencode's keyword-detector hook.
  */
 
 export type KeywordType =

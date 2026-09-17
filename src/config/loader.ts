@@ -25,7 +25,6 @@ export const DEFAULT_CONFIG: PluginConfig = {
     frontendEngineer: { model: 'inherit', enabled: true },
     documentWriter: { model: 'inherit', enabled: true },
     multimodalLooker: { model: 'inherit', enabled: true },
-    // New agents from oh-my-opencode
     critic: { model: 'inherit', enabled: true },
     analyst: { model: 'inherit', enabled: true },
     orchestrator: { model: 'inherit', enabled: true },

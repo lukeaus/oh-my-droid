@@ -3,7 +3,6 @@
  *
  * Handles injection of collected context into prompts/messages.
  *
- * Ported from oh-my-opencode's context-injector.
  */
 
 import type { ContextCollector } from './collector.js';

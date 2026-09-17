@@ -7,7 +7,6 @@
  * - Project-level commands from .factory/commands/
  * - Template expansion with $ARGUMENTS placeholder
  *
- * Adapted from oh-my-opencode's auto-slash-command hook.
  */
 
 import {

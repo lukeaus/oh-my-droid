@@ -3,7 +3,6 @@
  *
  * Constants for tracking tool usage and encouraging agent delegation.
  *
- * Ported from oh-my-opencode's agent-usage-reminder hook.
  */
 
 import { join } from 'path';

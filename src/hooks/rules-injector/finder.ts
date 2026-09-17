@@ -3,7 +3,6 @@
  *
  * Finds rule files in project directories and user home.
  *
- * Ported from oh-my-opencode's rules-injector hook.
  */
 
 import {

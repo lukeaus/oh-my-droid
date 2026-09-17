@@ -4,10 +4,9 @@
  * Monitors context usage and warns before hitting the context limit.
  * Encourages proactive compaction to prevent context overflow.
  *
- * Adapted from oh-my-opencode's preemptive-compaction hook.
  *
  * Note: This is a simplified version for Factory Droid's shell hook system.
- * The original uses OpenCode's plugin event system for automatic summarization.
+ * The original upstream design uses a plugin event system for automatic summarization.
  * This version injects warning messages to prompt manual compaction.
  */
 

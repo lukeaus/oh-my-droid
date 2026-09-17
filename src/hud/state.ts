@@ -162,8 +162,10 @@ export function readHudConfig(): HudConfig {
     const { thinking, thinkingFormat, ...elements } = config.elements ?? {};
 
     // Merge with defaults to ensure all fields exist
+    // ponytail: retired HUD preset removed from union; fall back for old saved configs
+    const preset = typeof config.preset === 'string' && config.preset in PRESET_CONFIGS ? config.preset : DEFAULT_HUD_CONFIG.preset;
     return {
-      preset: config.preset ?? DEFAULT_HUD_CONFIG.preset,
+      preset,
       elements: {
         ...DEFAULT_HUD_CONFIG.elements,
         ...elements,
@@ -200,11 +202,12 @@ export function writeHudConfig(config: HudConfig): boolean {
  */
 export function applyPreset(preset: HudConfig['preset']): HudConfig {
   const config = readHudConfig();
-  const presetElements = PRESET_CONFIGS[preset];
+  const safePreset = typeof preset === 'string' && preset in PRESET_CONFIGS ? preset : DEFAULT_HUD_CONFIG.preset;
+  const presetElements = PRESET_CONFIGS[safePreset] ?? {};
 
   const newConfig: HudConfig = {
     ...config,
-    preset,
+    preset: safePreset,
     elements: {
       ...config.elements,
       ...presetElements,

@@ -3,7 +3,6 @@
  *
  * Type definitions for slash command detection and execution.
  *
- * Adapted from oh-my-opencode's auto-slash-command hook.
  */
 
 /**

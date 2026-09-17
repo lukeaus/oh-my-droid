@@ -3,7 +3,6 @@
  *
  * Persists agent usage state across sessions.
  *
- * Ported from oh-my-opencode's agent-usage-reminder hook.
  */
 
 import {

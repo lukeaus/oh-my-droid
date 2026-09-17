@@ -3,7 +3,6 @@
  *
  * Configuration values for slash command detection.
  *
- * Adapted from oh-my-opencode's auto-slash-command hook.
  */
 
 export const HOOK_NAME = 'auto-slash-command' as const;

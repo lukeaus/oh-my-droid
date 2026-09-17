@@ -4,7 +4,6 @@
  * Handles notifications for background tasks completing.
  * Integrates with the BackgroundManager to show task completion status.
  *
- * Adapted from oh-my-opencode's background-notification hook for Factory Droid's
  * shell hooks system.
  */
 
