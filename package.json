@@ -60,7 +60,7 @@
     "jsonc-parser": "^3.3.1",
     "safe-regex": "^2.1.1",
     "vscode-languageserver-protocol": "^3.17.5",
-    "zod": "^4.5.4"
+    "zod": "^4.6.4"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
