@@ -9,7 +9,7 @@
 
 Based on [oh-my-claudecode](https://github.com/Yeachan-Heo/oh-my-claudecode) by Yeachan Heo.
 
-Forked from [MeroZemory/oh-my-droid](https://github.com/MeroZemory/oh-my-droid).
+Hard fork of [MeroZemory/oh-my-droid](https://github.com/MeroZemory/oh-my-droid).
 
 ---
 
