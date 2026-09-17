@@ -1,7 +1,6 @@
 /**
  * Boulder State Constants
  *
- * Ported from oh-my-opencode's boulder-state.
  */
 
 /** OMD state directory */

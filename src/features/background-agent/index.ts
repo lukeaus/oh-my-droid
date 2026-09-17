@@ -4,7 +4,6 @@
  * Manages background tasks for the OMD multi-agent system.
  * Provides concurrency control and task state management.
  *
- * Adapted from oh-my-opencode's background-agent feature.
  */
 
 export * from './types.js';

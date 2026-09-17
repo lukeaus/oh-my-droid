@@ -7,7 +7,6 @@
  * Enhanced with PRD (Product Requirements Document) support for structured task tracking.
  * When a prd.json exists, completion is based on all stories having passes: true.
  *
- * Ported from oh-my-opencode's ralph hook.
  */
 
 import { existsSync, readFileSync, writeFileSync, mkdirSync, unlinkSync } from 'fs';

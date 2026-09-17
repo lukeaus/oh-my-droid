@@ -3,7 +3,6 @@
  *
  * Manages concurrency limits for background tasks.
  *
- * Adapted from oh-my-opencode's background-agent feature.
  */
 
 import type { BackgroundTaskConfig } from './types.js';

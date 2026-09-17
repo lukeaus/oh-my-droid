@@ -3,7 +3,6 @@
  *
  * Strategic planning consultant.
  *
- * Ported from oh-my-opencode's agent definitions.
  */
 
 import type { AgentConfig, AgentPromptMetadata } from './types.js';

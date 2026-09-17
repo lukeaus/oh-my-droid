@@ -3,7 +3,6 @@
  *
  * Detects slash commands in user prompts.
  *
- * Adapted from oh-my-opencode's auto-slash-command hook.
  */
 
 import {

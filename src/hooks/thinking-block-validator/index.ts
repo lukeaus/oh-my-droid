@@ -13,7 +13,6 @@
  * - Runs BEFORE API call vs AFTER API error
  * - User never sees the error vs User sees error then recovery
  *
- * Ported from oh-my-opencode's thinking-block-validator hook.
  */
 
 import type {

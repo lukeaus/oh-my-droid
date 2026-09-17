@@ -36,7 +36,6 @@ export interface PluginConfig {
     frontendEngineer?: { model?: string; enabled?: boolean };
     documentWriter?: { model?: string; enabled?: boolean };
     multimodalLooker?: { model?: string; enabled?: boolean };
-    // New agents from oh-my-opencode
     critic?: { model?: string; enabled?: boolean };
     analyst?: { model?: string; enabled?: boolean };
     orchestrator?: { model?: string; enabled?: boolean };

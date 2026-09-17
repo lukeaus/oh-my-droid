@@ -2,7 +2,6 @@
  * Agent Types for Oh-My-Droid
  *
  * Defines types for agent configuration and metadata used in dynamic prompt generation.
- * Ported from oh-my-opencode's agent type system.
  */
 
 import type { ModelIdentifier, ModelType, ReasoningEffort } from '../shared/types.js';

@@ -4,7 +4,6 @@
  * Parses YAML frontmatter from rule files.
  * Supports multiple formats for compatibility.
  *
- * Ported from oh-my-opencode's rules-injector hook.
  */
 
 import type { RuleMetadata, RuleFrontmatterResult } from './types.js';

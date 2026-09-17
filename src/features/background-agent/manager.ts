@@ -5,7 +5,6 @@
  * This is a simplified version that tracks tasks launched via Factory Droid's
  * native Task tool with run_in_background: true.
  *
- * Adapted from oh-my-opencode's background-agent feature.
  */
 
 import { existsSync, mkdirSync, readFileSync, writeFileSync, unlinkSync } from 'fs';

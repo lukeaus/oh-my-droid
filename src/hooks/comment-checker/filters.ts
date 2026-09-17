@@ -3,7 +3,6 @@
  *
  * Filters to determine which comments should be flagged vs skipped.
  *
- * Adapted from oh-my-opencode's comment-checker hook.
  */
 
 import { BDD_KEYWORDS, TYPE_CHECKER_PREFIXES } from './constants.js';

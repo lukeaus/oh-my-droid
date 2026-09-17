@@ -4,7 +4,6 @@
  * Manages the active work plan state for OMD orchestrator.
  * Named after the persistent boulder - the eternal task that must be rolled.
  *
- * Ported from oh-my-opencode's boulder-state.
  */
 
 // Types

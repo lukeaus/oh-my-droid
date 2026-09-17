@@ -3,7 +3,6 @@
  *
  * Message templates and configuration for orchestrator behavior enforcement.
  *
- * Adapted from oh-my-opencode's omd-orchestrator hook.
  */
 
 export const HOOK_NAME = 'omd-orchestrator';

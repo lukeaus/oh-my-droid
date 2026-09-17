@@ -4,7 +4,6 @@
  * Executes tasks directly without delegation capabilities.
  * Execute tasks directly, working alone.
  *
- * Ported from oh-my-opencode's executor agent.
  * Prompt loaded from: droids/executor.md
  */
 

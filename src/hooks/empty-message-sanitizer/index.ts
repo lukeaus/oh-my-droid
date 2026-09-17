@@ -14,7 +14,6 @@
  * AFTER all other message processing. In the shell hooks system, this should be
  * invoked at the last stage before messages are sent to the API.
  *
- * Adapted from oh-my-opencode's empty-message-sanitizer hook.
  */
 
 import * as fs from 'fs';

@@ -3,7 +3,6 @@
  *
  * Matches rules against file paths using glob patterns.
  *
- * Ported from oh-my-opencode's rules-injector hook.
  */
 
 import { createHash } from 'crypto';

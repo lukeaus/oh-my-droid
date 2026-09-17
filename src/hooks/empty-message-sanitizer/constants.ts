@@ -3,7 +3,6 @@
  *
  * Constants for the empty message sanitizer hook.
  *
- * Adapted from oh-my-opencode's empty-message-sanitizer hook.
  */
 
 /**

@@ -4,7 +4,6 @@
  * Prevents stopping when incomplete tasks remain in the todo list.
  * Forces the agent to continue until all tasks are marked complete.
  *
- * Ported from oh-my-opencode's todo-continuation-enforcer hook.
  */
 
 /**

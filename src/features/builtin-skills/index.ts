@@ -3,7 +3,6 @@
  *
  * Provides bundled skills for Oh-My-Droid.
  *
- * Adapted from oh-my-opencode's builtin-skills feature.
  */
 
 export * from './types.js';

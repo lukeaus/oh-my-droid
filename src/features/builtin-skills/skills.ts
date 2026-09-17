@@ -6,7 +6,6 @@
  *
  * Skills are loaded from project_root/skills/SKILLNAME/SKILL.md
  *
- * Adapted from oh-my-opencode's builtin-skills feature.
  */
 
 import { existsSync, readdirSync, readFileSync } from 'fs';

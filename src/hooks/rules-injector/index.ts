@@ -5,7 +5,6 @@
  * Supports project-level (.factory/rules, .github/instructions) and
  * user-level (~/.factory/rules) rule files.
  *
- * Ported from oh-my-opencode's rules-injector hook.
  */
 
 import { readFileSync } from 'fs';

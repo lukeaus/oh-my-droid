@@ -4,7 +4,6 @@
  * Searches external resources: official docs, GitHub, Stack Overflow.
  * For internal codebase searches, use explore agent instead.
  *
- * Ported from oh-my-opencode's researcher agent.
  */
 
 import type { AgentConfig, AgentPromptMetadata } from './types.js';

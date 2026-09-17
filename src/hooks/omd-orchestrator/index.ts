@@ -5,7 +5,6 @@
  * When an orchestrator agent tries to directly modify files outside .omd/,
  * this hook injects reminders to delegate to subagents instead.
  *
- * Adapted from oh-my-opencode's omd-orchestrator hook for shell-based hooks.
  */
 
 import * as path from 'path';

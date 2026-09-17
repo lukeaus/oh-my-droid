@@ -3,7 +3,6 @@
  *
  * Persistent storage for tracking which directory READMEs have been injected per session.
  *
- * Ported from oh-my-opencode's directory-readme-injector hook.
  */
 
 import {

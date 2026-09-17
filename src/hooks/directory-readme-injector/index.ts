@@ -4,7 +4,6 @@
  * Automatically injects relevant README content from directories when files are accessed.
  * Walks up the directory tree from accessed files to find and inject README.md files.
  *
- * Ported from oh-my-opencode's directory-readme-injector hook.
  * Adapted for Factory Droid's shell hook system.
  */
 

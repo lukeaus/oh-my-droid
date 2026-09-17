@@ -6,7 +6,7 @@ Multi-agent orchestration system for Factory Droid CLI, providing intelligent de
 
 **Version:** 4.0.0 (unreleased)
 **Purpose:** Transform Factory Droid into a conductor of specialized AI agents
-**Inspired by:** oh-my-zsh / oh-my-opencode
+**Inspired by:** oh-my-zsh
 
 ## Purpose
 

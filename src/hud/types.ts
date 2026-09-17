@@ -199,7 +199,7 @@ export interface HudRenderContext {
 // Configuration
 // ============================================================================
 
-export type HudPreset = 'minimal' | 'focused' | 'full' | 'opencode' | 'dense' | 'analytics';
+export type HudPreset = 'minimal' | 'focused' | 'full' | 'dense' | 'analytics';
 
 /**
  * Agent display format options:
@@ -409,31 +409,6 @@ export const PRESET_CONFIGS: Record<HudPreset, Partial<HudElementConfig>> = {
     showCache: true,
     showCost: true,
     maxOutputLines: 12,
-  },
-  opencode: {
-    cwd: false,
-    cwdFormat: 'relative',
-    omdLabel: true,
-    ralph: true,
-    autopilot: true,
-    team: true,
-    prdStory: false,
-    activeSkills: true,
-    lastSkill: true,
-    contextBar: true,
-    agents: true,
-    agentsFormat: 'codes',
-    agentsMaxLines: 0,
-    backgroundTasks: false,
-    todos: true,
-    permissionStatus: false,
-    reasoning: true,
-    reasoningFormat: 'text',
-    sessionHealth: true,
-    useBars: false,
-    showCache: true,
-    showCost: true,
-    maxOutputLines: 4,
   },
   dense: {
     cwd: false,

@@ -2,7 +2,6 @@
  * Background Task Management
  *
  * Provides utilities for managing background task execution,
- * similar to oh-my-opencode's Background Task Manager.
  *
  * In Factory Droid, background execution is controlled via:
  * - Bash tool's `run_in_background` parameter

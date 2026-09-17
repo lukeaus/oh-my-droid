@@ -2,7 +2,6 @@
  * Magic Keywords Feature
  *
  * Detects special keywords in prompts and activates enhanced behaviors.
- * Patterns ported from oh-my-opencode.
  */
 
 import type { MagicKeyword, PluginConfig } from '../shared/types.js';

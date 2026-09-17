@@ -118,7 +118,7 @@ MIT
 
 **Based on:** [oh-my-claudecode](https://github.com/Yeachan-Heo/oh-my-claudecode) by Yeachan Heo
 
-**Inspired by:** [oh-my-opencode](https://github.com/code-yeongyu/oh-my-opencode) • [claude-hud](https://github.com/ryanjoachim/claude-hud)
+**Inspired by:** [claude-hud](https://github.com/ryanjoachim/claude-hud)
 
 **Zero learning curve. Maximum power.**
 
