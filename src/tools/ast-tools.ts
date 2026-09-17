@@ -24,15 +24,67 @@ let sgModule: typeof import("@ast-grep/napi") | null = null;
 let sgLoadFailed = false;
 let sgLoadError = '';
 
+/**
+ * Languages that @ast-grep/napi >= 0.39 ships as separate @ast-grep/lang-* packs
+ * instead of embedding them. Keys are ast-grep's language names (the values the
+ * removed Lang enum members used to hold), so one name works on both new napi
+ * (registered below) and old napi (where the language is built in).
+ */
+const DYNAMIC_LANGUAGE_PACKAGES: Record<string, string> = {
+  Python: "@ast-grep/lang-python",
+  Ruby: "@ast-grep/lang-ruby",
+  Go: "@ast-grep/lang-go",
+  Rust: "@ast-grep/lang-rust",
+  Java: "@ast-grep/lang-java",
+  Kotlin: "@ast-grep/lang-kotlin",
+  Swift: "@ast-grep/lang-swift",
+  C: "@ast-grep/lang-c",
+  Cpp: "@ast-grep/lang-cpp",
+  CSharp: "@ast-grep/lang-csharp",
+  Json: "@ast-grep/lang-json",
+  Yaml: "@ast-grep/lang-yaml",
+};
+
+let dynamicLanguagesRegistered = false;
+
+/**
+ * Register the languages supplied by @ast-grep/lang-* packs.
+ * A language whose pack is missing stays unavailable and errors when used.
+ */
+function registerDynamicLanguages(
+  sg: typeof import("@ast-grep/napi"),
+  contextRequire: NodeRequire,
+): void {
+  if (dynamicLanguagesRegistered) return;
+  // registerDynamicLanguage must be called exactly once per process.
+  dynamicLanguagesRegistered = true;
+  // Older napi versions embed every language; nothing to register.
+  if (typeof sg.registerDynamicLanguage !== "function") return;
+
+  const registrations: import("@ast-grep/napi").DynamicLangRegistrations = {};
+  for (const [name, pkg] of Object.entries(DYNAMIC_LANGUAGE_PACKAGES)) {
+    try {
+      registrations[name] = contextRequire(pkg);
+    } catch {
+      // Pack not installed: that language reports an error when used.
+    }
+  }
+  if (Object.keys(registrations).length > 0) {
+    sg.registerDynamicLanguage(registrations);
+  }
+}
+
 async function getSgModule(): Promise<typeof import("@ast-grep/napi") | null> {
   if (sgLoadFailed) {
     return null;
   }
   if (!sgModule) {
+    const contextRequire = createRequire(
+      import.meta.url || __filename || process.cwd() + '/',
+    );
     try {
       // Use createRequire for CJS-style resolution (respects NODE_PATH)
-      const require = createRequire(import.meta.url || __filename || process.cwd() + '/');
-      sgModule = require("@ast-grep/napi") as typeof import("@ast-grep/napi");
+      sgModule = contextRequire("@ast-grep/napi") as typeof import("@ast-grep/napi");
     } catch {
       // Fallback to dynamic import for pure ESM environments
       try {
@@ -43,43 +95,41 @@ async function getSgModule(): Promise<typeof import("@ast-grep/napi") | null> {
         return null;
       }
     }
+    registerDynamicLanguages(sgModule, contextRequire);
   }
   return sgModule;
 }
 
 /**
- * Convert lowercase language string to ast-grep Lang enum value
- * This provides type-safe language conversion without using 'as any'
+ * Language names accepted by ast-grep's parse(), keyed by the lowercase names
+ * used in this tool's schema.
  */
-function toLangEnum(
-  sg: typeof import("@ast-grep/napi"),
-  language: string,
-): import("@ast-grep/napi").Lang {
-  const langMap: Record<string, import("@ast-grep/napi").Lang> = {
-    javascript: sg.Lang.JavaScript,
-    typescript: sg.Lang.TypeScript,
-    tsx: sg.Lang.Tsx,
-    python: sg.Lang.Python,
-    ruby: sg.Lang.Ruby,
-    go: sg.Lang.Go,
-    rust: sg.Lang.Rust,
-    java: sg.Lang.Java,
-    kotlin: sg.Lang.Kotlin,
-    swift: sg.Lang.Swift,
-    c: sg.Lang.C,
-    cpp: sg.Lang.Cpp,
-    csharp: sg.Lang.CSharp,
-    html: sg.Lang.Html,
-    css: sg.Lang.Css,
-    json: sg.Lang.Json,
-    yaml: sg.Lang.Yaml,
-  };
+const LANG_NAMES: Record<string, string> = {
+  javascript: "JavaScript",
+  typescript: "TypeScript",
+  tsx: "Tsx",
+  python: "Python",
+  ruby: "Ruby",
+  go: "Go",
+  rust: "Rust",
+  java: "Java",
+  kotlin: "Kotlin",
+  swift: "Swift",
+  c: "C",
+  cpp: "Cpp",
+  csharp: "CSharp",
+  html: "Html",
+  css: "Css",
+  json: "Json",
+  yaml: "Yaml",
+};
 
-  const lang = langMap[language];
-  if (!lang) {
+function toLangName(language: string): string {
+  const name = LANG_NAMES[language];
+  if (!name) {
     throw new Error(`Unsupported language: ${language}`);
   }
-  return lang;
+  return name;
 }
 
 export interface AstToolDefinition<T extends z.ZodRawShape> {
@@ -309,6 +359,7 @@ Note: Patterns must be valid AST nodes for the language.`,
           ],
         };
       }
+      const langName = toLangName(language);
       const files = getFilesForLanguage(path, language);
 
       if (files.length === 0) {
@@ -330,7 +381,7 @@ Note: Patterns must be valid AST nodes for the language.`,
 
         try {
           const content = readFileSync(filePath, "utf-8");
-          const root = sg.parse(toLangEnum(sg, language), content).root();
+          const root = sg.parse(langName, content).root();
           const matches = root.findAll(pattern);
 
           for (const match of matches) {
@@ -443,6 +494,7 @@ IMPORTANT: dryRun=true (default) only previews changes. Set dryRun=false to appl
           ],
         };
       }
+      const langName = toLangName(language);
       const files = getFilesForLanguage(path, language);
 
       if (files.length === 0) {
@@ -467,7 +519,7 @@ IMPORTANT: dryRun=true (default) only previews changes. Set dryRun=false to appl
       for (const filePath of files) {
         try {
           const content = readFileSync(filePath, "utf-8");
-          const root = sg.parse(toLangEnum(sg, language), content).root();
+          const root = sg.parse(langName, content).root();
           const matches = root.findAll(pattern);
 
           if (matches.length === 0) continue;
