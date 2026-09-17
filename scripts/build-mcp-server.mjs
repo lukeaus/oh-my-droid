@@ -44,6 +44,9 @@ await esbuild.build({
     'dns', 'readline', 'tty', 'worker_threads',
     // Native modules that can't be bundled
     '@ast-grep/napi',
+    // Language packs resolve their prebuilt parser libraries relative to their
+    // own directory, so they have to stay external too.
+    '@ast-grep/lang-*',
   ],
 });
 

@@ -30787,14 +30787,46 @@ var import_meta = {};
 var sgModule = null;
 var sgLoadFailed = false;
 var sgLoadError = "";
+var DYNAMIC_LANGUAGE_PACKAGES = {
+  Python: "@ast-grep/lang-python",
+  Ruby: "@ast-grep/lang-ruby",
+  Go: "@ast-grep/lang-go",
+  Rust: "@ast-grep/lang-rust",
+  Java: "@ast-grep/lang-java",
+  Kotlin: "@ast-grep/lang-kotlin",
+  Swift: "@ast-grep/lang-swift",
+  C: "@ast-grep/lang-c",
+  Cpp: "@ast-grep/lang-cpp",
+  CSharp: "@ast-grep/lang-csharp",
+  Json: "@ast-grep/lang-json",
+  Yaml: "@ast-grep/lang-yaml"
+};
+var dynamicLanguagesRegistered = false;
+function registerDynamicLanguages(sg, contextRequire) {
+  if (dynamicLanguagesRegistered) return;
+  dynamicLanguagesRegistered = true;
+  if (typeof sg.registerDynamicLanguage !== "function") return;
+  const registrations = {};
+  for (const [name, pkg] of Object.entries(DYNAMIC_LANGUAGE_PACKAGES)) {
+    try {
+      registrations[name] = contextRequire(pkg);
+    } catch {
+    }
+  }
+  if (Object.keys(registrations).length > 0) {
+    sg.registerDynamicLanguage(registrations);
+  }
+}
 async function getSgModule() {
   if (sgLoadFailed) {
     return null;
   }
   if (!sgModule) {
+    const contextRequire = (0, import_module.createRequire)(
+      import_meta.url || __filename || process.cwd() + "/"
+    );
     try {
-      const require2 = (0, import_module.createRequire)(import_meta.url || __filename || process.cwd() + "/");
-      sgModule = require2("@ast-grep/napi");
+      sgModule = contextRequire("@ast-grep/napi");
     } catch {
       try {
         sgModule = await import("@ast-grep/napi");
@@ -30804,34 +30836,35 @@ async function getSgModule() {
         return null;
       }
     }
+    registerDynamicLanguages(sgModule, contextRequire);
   }
   return sgModule;
 }
-function toLangEnum(sg, language) {
-  const langMap = {
-    javascript: sg.Lang.JavaScript,
-    typescript: sg.Lang.TypeScript,
-    tsx: sg.Lang.Tsx,
-    python: sg.Lang.Python,
-    ruby: sg.Lang.Ruby,
-    go: sg.Lang.Go,
-    rust: sg.Lang.Rust,
-    java: sg.Lang.Java,
-    kotlin: sg.Lang.Kotlin,
-    swift: sg.Lang.Swift,
-    c: sg.Lang.C,
-    cpp: sg.Lang.Cpp,
-    csharp: sg.Lang.CSharp,
-    html: sg.Lang.Html,
-    css: sg.Lang.Css,
-    json: sg.Lang.Json,
-    yaml: sg.Lang.Yaml
-  };
-  const lang = langMap[language];
-  if (!lang) {
+var LANG_NAMES = {
+  javascript: "JavaScript",
+  typescript: "TypeScript",
+  tsx: "Tsx",
+  python: "Python",
+  ruby: "Ruby",
+  go: "Go",
+  rust: "Rust",
+  java: "Java",
+  kotlin: "Kotlin",
+  swift: "Swift",
+  c: "C",
+  cpp: "Cpp",
+  csharp: "CSharp",
+  html: "Html",
+  css: "Css",
+  json: "Json",
+  yaml: "Yaml"
+};
+function toLangName(language) {
+  const name = LANG_NAMES[language];
+  if (!name) {
     throw new Error(`Unsupported language: ${language}`);
   }
-  return lang;
+  return name;
 }
 var SUPPORTED_LANGUAGES = [
   "javascript",
@@ -30981,6 +31014,7 @@ Error: ${sgLoadError}`
           ]
         };
       }
+      const langName = toLangName(language);
       const files = getFilesForLanguage(path6, language);
       if (files.length === 0) {
         return {
@@ -30998,7 +31032,7 @@ Error: ${sgLoadError}`
         if (totalMatches >= maxResults) break;
         try {
           const content = (0, import_fs5.readFileSync)(filePath, "utf-8");
-          const root = sg.parse(toLangEnum(sg, language), content).root();
+          const root = sg.parse(langName, content).root();
           const matches = root.findAll(pattern);
           for (const match of matches) {
             if (totalMatches >= maxResults) break;
@@ -31101,6 +31135,7 @@ Error: ${sgLoadError}`
           ]
         };
       }
+      const langName = toLangName(language);
       const files = getFilesForLanguage(path6, language);
       if (files.length === 0) {
         return {
@@ -31117,7 +31152,7 @@ Error: ${sgLoadError}`
       for (const filePath of files) {
         try {
           const content = (0, import_fs5.readFileSync)(filePath, "utf-8");
-          const root = sg.parse(toLangEnum(sg, language), content).root();
+          const root = sg.parse(langName, content).root();
           const matches = root.findAll(pattern);
           if (matches.length === 0) continue;
           const edits = [];

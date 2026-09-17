@@ -195,6 +195,7 @@ async function withLspClient(filePath, operation, fn) {
 |---------|---------|
 | `zod` | Runtime schema validation for tool parameters |
 | `@ast-grep/napi` | AST parsing and pattern matching |
+| `@ast-grep/lang-*` | Language packs for languages napi no longer embeds (registered dynamically) |
 | `vscode-languageserver-protocol` | LSP types |
 
 ## Tool Summary

@@ -307,6 +307,7 @@ JavaScript, TypeScript, TSX, Python, Ruby, Go, Rust, Java, Kotlin, Swift, C, C++
 |---------|---------|
 | `@modelcontextprotocol/sdk` | Standalone stdio MCP bridge (`t`); no Claude Agent SDK dependency |
 | `@ast-grep/napi` | AST-based code search/replace |
+| `@ast-grep/lang-*` | AST languages napi no longer embeds; registered dynamically at load time |
 | `vscode-languageserver-protocol` | LSP types |
 | `zod` | Runtime schema validation |
 | `node:sqlite` | Swarm task coordination |
