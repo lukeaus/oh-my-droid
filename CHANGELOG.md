@@ -14,10 +14,11 @@ Planned release: **4.0.0**. See [migration instructions](docs/MIGRATION.md).
 - **Standalone MCP Integration** (#33, breaking) — Replaced the Claude Agent SDK dependency and in-process server with the existing `@modelcontextprotocol/sdk` stdio bridge. Server ID `t` and `mcp__t__` tool names remain unchanged; the standalone server exposes all 19 tools, including swarm and three skill tools. `createDroidSession()` consumers must configure the bridge separately; tool-name helpers move to `src/mcp/tool-names.ts`.
 - **Factory/Droid Public Names** (#33, breaking) — Renamed `getClaudeConfigDir` to `getFactoryConfigDir`, `isClaudeInstalled` to `isDroidInstalled`, `skipClaudeCheck` to `skipDroidCheck`, and `PaneAnalysisResult.hasClaudeCode` to `hasDroid`. The internal tmux pattern constant is now `DROID_PATTERNS`.
 - **Historical Materials** (#33) — Marked the upstream benchmark harness and seminar slides/demos as unsupported and not packaged; preserved them without porting.
+- **OMC to OMD Naming** — Renamed the remaining `OMC` identifiers to `OMD`: environment variables (`OMC_DEBUG` → `OMD_DEBUG`, `OMC_BRIDGE_SCRIPT` → `OMD_BRIDGE_SCRIPT`, and the other `OMC_*` options), public exports (`omdToolNames`, `getOmdToolNames`, `getOmdSystemPrompt`), MCP skill tools (`load_omd_skills_local`, `load_omd_skills_global`, `list_omd_skills`), the `src/mcp/omd-tools-server.ts` module, the `cancelomd`/`stopomd` magic keywords, and the repo assets. Legacy paths (`~/.factory/skills/omc-learned/`, `.omc/`) and upstream `oh-my-claudecode` references are unchanged.
 
 ### Removed
 
-- **Claude Runtime Integration** (#33, breaking) — Removed `omdToolsServer` and the `sdkTools` adapter; `src/mcp/omc-tools-server.ts` remains as the shared tool registry.
+- **Claude Runtime Integration** (#33, breaking) — Removed `omdToolsServer` and the `sdkTools` adapter; `src/mcp/omd-tools-server.ts` remains as the shared tool registry.
 - **Unsupported Claude Signals and HUD Authentication** (#33) — Removed Claude-specific non-interactive environment signals and unsupported Anthropic OAuth credential reads/refreshes for HUD rate-limit data.
 
 ### Added

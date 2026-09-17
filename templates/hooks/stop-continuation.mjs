@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// OMC Stop Continuation Hook (Simplified)
+// OMD Stop Continuation Hook (Simplified)
 // Always allows stop - soft enforcement via message injection only.
 
 // Consume stdin (required for hook protocol)

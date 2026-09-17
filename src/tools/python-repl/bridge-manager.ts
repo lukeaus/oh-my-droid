@@ -52,9 +52,9 @@ export interface EscalationResult {
  * Handles both ESM and CJS contexts (for bundled MCP server).
  */
 function getBridgeScriptPath(): string {
-  // Check for OMC_BRIDGE_SCRIPT environment variable first (set by MCP server context)
-  if (process.env.OMC_BRIDGE_SCRIPT) {
-    return process.env.OMC_BRIDGE_SCRIPT;
+  // Check for OMD_BRIDGE_SCRIPT environment variable first (set by MCP server context)
+  if (process.env.OMD_BRIDGE_SCRIPT) {
+    return process.env.OMD_BRIDGE_SCRIPT;
   }
 
   let moduleDir: string;

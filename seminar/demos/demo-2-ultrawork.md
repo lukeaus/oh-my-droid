@@ -6,7 +6,7 @@
 ## Pre-requisites
 
 - Project with intentional TypeScript errors
-- OMC installed and configured
+- OMD installed and configured
 - HUD statusline visible (shows multiple active agents)
 
 ## Setup (2 minutes before demo)
@@ -157,7 +157,7 @@ ulw fix all TypeScript errors in the project
 
 ### Phase 1: Activation & Analysis (0:00-0:20)
 **What happens:**
-- OMC announces: "I'm activating ultrawork for maximum parallel execution..."
+- OMD announces: "I'm activating ultrawork for maximum parallel execution..."
 - Explorer agent scans codebase
 - Identifies errors across `user.ts`, `order.ts`, `product.ts`, `index.ts`
 
@@ -180,7 +180,7 @@ ulw fix all TypeScript errors in the project
 - Point to HUD: "See the statusline? Four agents active simultaneously"
 - "Each agent is fixing a different file - no conflicts"
 - "Traditional approach: Fix one file, wait, fix next. Ultrawork: Fix all at once"
-- "This is how OMC achieves 3-5x speedup on multi-file tasks"
+- "This is how OMD achieves 3-5x speedup on multi-file tasks"
 
 ### Phase 3: Verification (2:00-2:30)
 **What happens:**
@@ -311,7 +311,7 @@ export function filterInStock(products: Product[]): Product[] {
 - Batch operations (e.g., "add error handling to all services")
 
 ### Architecture highlight
-- "OMC uses a file ownership coordinator - prevents two agents from editing the same file"
+- "OMD uses a file ownership coordinator - prevents two agents from editing the same file"
 - "Each agent gets exclusive write access to its assigned files"
 - "Shared reads are fine - conflicts only happen on writes"
 
@@ -337,12 +337,12 @@ $ ulw fix all TypeScript errors in the project
 
 I'm activating ultrawork for maximum parallel execution.
 
-[HUD: OMC │ explore:1 scanning...]
+[HUD: OMD │ explore:1 scanning...]
 
 Scanning codebase for TypeScript errors...
 ✓ Found 8 errors across 4 files (3s)
 
-[HUD: OMC │ executor-low:4 active │ Tasks: 4/4 in progress]
+[HUD: OMD │ executor-low:4 active │ Tasks: 4/4 in progress]
 
 Spawning 4 executor agents in parallel...
 [executor-1] Assigned: src/user.ts (2 errors)
@@ -360,7 +360,7 @@ Spawning 4 executor agents in parallel...
 [0:19] ✓ executor-2 completed src/order.ts (19s)
 [0:22] ✓ executor-3 completed src/product.ts (22s)
 
-[HUD: OMC │ build-fixer:1 active │ Verifying...]
+[HUD: OMD │ build-fixer:1 active │ Verifying...]
 
 Running TypeScript compilation...
 ✓ Build successful - 0 errors (2s)
@@ -391,7 +391,7 @@ Success: no errors found.
 
 ### Issue: Fewer agents spawn than expected
 **Solution:**
-- Still good for demo! Point out: "OMC determined 3 agents was optimal for this workload"
+- Still good for demo! Point out: "OMD determined 3 agents was optimal for this workload"
 - Explain: "It balances parallelism with coordination overhead"
 
 ### Issue: One agent takes much longer
@@ -410,22 +410,22 @@ Point out these HUD states during the demo:
 
 **During scanning:**
 ```
-OMC │ explore:1 scanning │ 0s
+OMD │ explore:1 scanning │ 0s
 ```
 
 **During parallel execution:**
 ```
-OMC │ executor-low:4 active │ Tasks: 4/4 in progress │ 18s
+OMD │ executor-low:4 active │ Tasks: 4/4 in progress │ 18s
 ```
 
 **During verification:**
 ```
-OMC │ build-fixer:1 verifying │ 22s
+OMD │ build-fixer:1 verifying │ 22s
 ```
 
 **After completion:**
 ```
-OMC │ idle │ Last: 4 agents, 1m34s
+OMD │ idle │ Last: 4 agents, 1m34s
 ```
 
 ## Transition to Next Demo

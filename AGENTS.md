@@ -101,7 +101,7 @@ oh-my-droid enhances Factory Droid with:
 | `src/hooks/{session-end,subagent-tracker,pre-compact,permission-handler,setup}/*` | rebuild `bridge/hooks.cjs` (`npm run build`) and commit it |
 | `src/hooks/learner/bridge.ts` | rebuild `bridge/skill-bridge.cjs` (`npm run build`) and commit it |
 | Agent prompt | Tiered variants (`-low`, `-medium`, `-high`) |
-| Tool definition | `src/tools/index.ts`, `src/mcp/omc-tools-server.ts` (shared registry), `docs/REFERENCE.md` |
+| Tool definition | `src/tools/index.ts`, `src/mcp/omd-tools-server.ts` (shared registry), `docs/REFERENCE.md` |
 | `src/hud/*` | `commands/hud.md`, `skills/hud/SKILL.md` |
 | `src/mcp/*` | `docs/REFERENCE.md` (MCP Tools section) |
 | Agent tool assignments | `docs/FACTORY.md` (Agent Tool Matrix) |
@@ -183,7 +183,7 @@ import { allCustomTools, lspTools, astTools } from './tools';
 ┌─────────────────────────────────────────────────────────────┐
 │                    Factory Droid CLI                          │
 ├─────────────────────────────────────────────────────────────┤
-│                  oh-my-droid (OMC)                     │
+│                  oh-my-droid (OMD)                     │
 │  ┌─────────────┬─────────────┬─────────────┬─────────────┐  │
 │  │   Skills    │   Agents    │    Tools    │   Hooks     │  │
 │  │ (38 skills) │ (33 agents) │(LSP/AST/REPL)│   (hooks)   │  │

@@ -5,7 +5,7 @@
  * 1. Re-exports of base agents from individual files
  * 2. Tiered agent variants with dynamically loaded prompts from /droids/*.md
  * 3. getAgentDefinitions() for agent registry
- * 4. omcSystemPrompt for the main orchestrator
+ * 4. omdSystemPrompt for the main orchestrator
  */
 
 import type { AgentConfig, ModelIdentifier } from '../shared/types.js';
@@ -398,13 +398,13 @@ export function getAgentDefinitions(overrides?: Partial<Record<string, Partial<A
 }
 
 // ============================================================
-// OMC SYSTEM PROMPT
+// OMD SYSTEM PROMPT
 // ============================================================
 
 /**
- * OMC System Prompt - The main orchestrator
+ * OMD System Prompt - The main orchestrator
  */
-export const omcSystemPrompt = `You are the relentless orchestrator of a multi-agent development system.
+export const omdSystemPrompt = `You are the relentless orchestrator of a multi-agent development system.
 
 ## RELENTLESS EXECUTION
 

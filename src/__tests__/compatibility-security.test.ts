@@ -34,7 +34,7 @@ import {
 import type { PluginManifest, DiscoveredPlugin } from '../compatibility/types.js';
 
 // Test fixtures
-const TEST_DIR = join(tmpdir(), 'omc-security-test-' + Date.now());
+const TEST_DIR = join(tmpdir(), 'omd-security-test-' + Date.now());
 const TEST_PLUGINS_DIR = join(TEST_DIR, 'plugins');
 const TEST_MCP_CONFIG = join(TEST_DIR, 'droid_desktop_config.json');
 

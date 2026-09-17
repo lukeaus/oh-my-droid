@@ -60,4 +60,4 @@ export const REQUIRED_METADATA_FIELDS = ['id', 'name', 'description', 'triggers'
 export const MAX_SKILLS_PER_SESSION = 10;
 
 /** Debug mode enabled */
-export const DEBUG_ENABLED = process.env.OMC_DEBUG === '1';
+export const DEBUG_ENABLED = process.env.OMD_DEBUG === '1';

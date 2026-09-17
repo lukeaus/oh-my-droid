@@ -2,7 +2,7 @@
  * Verification Module Usage Examples
  *
  * This file demonstrates how to use the verification module
- * in different OMC workflows.
+ * in different OMD workflows.
  */
 
 import {

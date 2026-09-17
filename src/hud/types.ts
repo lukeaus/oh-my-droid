@@ -24,7 +24,7 @@ export interface BackgroundTask {
   exitCode?: number; // For tracking abnormal termination
 }
 
-export interface OmcHudState {
+export interface OmdHudState {
   timestamp: string;
   backgroundTasks: BackgroundTask[];
 }
@@ -121,7 +121,7 @@ export interface TranscriptData {
 }
 
 // ============================================================================
-// OMC State Types (read from existing files)
+// OMD State Types (read from existing files)
 // ============================================================================
 
 export interface RalphStateForHud {

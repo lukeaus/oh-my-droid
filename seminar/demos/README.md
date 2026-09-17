@@ -1,10 +1,10 @@
-# OMC Seminar Demo Scripts
+# OMD Seminar Demo Scripts
 
 This directory contains demo scripts for showcasing Oh-My-Droid's capabilities.
 
 ## Overview
 
-The seminar includes 5 progressive demos that showcase different aspects of OMC:
+The seminar includes 5 progressive demos that showcase different aspects of OMD:
 
 1. **Autopilot** (5 min) - Full autonomous execution from idea to working code
 2. **Ultrawork** (3 min) - Maximum parallelism with multiple agents
@@ -17,7 +17,7 @@ The seminar includes 5 progressive demos that showcase different aspects of OMC:
 ## Global Pre-requisites
 
 ### Required Setup
-- OMC installed and configured (`/oh-my-droid:omd-setup` completed)
+- OMD installed and configured (`/oh-my-droid:omd-setup` completed)
 - HUD statusline installed (`/oh-my-droid:hud setup`)
 - Clean workspace directory for demos
 - Terminal with good font size for presentation (16-18pt minimum)
@@ -29,8 +29,8 @@ The seminar includes 5 progressive demos that showcase different aspects of OMC:
 mkdir -p ~/demo-workspace
 cd ~/demo-workspace
 
-# Verify OMC is installed
-which omc || echo "Run: /oh-my-droid:omd-setup"
+# Verify OMD is installed
+which omd || echo "Run: /oh-my-droid:omd-setup"
 
 # Check HUD is working
 echo "HUD should display in your terminal prompt"
@@ -38,7 +38,7 @@ echo "HUD should display in your terminal prompt"
 
 ### Pre-Demo Checklist
 - [ ] Terminal font size increased for visibility
-- [ ] No active OMC operations running (`/oh-my-droid:cancel --all`)
+- [ ] No active OMD operations running (`/oh-my-droid:cancel --all`)
 - [ ] Clean state files (`rm -rf .omd/state/*`)
 - [ ] Screen recorder ready
 - [ ] Fallback terminal outputs printed/accessible
@@ -57,12 +57,12 @@ echo "HUD should display in your terminal prompt"
 5. **Demo 5: Ralph** - "For mission-critical tasks - never gives up until verified complete"
 
 ### Closing (1 min)
-"OMC transforms how you work with Claude - from manual coding to orchestrating specialized agents. All open source at github.com/MeroZemory/oh-my-droid."
+"OMD transforms how you work with Claude - from manual coding to orchestrating specialized agents. All open source at github.com/MeroZemory/oh-my-droid."
 
 ## Tips for Presenters
 
 ### General Tips
-- **Announce behaviors**: OMC announces what it's activating ("I'm activating autopilot...")
+- **Announce behaviors**: OMD announces what it's activating ("I'm activating autopilot...")
 - **Watch the HUD**: The statusline shows active agents, tasks, and progress
 - **Embrace async**: Background tasks run while you talk - no waiting
 - **Have fallbacks**: Pre-recorded outputs for each demo in case of issues
@@ -105,7 +105,7 @@ seminar/demos/
 
 - Share demo workspace as GitHub repo
 - Provide recording link
-- Share OMC installation guide
+- Share OMD installation guide
 - Collect feedback on demo clarity
 
 ## Questions During Demos

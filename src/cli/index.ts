@@ -120,7 +120,7 @@ async function displayAnalyticsBanner() {
   }
 }
 
-// Default action when running 'omc' with no args - show everything
+// Default action when running 'omd' with no args - show everything
 async function defaultAction() {
   await displayAnalyticsBanner();
 
@@ -163,7 +163,7 @@ async function defaultAction() {
 }
 
 program
-  .name('omc')
+  .name('omd')
   .description('Multi-agent orchestration system for Factory Droid with analytics')
   .version(version)
   .action(defaultAction);
@@ -258,7 +258,7 @@ program
   .option('--json', 'Output as JSON')
   .action(async (options) => {
     if (!options.reset && !options.project && !options.from && !options.to) {
-      console.log(chalk.yellow('Note: Backfill now runs automatically with every omc command.'));
+      console.log(chalk.yellow('Note: Backfill now runs automatically with every omd command.'));
       console.log(chalk.gray('Use --reset to force full re-sync, or --project/--from/--to for filtered backfill.\n'));
     }
     await backfillCommand(options);

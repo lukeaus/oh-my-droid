@@ -6,7 +6,7 @@
 ## Pre-requisites
 
 - Project with a complex refactoring task that might hit errors
-- OMC installed and configured
+- OMD installed and configured
 - Understanding that Ralph never gives up until verified complete
 
 ## Setup (2 minutes before demo)
@@ -499,11 +499,11 @@ ralph ulw: refactor all auth modules to TypeScript
 
 ## Closing Statement
 
-"That's Ralph - your persistent agent that never gives up. Errors? Fixed automatically. Complete? Only when architect-verified. This is what makes OMC production-ready, not just a demo."
+"That's Ralph - your persistent agent that never gives up. Errors? Fixed automatically. Complete? Only when architect-verified. This is what makes OMD production-ready, not just a demo."
 
 **Transition to Q&A or Summary:**
 
-"We've seen five modes of OMC:
+"We've seen five modes of OMD:
 1. **Autopilot** - Full autonomous execution
 2. **Ultrawork** - Maximum parallelism
 3. **Pipeline** - Sequential coordination

@@ -2951,17 +2951,17 @@ init_token_tracker();
 var previousSnapshot = null;
 async function recordTokenUsage(stdin, transcriptData) {
   try {
-    if (process.env.OMC_DEBUG) {
+    if (process.env.OMD_DEBUG) {
       console.error("[TokenRecording] stdin.context_window:", JSON.stringify(stdin.context_window));
     }
     const modelName = getModelName(stdin);
     const runningAgents = transcriptData.agents?.filter((a) => a.status === "running") ?? [];
     const agentName = runningAgents.length > 0 ? runningAgents[0].name : void 0;
-    if (process.env.OMC_DEBUG) {
+    if (process.env.OMD_DEBUG) {
       console.error("[TokenRecording] agentName determined:", agentName);
     }
     const extracted = extractTokens(stdin, previousSnapshot, modelName, agentName);
-    if (process.env.OMC_DEBUG) {
+    if (process.env.OMD_DEBUG) {
       console.error("[TokenRecording] extracted tokens:", {
         inputTokens: extracted.inputTokens,
         outputTokens: extracted.outputTokens,
@@ -2972,7 +2972,7 @@ async function recordTokenUsage(stdin, transcriptData) {
       });
     }
     if (extracted.inputTokens > 0 || extracted.cacheCreationTokens > 0) {
-      if (process.env.OMC_DEBUG) {
+      if (process.env.OMD_DEBUG) {
         console.error("[TokenRecording] Recording condition PASSED - recording usage");
       }
       const sessionId = extractSessionId(stdin.transcript_path);
@@ -2985,17 +2985,17 @@ async function recordTokenUsage(stdin, transcriptData) {
         cacheCreationTokens: extracted.cacheCreationTokens,
         cacheReadTokens: extracted.cacheReadTokens
       });
-      if (process.env.OMC_DEBUG) {
+      if (process.env.OMD_DEBUG) {
         console.error("[TokenRecording] Successfully recorded usage for agent:", extracted.agentName);
       }
     } else {
-      if (process.env.OMC_DEBUG) {
+      if (process.env.OMD_DEBUG) {
         console.error("[TokenRecording] Recording condition FAILED - no token delta detected");
       }
     }
     previousSnapshot = createSnapshot(stdin);
   } catch (error) {
-    if (process.env.OMC_DEBUG) {
+    if (process.env.OMD_DEBUG) {
       console.error("[Analytics] Token recording failed:", error);
     }
   }
@@ -3013,7 +3013,7 @@ async function calculateSessionHealth(sessionStart, contextPercent, stdin) {
   const inputTokens = usage?.input_tokens ?? 0;
   const cacheCreationTokens = usage?.cache_creation_input_tokens ?? 0;
   const cacheReadTokens = usage?.cache_read_input_tokens ?? 0;
-  if (process.env.OMC_DEBUG) {
+  if (process.env.OMD_DEBUG) {
     console.error("[HUD DEBUG] current_usage:", JSON.stringify(usage));
     console.error("[HUD DEBUG] tokens:", { inputTokens, cacheCreationTokens, cacheReadTokens });
   }
@@ -3044,7 +3044,7 @@ async function calculateSessionHealth(sessionStart, contextPercent, stdin) {
       health = "warning";
     }
   } catch (error) {
-    if (process.env.OMC_DEBUG) {
+    if (process.env.OMD_DEBUG) {
       console.error("[HUD] Cost calculation failed:", error);
     }
   }
@@ -3057,7 +3057,7 @@ async function calculateSessionHealth(sessionStart, contextPercent, stdin) {
       topAgents = agents.map((a) => ({ agent: a.agent, cost: a.cost }));
     }
   } catch (error) {
-    if (process.env.OMC_DEBUG) {
+    if (process.env.OMD_DEBUG) {
       console.error("[HUD] Top agents fetch failed:", error);
     }
   }
@@ -3115,7 +3115,7 @@ async function main() {
         stdin
       )
     };
-    if (process.env.OMC_DEBUG) {
+    if (process.env.OMD_DEBUG) {
       console.error("[HUD DEBUG] stdin.context_window:", JSON.stringify(stdin.context_window));
       console.error("[HUD DEBUG] sessionHealth:", JSON.stringify(context.sessionHealth));
     }

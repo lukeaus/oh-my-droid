@@ -6,7 +6,7 @@
 ## Pre-requisites
 
 - Clean demo directory
-- OMC installed and configured
+- OMD installed and configured
 - Node.js and npm available
 - Terminal visible to audience
 
@@ -34,7 +34,7 @@ autopilot: build a REST API for a bookstore inventory with CRUD operations for b
 
 ### Phase 1: Expansion (0:00-0:30)
 **What happens:**
-- OMC announces: "I'm activating autopilot for full autonomous execution..."
+- OMD announces: "I'm activating autopilot for full autonomous execution..."
 - Analyst agent spawned to create detailed specification
 - Requirements expanded: models, routes, validation, tests
 

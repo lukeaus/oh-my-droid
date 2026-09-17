@@ -23,10 +23,10 @@
 **백업 아이디어** (청중이 조용하면):
 "자, 그럼 실시간 투표 앱을 만들어볼까요?"
 
-### 3. OMC 실행 (7분)
+### 3. OMD 실행 (7분)
 ```bash
 # 터미널 전체 화면으로
-/oh-my-droid:omc
+/oh-my-droid:omd-setup
 
 # 청중 요청 입력
 "Build a [청중 아이디어] with:
@@ -55,7 +55,7 @@ npm run dev
 ## 백업 플랜
 
 **만약 실패하면?**
-1. 에러도 컨텐츠: "보세요, 에러가 났지만 OMC가 자동으로 고치고 있습니다"
+1. 에러도 컨텐츠: "보세요, 에러가 났지만 OMD가 자동으로 고치고 있습니다"
 2. 사전 녹화본: `demos/recordings/` 에 백업
 3. 이미 만들어둔 앱: `demos/sample-apps/`
 
@@ -65,15 +65,15 @@ npm run dev
 ```bash
 # 폰트 크기 키우기
 # 불필요한 로그 숨기기
-export OMC_QUIET=true
+export OMD_QUIET=true
 
 # 빠른 모델 (Sonnet 4.5)
-export OMC_MODEL=anthropic/claude-sonnet-4-5
+export OMD_MODEL=anthropic/claude-sonnet-4-5
 ```
 
 ### 타이밍
 - 너무 빠르면: 코드 설명 추가
-- 너무 느리면: "여러분과 대화하는 동안 OMC가 완성했습니다"
+- 너무 느리면: "여러분과 대화하는 동안 OMD가 완성했습니다"
 
 ## 왜 이게 효과적인가?
 

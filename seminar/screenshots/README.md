@@ -1,4 +1,4 @@
-# Screenshot Guide for OMC Seminar
+# Screenshot Guide for OMD Seminar
 
 This guide documents all screenshots needed for the seminar presentation, with detailed capture instructions and ASCII mockups that can serve as standalone visuals.
 
@@ -160,7 +160,7 @@ autopilot: build a React dashboard with user authentication
 
 ### 2. `before-after.png` (Slide 6)
 
-**Description:** Split-screen comparison showing manual Factory Droid usage on left vs. OMC orchestrated on right, demonstrating the difference in workflow.
+**Description:** Split-screen comparison showing manual Factory Droid usage on left vs. OMD orchestrated on right, demonstrating the difference in workflow.
 
 **Capture Instructions:**
 1. Use `tmux` or terminal split feature
@@ -175,7 +175,7 @@ autopilot: build a React dashboard with user authentication
    > Can you test this?
    > (wait for response)
    ```
-3. Right pane: OMC workflow
+3. Right pane: OMD workflow
    ```bash
    # In right pane
    droid
@@ -187,7 +187,7 @@ autopilot: build a React dashboard with user authentication
 **ASCII Mockup:**
 ```
 ┌─────────────────────────────────────┬─────────────────────────────────────┐
-│ BEFORE: Manual Factory Droid          │ AFTER: OMC Orchestration            │
+│ BEFORE: Manual Factory Droid          │ AFTER: OMD Orchestration            │
 ├─────────────────────────────────────┼─────────────────────────────────────┤
 │ > Can you implement user auth?      │ > autopilot: implement user auth    │
 │                                     │   with validation and tests         │
@@ -286,7 +286,7 @@ Create as a slide graphic using:
 ```
 ┌────┬──────────┬─────────────┬──────────────┬────────┐
 │ 🎯 │  Agents  │    Todos    │    Tokens    │ Status │
-│ OMC│ 3 active │  8/15 done  │ 145K/200K    │  🟢    │
+│ OMD│ 3 active │  8/15 done  │ 145K/200K    │  🟢    │
 │ HUD│          │   (53%)     │   (73%)      │        │
 └────┴──────────┴─────────────┴──────────────┴────────┘
 
@@ -857,7 +857,7 @@ Time →
 **ASCII Mockup:**
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                       OMC 3-Tier Model Routing                              │
+│                       OMD 3-Tier Model Routing                              │
 └─────────────────────────────────────────────────────────────────────────────┘
 
                               Task Arrives
@@ -1025,7 +1025,7 @@ to the most cost-effective model that can handle it successfully.
 ### Terminal Recording
 ```bash
 # Use asciinema for terminal recording
-asciinema rec -t "OMC Autopilot Demo" autopilot-demo.cast
+asciinema rec -t "OMD Autopilot Demo" autopilot-demo.cast
 
 # Convert to animated GIF
 agg autopilot-demo.cast autopilot-phases.gif
@@ -1042,7 +1042,7 @@ tmux new-session \; \
   select-pane -t 0 \; \
   send-keys "# BEFORE: Manual workflow" C-m \; \
   select-pane -t 1 \; \
-  send-keys "# AFTER: OMC workflow" C-m
+  send-keys "# AFTER: OMD workflow" C-m
 ```
 
 ### Screenshot Tools

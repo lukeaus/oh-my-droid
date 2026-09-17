@@ -13,9 +13,9 @@
  */
 
 import { loadConfig, findContextFiles, loadContextFromFiles } from './config/loader.js';
-import { getAgentDefinitions, omcSystemPrompt } from './droids/definitions.js';
+import { getAgentDefinitions, omdSystemPrompt } from './droids/definitions.js';
 import { getDefaultMcpServers, toSdkMcpFormat } from './mcp/servers.js';
-import { getOmcToolNames } from './mcp/tool-names.js';
+import { getOmdToolNames } from './mcp/tool-names.js';
 import { createMagicKeywordProcessor, detectMagicKeywords } from './features/magic-keywords.js';
 import { continuationSystemPromptAddition } from './features/continuation-enforcement.js';
 import {
@@ -28,10 +28,10 @@ import {
 } from './features/background-tasks.js';
 import type { PluginConfig, SessionState } from './shared/types.js';
 
-export { loadConfig, getAgentDefinitions, omcSystemPrompt };
+export { loadConfig, getAgentDefinitions, omdSystemPrompt };
 export { getDefaultMcpServers, toSdkMcpFormat } from './mcp/servers.js';
 export { lspTools, astTools, allCustomTools } from './tools/index.js';
-export { omcToolNames, getOmcToolNames } from './mcp/tool-names.js';
+export { omdToolNames, getOmdToolNames } from './mcp/tool-names.js';
 export { createMagicKeywordProcessor, detectMagicKeywords } from './features/magic-keywords.js';
 export {
   createBackgroundTaskManager,
@@ -274,7 +274,7 @@ export function createDroidSession(options?: DroidOptions): DroidSession {
   }
 
   // Build system prompt
-  let systemPrompt = omcSystemPrompt;
+  let systemPrompt = omdSystemPrompt;
 
   // Add continuation enforcement
   if (config.features?.continuationEnforcement !== false) {
@@ -336,7 +336,7 @@ export function createDroidSession(options?: DroidOptions): DroidSession {
   }
 
   // Allow custom tools served by the plugin's standalone MCP bridge (server id: t)
-  const omdTools = getOmcToolNames({
+  const omdTools = getOmdToolNames({
     includeLsp: config.features?.lspTools !== false,
     includeAst: config.features?.astTools !== false,
     includePython: true
@@ -390,11 +390,11 @@ export function enhancePrompt(prompt: string, config?: PluginConfig): string {
 /**
  * Get the system prompt for the orchestrator (for direct use)
  */
-export function getOmcSystemPrompt(options?: {
+export function getOmdSystemPrompt(options?: {
   includeContinuation?: boolean;
   customAddition?: string;
 }): string {
-  let prompt = omcSystemPrompt;
+  let prompt = omdSystemPrompt;
 
   if (options?.includeContinuation !== false) {
     prompt += continuationSystemPromptAddition;

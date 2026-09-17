@@ -1,7 +1,7 @@
 /**
  * MCP Server Bridge
  *
- * Connects to MCP servers and exposes their tools to OMC.
+ * Connects to MCP servers and exposes their tools to OMD.
  * Handles:
  * - Server lifecycle (spawn, connect, disconnect)
  * - Tool discovery from MCP servers

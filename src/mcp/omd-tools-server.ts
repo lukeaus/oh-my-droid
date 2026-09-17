@@ -1,5 +1,5 @@
 /**
- * OMC tool registry shared by the standalone MCP server and tool-name helpers.
+ * OMD tool registry shared by the standalone MCP server and tool-name helpers.
  *
  * Contains 19 tools: 12 LSP, 2 AST, 1 Python REPL, 3 skills, and 1 swarm.
  */

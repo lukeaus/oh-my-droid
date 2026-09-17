@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * OMC Persistent Mode Hook (Node.js)
+ * OMD Persistent Mode Hook (Node.js)
  * Minimal continuation enforcer for all OMD modes.
  * Stripped down for reliability — no optional imports, no PRD, no notepad pruning.
  *

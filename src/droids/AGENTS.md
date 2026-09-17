@@ -22,7 +22,7 @@ This directory defines all agents available in oh-my-droid:
 
 | File | Description |
 |------|-------------|
-| `definitions.ts` | **Main registry** - `getAgentDefinitions()`, `omcSystemPrompt` |
+| `definitions.ts` | **Main registry** - `getAgentDefinitions()`, `omdSystemPrompt` |
 | `architect.ts` | Architecture & debugging expert |
 | `executor.ts` | Focused task implementation |
 | `explore.ts` | Fast codebase search |

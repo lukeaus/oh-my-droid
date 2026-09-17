@@ -1,7 +1,7 @@
 /**
  * Installer Module
  *
- * Handles installation of OMC agents, commands, and configuration
+ * Handles installation of OMD agents, commands, and configuration
  * into the Factory Droid config directory (~/.factory/).
  *
  * Cross-platform support via Node.js-based hook scripts (.mjs).
@@ -171,7 +171,7 @@ function loadFactoryMdContent(): string {
 }
 
 /**
- * Install OMC agents, commands, skills, and hooks
+ * Install OMD agents, commands, skills, and hooks
  */
 export function install(options: InstallOptions = {}): InstallResult {
   const result: InstallResult = {
@@ -563,7 +563,7 @@ export function install(options: InstallOptions = {}): InstallResult {
 }
 
 /**
- * Check if OMC is already installed
+ * Check if OMD is already installed
  */
 export function isInstalled(): boolean {
   return existsSync(VERSION_FILE) && existsSync(AGENTS_DIR) && existsSync(COMMANDS_DIR);

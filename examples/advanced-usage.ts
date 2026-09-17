@@ -11,7 +11,7 @@
 import {
   createDroidSession,
   getAgentDefinitions,
-  getOmcSystemPrompt,
+  getOmdSystemPrompt,
   getDefaultMcpServers
 } from '../src/index.js';
 
@@ -61,7 +61,7 @@ async function main() {
   // Example 3: Custom system prompt
   console.log('Example 3: Custom System Prompt');
 
-  const customPrompt = getOmcSystemPrompt({
+  const customPrompt = getOmdSystemPrompt({
     includeContinuation: true,
     customAddition: `
 ## Project-Specific Instructions

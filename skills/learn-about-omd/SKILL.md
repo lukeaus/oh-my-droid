@@ -1,9 +1,9 @@
 ---
 name: learn-about-omd
-description: Analyze your OMC usage patterns and get personalized recommendations
+description: Analyze your OMD usage patterns and get personalized recommendations
 ---
 
-# Learn About OMC
+# Learn About OMD
 
 Analyzes your oh-my-droid usage and provides tailored recommendations to improve your workflow.
 
@@ -25,7 +25,7 @@ TOKEN_FILE="$HOME/.omd/state/token-tracking.jsonl"
 SESSION_FILE=".omd/state/session-history.json"
 CONFIG_FILE="$HOME/.factory/.omd-config.json"
 
-echo "📊 Analyzing OMC Usage..."
+echo "📊 Analyzing OMD Usage..."
 echo ""
 
 # Check what data is available
@@ -98,15 +98,15 @@ If no data found:
 
 No token tracking found. To enable tracking:
 1. Ensure ~/.omd/state/ directory exists
-2. Run any OMC command to start tracking
+2. Run any OMD command to start tracking
 
-Tip: Run /omd-setup to configure OMC properly.
+Tip: Run /omd-setup to configure OMD properly.
 ```
 
 ## Example Output
 
 ```
-📊 Your OMC Usage Analysis
+📊 Your OMD Usage Analysis
 
 TOKEN SUMMARY:
 - Total records: 1,234

@@ -50,7 +50,7 @@ describe('Notepad Module', () => {
       expect(content).toContain(PRIORITY_HEADER);
       expect(content).toContain(WORKING_MEMORY_HEADER);
       expect(content).toContain(MANUAL_HEADER);
-      expect(content).toContain('Auto-managed by OMC');
+      expect(content).toContain('Auto-managed by OMD');
     });
 
     it('should create .omd directory if not exists', () => {

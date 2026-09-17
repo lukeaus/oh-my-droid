@@ -6,7 +6,7 @@
 ## Pre-requisites
 
 - Any project directory (can be empty or existing)
-- OMC installed and configured
+- OMD installed and configured
 - Understanding that planning is for unclear/broad requirements
 
 ## Setup (30 seconds before demo)
@@ -35,12 +35,12 @@ plan adding authentication to my app
 
 ### Phase 1: Activation & Broad Request Detection (0:00-0:10)
 **What happens:**
-- OMC detects broad request: "authentication system" without specifics
+- OMD detects broad request: "authentication system" without specifics
 - Plan skill activates
 - Announces: "I'm starting a planning session - I'll interview you about requirements"
 
 **Presenter talking points:**
-- "OMC detected a broad request - 'authentication' could mean many things"
+- "OMD detected a broad request - 'authentication' could mean many things"
 - "Instead of guessing, it starts an interview to understand what YOU want"
 - "This is intelligent requirement gathering"
 

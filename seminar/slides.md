@@ -38,7 +38,7 @@ Version 3.6.3
 
 | Time | Topic |
 |------|-------|
-| 0:00 | What is OMC? |
+| 0:00 | What is OMD? |
 | 0:10 | The 5 Key Execution Modes |
 | 0:30 | The Agent System |
 | 0:40 | Live Demo Scenarios |
@@ -60,13 +60,13 @@ Note: This is a 60-minute seminar covering the complete oh-my-droid system. We'l
 - No persistence - AI gives up when tasks get hard <!-- .element: class="fragment" -->
 - Token waste - using expensive models for simple tasks <!-- .element: class="fragment" -->
 
-Note: These are real problems I faced building production applications with Factory Droid. OMC was born from frustration with manually orchestrating AI-assisted development.
+Note: These are real problems I faced building production applications with Factory Droid. OMD was born from frustration with manually orchestrating AI-assisted development.
 
 ---
 <!-- .slide: data-background="#1a1a2e" -->
 
 # Section 1
-## What is OMC?
+## What is OMD?
 
 ---
 
@@ -101,7 +101,7 @@ Note: These are real problems I faced building production applications with Fact
 - 37 skills <!-- .element: class="fragment" -->
 - Zero configuration required <!-- .element: class="fragment" -->
 
-Note: OMC transforms Claude from a single performer into a conductor of an orchestra of specialized AI agents.
+Note: OMD transforms Claude from a single performer into a conductor of an orchestra of specialized AI agents.
 
 ---
 
@@ -114,7 +114,7 @@ Note: OMC transforms Claude from a single performer into a conductor of an orche
 User -> Claude -> [Does everything itself]
 ```
 
-**OMC Workflow:**
+**OMD Workflow:**
 ```
 User -> Claude (Conductor) -> [Delegates to specialists]
                                     |
@@ -130,9 +130,9 @@ Note: This is the core mental model. Claude stops being a generalist trying to d
 
 ---
 
-## Before vs After OMC
+## Before vs After OMD
 
-| Aspect | Before OMC | After OMC |
+| Aspect | Before OMD | After OMD |
 |--------|-----------|-----------|
 | **Task execution** | Single-threaded | Parallel agents |
 | **Complex tasks** | Manual breakdown | Automatic decomposition |
@@ -665,13 +665,13 @@ Note: Each agent has a specialized prompt and toolset optimized for its domain.
 **Cost Example:**
 - 1000 simple questions: Haiku = $0.25 vs Opus = $15 (60x cheaper!)
 
-Note: The tier system is central to OMC's cost efficiency. Always start low and escalate only when needed.
+Note: The tier system is central to OMD's cost efficiency. Always start low and escalate only when needed.
 
 ---
 
 ## Smart Delegation
 
-**OMC automatically picks the right agent:**
+**OMD automatically picks the right agent:**
 
 | Task | Agent Selected | Model |
 |------|---------------|-------|
@@ -718,7 +718,7 @@ ralph ultrawork git-master: refactor authentication
 
 **Result:** Persistent, parallel, git-aware refactoring
 
-Note: Composition is where OMC really shines - combine behaviors for exactly the workflow you need.
+Note: Composition is where OMD really shines - combine behaviors for exactly the workflow you need.
 
 ---
 
@@ -983,7 +983,7 @@ Note: Keywords are optional - natural language works fine. Keywords just give yo
 
 ```
 +------------------------------------------------------------+
-| OMC | autopilot:exec | 3 agents | 5/12 tasks | ctx:45% | $2.34 |
+| OMD | autopilot:exec | 3 agents | 5/12 tasks | ctx:45% | $2.34 |
 +------------------------------------------------------------+
       ^               ^          ^            ^         ^
       |               |          |            |         |
@@ -1120,7 +1120,7 @@ autopilot: build a REST API for managing tasks
 
 **That's it.** Everything else is automatic.
 
-Note: Zero learning curve means you can start using OMC immediately after installation.
+Note: Zero learning curve means you can start using OMD immediately after installation.
 
 ---
 
@@ -1176,7 +1176,7 @@ Note: Most users never need to configure anything - defaults work well for typic
 | **Security audit** | pipeline:security | Structured review process |
 | **Exploratory prototyping** | ecomode | Budget-conscious iteration |
 
-Note: Matching the right mode to the task type is key to getting the most out of OMC.
+Note: Matching the right mode to the task type is key to getting the most out of OMD.
 
 ---
 
@@ -1220,8 +1220,8 @@ Note: The GitHub repo has all documentation, examples, and issue tracking.
 
 | Question | Answer |
 |----------|--------|
-| Does OMC work with Claude API keys? | Yes, both Max/Pro subscription and API keys work |
-| Can I use OMC with other AI models? | No, OMC is specifically for Factory Droid |
+| Does OMD work with Claude API keys? | Yes, both Max/Pro subscription and API keys work |
+| Can I use OMD with other AI models? | No, OMD is specifically for Factory Droid |
 | How do I stop a runaway autopilot? | Say "stop", "cancel", or `/oh-my-droid:cancel` |
 | Why is my HUD not showing? | Run `/oh-my-droid:hud setup` |
 | Can I create custom agents? | Yes, add `.md` files to `droids/` directory |

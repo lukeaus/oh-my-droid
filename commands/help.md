@@ -2,9 +2,9 @@
 description: Guide on using oh-my-droid plugin
 ---
 
-# How OMC Works
+# How OMD Works
 
-**You don't need to learn any commands!** OMC enhances Factory Droid with intelligent behaviors that activate automatically.
+**You don't need to learn any commands!** OMD enhances Factory Droid with intelligent behaviors that activate automatically.
 
 ## What Happens Automatically
 
@@ -40,7 +40,7 @@ I'll figure out what to stop based on context.
 
 ## First Time Setup
 
-If you haven't configured OMC yet:
+If you haven't configured OMD yet:
 
 ```
 /omd-setup

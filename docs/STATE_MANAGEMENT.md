@@ -355,7 +355,7 @@ console.log(state?.taskCount); // ✓ Type-safe access
 
 ## Differences from oh-my-claudecode
 
-1. **Path structure**: Uses `.omd` and `.factory/omd` instead of `.omc`
+1. **Path structure**: Uses `.omd` and `.factory/omd` instead of `.omd`
 2. **Config naming**: Uses `omd.config.json` instead of multiple config files
 3. **Legacy support**: Simplified, no legacy location migration
 4. **Simpler API**: Focused on essential features for oh-my-droid

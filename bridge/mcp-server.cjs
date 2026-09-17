@@ -32762,8 +32762,8 @@ var BRIDGE_SPAWN_TIMEOUT_MS = 3e4;
 var DEFAULT_GRACE_PERIOD_MS = 5e3;
 var SIGTERM_GRACE_MS = 2500;
 function getBridgeScriptPath() {
-  if (process.env.OMC_BRIDGE_SCRIPT) {
-    return process.env.OMC_BRIDGE_SCRIPT;
+  if (process.env.OMD_BRIDGE_SCRIPT) {
+    return process.env.OMD_BRIDGE_SCRIPT;
   }
   let moduleDir;
   try {
@@ -33481,7 +33481,7 @@ var LEGACY_USER_SKILLS_DIRS = [
 var LEGACY_PROJECT_SKILLS_SUBDIR = (0, import_path7.join)(".omd", "skills");
 var MAX_RECURSION_DEPTH = 10;
 var SKILL_EXTENSION = ".md";
-var DEBUG_ENABLED = process.env.OMC_DEBUG === "1";
+var DEBUG_ENABLED = process.env.OMD_DEBUG === "1";
 
 // src/hooks/learner/finder.ts
 function findSkillFilesRecursive(dir, results, depth = 0) {
@@ -33779,7 +33779,7 @@ function formatSkillOutput(skills) {
   return lines.join("\n");
 }
 var loadLocalTool = {
-  name: "load_omc_skills_local",
+  name: "load_omd_skills_local",
   description: "Load and list project-local skills from .agents/skills/droid-learned/ with .omd/skills/ as a legacy fallback. Returns skill metadata (id, name, description, triggers, tags) for all discovered project-scoped skills.",
   schema: loadLocalSchema,
   handler: async (args) => {
@@ -33797,7 +33797,7 @@ ${formatSkillOutput(projectSkills)}`
   }
 };
 var loadGlobalTool = {
-  name: "load_omc_skills_global",
+  name: "load_omd_skills_global",
   description: "Load and list global user skills from ~/.agents/skills/droid-learned/ with ~/.factory/skills/{droid,omc}-learned/ and ~/.omd/skills/ as legacy fallbacks. Returns skill metadata for all discovered user-scoped skills.",
   schema: loadGlobalSchema,
   handler: async (_args) => {
@@ -33814,7 +33814,7 @@ ${formatSkillOutput(userSkills)}`
   }
 };
 var listSkillsTool = {
-  name: "list_omc_skills",
+  name: "list_omd_skills",
   description: "List all available skills (both project-local and global user skills). Project skills take priority over user skills with the same ID.",
   schema: listSkillsSchema,
   handler: async (args) => {
@@ -34966,7 +34966,7 @@ var swarmTool = {
   handler: handleSwarm
 };
 
-// src/mcp/omc-tools-server.ts
+// src/mcp/omd-tools-server.ts
 var allTools = [
   ...lspTools,
   ...astTools,
@@ -35032,7 +35032,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  console.error("OMC Tools MCP Server running on stdio");
+  console.error("OMD Tools MCP Server running on stdio");
 }
 main().catch((error62) => {
   console.error("Failed to start server:", error62);

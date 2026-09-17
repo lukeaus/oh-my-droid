@@ -18,7 +18,7 @@ import * as tmux from '../../features/rate-limit-wait/tmux-detector.js';
 import type { DaemonState, DaemonConfig } from '../../features/rate-limit-wait/types.js';
 
 describe('daemon', () => {
-  const testDir = join(tmpdir(), 'omc-daemon-test-' + Date.now());
+  const testDir = join(tmpdir(), 'omd-daemon-test-' + Date.now());
   const testConfig: DaemonConfig = {
     stateFilePath: join(testDir, 'state.json'),
     pidFilePath: join(testDir, 'daemon.pid'),

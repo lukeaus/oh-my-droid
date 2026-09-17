@@ -135,7 +135,7 @@ The `lsp_diagnostics_directory` tool supports two strategies:
 
 1. Define tool in appropriate file (`lsp-tools.ts`, `ast-tools.ts`, or new file)
 2. Export from `index.ts` (add to `allCustomTools`)
-3. Register in `src/mcp/omc-tools-server.ts` if exposed via MCP; the standalone server and tool-name helpers consume this registry
+3. Register in `src/mcp/omd-tools-server.ts` if exposed via MCP; the standalone server and tool-name helpers consume this registry
 4. Update `docs/REFERENCE.md` (MCP Tools section)
 5. Update agent tool assignments in `src/droids/definitions.ts` if needed
 6. Update `docs/FACTORY.md` (Agent Tool Matrix) if assigned to agents
