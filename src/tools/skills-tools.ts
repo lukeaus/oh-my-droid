@@ -1,7 +1,7 @@
 /**
  * Skills Tools
  *
- * MCP tools for loading and listing OMC learned skills
+ * MCP tools for loading and listing OMD learned skills
  * from canonical .agents directories with backward-compatible legacy fallbacks.
  */
 
@@ -99,9 +99,9 @@ function formatSkillOutput(skills: LearnedSkill[]): string {
   return lines.join('\n');
 }
 
-// Tool 1: load_omc_skills_local
+// Tool 1: load_omd_skills_local
 export const loadLocalTool = {
-  name: 'load_omc_skills_local',
+  name: 'load_omd_skills_local',
   description: 'Load and list project-local skills from .agents/skills/droid-learned/ with .omd/skills/ as a legacy fallback. Returns skill metadata (id, name, description, triggers, tags) for all discovered project-scoped skills.',
   schema: loadLocalSchema,
   handler: async (args: { projectRoot?: string }) => {
@@ -118,10 +118,10 @@ export const loadLocalTool = {
   },
 };
 
-// Tool 2: load_omc_skills_global
+// Tool 2: load_omd_skills_global
 export const loadGlobalTool = {
-  name: 'load_omc_skills_global',
-  description: 'Load and list global user skills from ~/.agents/skills/droid-learned/ with ~/.factory/skills/{droid,omc}-learned/ and ~/.omd/skills/ as legacy fallbacks. Returns skill metadata for all discovered user-scoped skills.',
+  name: 'load_omd_skills_global',
+  description: 'Load and list global user skills from ~/.agents/skills/droid-learned/ with ~/.factory/skills/droid-learned/ and ~/.omd/skills/ as legacy fallbacks. Returns skill metadata for all discovered user-scoped skills.',
   schema: loadGlobalSchema,
   handler: async (_args: Record<string, never>) => {
     const allSkills = loadAllSkills(null);
@@ -136,9 +136,9 @@ export const loadGlobalTool = {
   },
 };
 
-// Tool 3: list_omc_skills
+// Tool 3: list_omd_skills
 export const listSkillsTool = {
-  name: 'list_omc_skills',
+  name: 'list_omd_skills',
   description: 'List all available skills (both project-local and global user skills). Project skills take priority over user skills with the same ID.',
   schema: listSkillsSchema,
   handler: async (args: { projectRoot?: string }) => {
@@ -158,7 +158,7 @@ export const listSkillsTool = {
     }
 
     if (skills.length === 0) {
-      output = '## No Skills Found\n\nNo skill files were discovered in any searched directories.\n\nSearched:\n- Project: .agents/skills/droid-learned/\n- User: ~/.agents/skills/droid-learned/\n- Legacy project: .omd/skills/\n- Legacy user: ~/.factory/skills/{droid,omc}-learned/ and ~/.omd/skills/';
+      output = '## No Skills Found\n\nNo skill files were discovered in any searched directories.\n\nSearched:\n- Project: .agents/skills/droid-learned/\n- User: ~/.agents/skills/droid-learned/\n- Legacy project: .omd/skills/\n- Legacy user: ~/.factory/skills/droid-learned/ and ~/.omd/skills/';
     }
 
     return {
@@ -170,5 +170,5 @@ export const listSkillsTool = {
   },
 };
 
-/** All skills tools for registration in omc-tools-server */
+/** All skills tools for registration in omd-tools-server */
 export const skillsTools = [loadLocalTool, loadGlobalTool, listSkillsTool];

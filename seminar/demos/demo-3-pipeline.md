@@ -6,7 +6,7 @@
 ## Pre-requisites
 
 - Existing codebase to review (can use the TypeScript project from Demo 2, or any small codebase)
-- OMC installed and configured
+- OMD installed and configured
 - Understanding that pipeline is for sequential workflows where output of one agent feeds the next
 
 ## Setup (1 minute before demo)

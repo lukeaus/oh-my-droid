@@ -19,23 +19,23 @@ if [ -n "$ANTHROPIC_BASE_URL" ]; then
     export ANTHROPIC_BASE_URL="$ANTHROPIC_BASE_URL"
 fi
 
-# Install OMC if in omc mode
+# Install OMD if in omd mode
 if [ "$RUN_MODE" = "omd" ]; then
     echo "Installing oh-my-droid for enhanced mode..."
 
-    # Check if OMC source is mounted
-    if [ -d "/workspace/omc-source" ]; then
-        echo "Installing OMC from mounted source..."
-        cd /workspace/omc-source && npm install && npm link
+    # Check if OMD source is mounted
+    if [ -d "/workspace/omd-source" ]; then
+        echo "Installing OMD from mounted source..."
+        cd /workspace/omd-source && npm install && npm link
     else
-        echo "Installing OMC from npm..."
+        echo "Installing OMD from npm..."
         npm install -g oh-my-droid
     fi
 
-    # Initialize OMC configuration
+    # Initialize OMD configuration
     mkdir -p ~/.factory
 
-    echo "OMC installation complete"
+    echo "OMD installation complete"
 fi
 
 # Execute the command passed to the container

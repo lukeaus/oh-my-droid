@@ -108,6 +108,45 @@ omd wait --stop   # Disable daemon
 
 ---
 
+## Environment Variables
+
+oh-my-droid reads these variables at runtime. Configuration variables override
+`~/.factory/.omd-config.json` (environment has the highest precedence).
+
+| Variable | Purpose |
+| -------- | ------- |
+| `ANTHROPIC_1M_CONTEXT` | Set to `true` when the Anthropic 1M-context beta is active, so the preemptive-compaction hook accounts for the larger window |
+| `APPDATA` | Windows roaming directory for config paths |
+| `CI` | Set to `true` or `1` in non-interactive environments; hooks skip interactive prompts |
+| `COMMENT_CHECKER_DEBUG` | Set to `1` for debug logging from the comment-checker hook |
+| `CONTEXT_LIMIT_RECOVERY_DEBUG` | Set to `1` for debug logging from the context-limit recovery path |
+| `DEBUG_THINKING_VALIDATOR` | Set to enable debug logging from the thinking-block validator hook |
+| `DROID_PLUGIN_ROOT` | Set by Factory when the plugin loads; used by `hooks/hooks.json`, `.mcp.json`, and installer detection to locate plugin files |
+| `EMPTY_MESSAGE_SANITIZER_DEBUG` | Set to `1` for debug logging from the empty-message sanitizer hook |
+| `EXA_API_KEY` | Exa API key; when set, the config loader enables the Exa MCP server |
+| `FACTORY_API_KEY` | Factory API key; `omd config --validate` warns when it is missing |
+| `FACTORY_HOME` | Factory home directory used by the permission handler when resolving its state location |
+| `GITHUB_ACTIONS` | Set to `true` on GitHub Actions; treated as a non-interactive environment |
+| `LOCALAPPDATA` | Windows local directory for data paths |
+| `OMD_BRIDGE_SCRIPT` | Absolute path to the Python REPL bridge script; overrides auto-discovery |
+| `OMD_DEBUG` | Verbose debug logging for the HUD, auto-update, todo continuation, and learner. Any non-empty value works; the learner requires `1` |
+| `OMD_ESCALATION_ENABLED` | `true` forces model-routing escalation on, `false` forces it off |
+| `OMD_LSP_TOOLS` | `true` forces the LSP tools feature on, `false` forces it off |
+| `OMD_MAX_BACKGROUND_TASKS` | Integer; overrides the maximum number of concurrent background tasks |
+| `OMD_PARALLEL_EXECUTION` | `true` forces parallel execution on, `false` forces it off |
+| `OMD_ROUTING_DEFAULT_TIER` | `LOW`, `MEDIUM`, or `HIGH`; overrides the default model-routing tier (invalid values are ignored) |
+| `OMD_ROUTING_ENABLED` | `true` forces model routing on, `false` forces it off |
+| `PREEMPTIVE_COMPACTION_DEBUG` | Set to `1` for debug logging from the preemptive-compaction hook |
+| `RECOVERY_DEBUG` | Set to `1` for debug logging from the recovery hook |
+| `SESSION_RECOVERY_DEBUG` | Set to `1` for debug logging from session recovery |
+| `TMUX` | Set by tmux; rate-limit wait uses it to detect a tmux session |
+| `VERTEX_ANTHROPIC_1M_CONTEXT` | Same as `ANTHROPIC_1M_CONTEXT`, for Vertex AI |
+| `XDG_CONFIG_HOME` | Linux config directory (default `~/.config`) |
+| `XDG_DATA_HOME` | Linux data directory (default `~/.local/share`) |
+| `XDG_RUNTIME_DIR` | Linux runtime directory used by the Python REPL for session files |
+
+---
+
 ## License
 
 MIT

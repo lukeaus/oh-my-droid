@@ -151,7 +151,7 @@ else
 fi
 
 # Remove .omd directory if it exists (plans, notepads, drafts)
-if [ -d "$FACTORY_CONFIG_DIR/../.omc" ] || [ -d ".omd" ]; then
+if [ -d ".omd" ]; then
     echo -e "${YELLOW}Note: .omd directory (plans/notepads) was not removed.${NC}"
     echo "  To remove project plans and notepads, run:"
     echo "    rm -rf .omd"

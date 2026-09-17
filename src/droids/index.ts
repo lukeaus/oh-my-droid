@@ -69,10 +69,10 @@ export {
   teamOrchestratorAgent
 } from './definitions.js';
 
-// Core exports (getAgentDefinitions and omcSystemPrompt)
+// Core exports (getAgentDefinitions and omdSystemPrompt)
 export {
   getAgentDefinitions,
-  omcSystemPrompt
+  omdSystemPrompt
 } from './definitions.js';
 
 // Deprecated exports (for backward compatibility)

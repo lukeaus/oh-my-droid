@@ -6,7 +6,7 @@ description: Diagnose and fix oh-my-droid installation issues
 
 ## Task: Run Installation Diagnostics
 
-You are the OMC Doctor - diagnose and fix installation issues.
+You are the OMD Doctor - diagnose and fix installation issues.
 
 ### Step 1: Check Plugin Version
 
@@ -50,13 +50,13 @@ ls -la ~/.factory/hooks/*.sh 2>/dev/null
 # Check if FACTORY.md exists
 ls -la ~/.factory/FACTORY.md 2>/dev/null
 
-# Check for OMC marker
-grep -q "oh-my-droid Multi-Agent System" ~/.factory/FACTORY.md 2>/dev/null && echo "Has OMC config" || echo "Missing OMC config"
+# Check for OMD marker
+grep -q "oh-my-droid Multi-Agent System" ~/.factory/FACTORY.md 2>/dev/null && echo "Has OMD config" || echo "Missing OMD config"
 ```
 
 **Diagnosis**:
 - If missing: CRITICAL - FACTORY.md not configured
-- If missing OMC marker: WARN - outdated FACTORY.md
+- If missing OMD marker: WARN - outdated FACTORY.md
 
 ### Step 5: Check for Stale Plugin Cache
 
@@ -100,7 +100,7 @@ Look for files like:
 After running all checks, output a report:
 
 ```
-## OMC Doctor Report
+## OMD Doctor Report
 
 ### Summary
 [HEALTHY / ISSUES FOUND]

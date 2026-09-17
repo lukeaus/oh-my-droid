@@ -5,7 +5,7 @@
 | Mode | Pass Rate | Avg Tokens | Avg Time | Total Cost |
 |------|-----------|------------|----------|------------|
 | Vanilla | -% | - | -m | $- |
-| OMC | -% | - | -m | $- |
+| OMD | -% | - | -m | $- |
 
 **Delta:** - percentage points improvement
 
@@ -28,11 +28,11 @@
 ### Vanilla Configuration
 
 Standard Factory Droid with default settings:
-- No OMC extensions loaded
+- No OMD extensions loaded
 - Default system prompt
 - Single-agent execution
 
-### OMC Configuration
+### OMD Configuration
 
 Oh-My-Droid enhanced with:
 - Multi-agent orchestration
@@ -52,7 +52,7 @@ Oh-My-Droid enhanced with:
 
 ### By Repository
 
-| Repository | Vanilla | OMC | Delta |
+| Repository | Vanilla | OMD | Delta |
 |------------|---------|-----|-------|
 | django | -/- | -/- | - |
 | flask | -/- | -/- | - |
@@ -61,7 +61,7 @@ Oh-My-Droid enhanced with:
 
 ### By Difficulty
 
-| Difficulty | Vanilla | OMC | Delta |
+| Difficulty | Vanilla | OMD | Delta |
 |------------|---------|-----|-------|
 | Easy | -% | -% | - |
 | Medium | -% | -% | - |
@@ -75,13 +75,13 @@ Top failure categories for each mode:
 1. Category: N failures (N%)
 2. ...
 
-**OMC:**
+**OMD:**
 1. Category: N failures (N%)
 2. ...
 
 ## Improvements
 
-Instances that OMC solved but vanilla failed:
+Instances that OMD solved but vanilla failed:
 
 | Instance ID | Category | Notes |
 |-------------|----------|-------|
@@ -89,7 +89,7 @@ Instances that OMC solved but vanilla failed:
 
 ## Regressions
 
-Instances that vanilla solved but OMC failed:
+Instances that vanilla solved but OMD failed:
 
 | Instance ID | Category | Notes |
 |-------------|----------|-------|
@@ -103,7 +103,7 @@ Instances that vanilla solved but OMC failed:
 # Install SWE-bench
 pip install swebench
 
-# Install oh-my-droid (if testing OMC)
+# Install oh-my-droid (if testing OMD)
 # Follow setup instructions in main README
 ```
 
@@ -117,11 +117,11 @@ python run_benchmark.py --mode vanilla --dataset swe-bench-verified --output res
 python evaluate.py --predictions results/vanilla/predictions.json --output results/vanilla/
 ```
 
-### Running OMC
+### Running OMD
 
 ```bash
-# Generate predictions with OMC
-python run_benchmark.py --mode omc --dataset swe-bench-verified --output results/omd/
+# Generate predictions with OMD
+python run_benchmark.py --mode omd --dataset swe-bench-verified --output results/omd/
 
 # Evaluate
 python evaluate.py --predictions results/omd/predictions.json --output results/omd/
@@ -130,13 +130,13 @@ python evaluate.py --predictions results/omd/predictions.json --output results/o
 ### Comparing Results
 
 ```bash
-python compare_results.py --vanilla results/vanilla/ --omc results/omd/ --output comparison/
+python compare_results.py --vanilla results/vanilla/ --omd results/omd/ --output comparison/
 ```
 
 ### Analyzing Failures
 
 ```bash
-python analyze_failures.py --vanilla results/vanilla/ --omc results/omd/ --compare --output analysis/
+python analyze_failures.py --vanilla results/vanilla/ --omd results/omd/ --compare --output analysis/
 ```
 
 ## Files
@@ -148,7 +148,7 @@ results/
 │   ├── summary.json          # Evaluation summary
 │   ├── report.md             # Human-readable report
 │   └── logs/                 # Per-instance logs
-├── omc/
+├── omd/
 │   ├── predictions.json
 │   ├── summary.json
 │   ├── report.md

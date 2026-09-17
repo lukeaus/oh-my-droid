@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// OMC Post-Tool-Use Hook (Node.js)
+// OMD Post-Tool-Use Hook (Node.js)
 // Processes <remember> tags from Task agent output
 // Saves to .omd/notepad.md for compaction-resilient memory
 
@@ -16,7 +16,7 @@ const { normalizeHookInput } = await import(pathToFileURL(join(__dirname, 'lib',
 
 // Constants
 const NOTEPAD_TEMPLATE = '# Notepad\n' +
-  '<!-- Auto-managed by OMC. Manual edits preserved in MANUAL section. -->\n\n' +
+  '<!-- Auto-managed by OMD. Manual edits preserved in MANUAL section. -->\n\n' +
   '## Priority Context\n' +
   '<!-- ALWAYS loaded. Keep under 500 chars. Critical discoveries only. -->\n\n' +
   '## Working Memory\n' +

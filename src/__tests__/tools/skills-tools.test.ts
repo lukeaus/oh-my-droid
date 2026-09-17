@@ -4,7 +4,7 @@ import { loadLocalTool, loadGlobalTool, listSkillsTool } from '../../tools/skill
 describe('skills-tools', () => {
   describe('loadLocalTool', () => {
     it('should have correct name and description', () => {
-      expect(loadLocalTool.name).toBe('load_omc_skills_local');
+      expect(loadLocalTool.name).toBe('load_omd_skills_local');
       expect(loadLocalTool.description).toContain('project-local');
       expect(loadLocalTool.description).toContain('.agents/skills/droid-learned');
       expect(loadLocalTool.description).toContain('.omd/skills');
@@ -38,10 +38,10 @@ describe('skills-tools', () => {
 
   describe('loadGlobalTool', () => {
     it('should have correct name and description', () => {
-      expect(loadGlobalTool.name).toBe('load_omc_skills_global');
+      expect(loadGlobalTool.name).toBe('load_omd_skills_global');
       expect(loadGlobalTool.description).toContain('global');
       expect(loadGlobalTool.description).toContain('~/.agents/skills/droid-learned');
-      expect(loadGlobalTool.description).toContain('~/.factory/skills/{droid,omc}-learned');
+      expect(loadGlobalTool.description).toContain('~/.factory/skills/droid-learned');
     });
 
     it('should return content array from handler', async () => {
@@ -54,7 +54,7 @@ describe('skills-tools', () => {
 
   describe('listSkillsTool', () => {
     it('should have correct name and description', () => {
-      expect(listSkillsTool.name).toBe('list_omc_skills');
+      expect(listSkillsTool.name).toBe('list_omd_skills');
       expect(listSkillsTool.description).toContain('all available');
     });
 

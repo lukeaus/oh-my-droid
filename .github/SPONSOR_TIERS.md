@@ -1,14 +1,14 @@
 # Sponsor Tiers
 
 ## 🌟 Individual Supporter - $5/month
-**Help keep OMC free and open source**
+**Help keep OMD free and open source**
 
 - 💖 Sponsor badge on your profile
 - 🙏 Name in SPONSORS.md
 - ✨ My eternal gratitude
 
 ## 🚀 Power User - $20/month
-**For professionals who rely on OMC daily**
+**For professionals who rely on OMD daily**
 
 Everything in Individual, plus:
 - 🎯 Priority issue triage
@@ -16,7 +16,7 @@ Everything in Individual, plus:
 - 🗳️ Vote on feature priorities
 
 ## 🏢 Team - $100/month
-**For companies using OMC in production**
+**For companies using OMD in production**
 
 Everything in Power User, plus:
 - 📋 Influence roadmap

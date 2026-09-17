@@ -1,5 +1,5 @@
 /**
- * Shared stdin utilities for OMC hooks
+ * Shared stdin utilities for OMD hooks
  * Provides timeout-protected stdin reading to prevent hangs on Linux
  * See: https://github.com/MeroZemory/oh-my-droid/issues/240
  */

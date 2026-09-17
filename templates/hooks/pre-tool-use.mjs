@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * OMC Pre-Tool-Use Hook (Node.js)
+ * OMD Pre-Tool-Use Hook (Node.js)
  * - Enforces delegation by warning when orchestrator attempts direct source file edits
  * - Enables background Task/Agent delegations during ultrawork mode (parallelism)
  */

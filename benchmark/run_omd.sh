@@ -83,14 +83,14 @@ if [ -z "${ANTHROPIC_AUTH_TOKEN:-}" ] && [ -z "${ANTHROPIC_API_KEY:-}" ]; then
     exit 1
 fi
 
-# Verify OMC is built
+# Verify OMD is built
 if [ ! -d "$PROJECT_ROOT/dist" ] || [ ! -f "$PROJECT_ROOT/dist/index.js" ]; then
     log_error "oh-my-droid is not built. Run: npm run build"
     exit 1
 fi
 
 log_info "=========================================="
-log_info "Running OMC-Enhanced Benchmark"
+log_info "Running OMD-Enhanced Benchmark"
 log_info "=========================================="
 log_info "Mode: $RUN_MODE (with oh-my-droid orchestration)"
 log_info "Model: $MODEL"
@@ -114,7 +114,7 @@ CMD="$CMD --output-dir $PREDICTIONS_DIR"
 [ -n "$LIMIT" ] && CMD="$CMD --limit $LIMIT"
 [ -n "$SKIP" ] && CMD="$CMD --skip $SKIP"
 
-log_step "Starting OMC-enhanced benchmark run..."
+log_step "Starting OMD-enhanced benchmark run..."
 log_info "Command: $CMD"
 log_info ""
 
@@ -133,7 +133,7 @@ if [ $EXIT_CODE -eq 0 ]; then
     log_info ""
     log_info "Next steps:"
     log_info "  1. Run evaluation: python3 evaluate.py --predictions $PREDICTIONS_DIR"
-    log_info "  2. Compare results: python3 compare_results.py --vanilla predictions/vanilla --omc predictions/omc"
+    log_info "  2. Compare results: python3 compare_results.py --vanilla predictions/vanilla --omd predictions/omd"
     log_info ""
 else
     log_error "=========================================="

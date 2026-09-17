@@ -90,7 +90,7 @@ describe('hooks handle a missing cwd', () => {
       mkdirSync(join(homeDir, '.omd', 'state'), { recursive: true });
       writeFileSync(globalState('ultrawork'), JSON.stringify({ active: true }));
 
-      runHook(scriptPath, { prompt: 'cancelomc', session_id: 'kd_2' }, homeDir);
+      runHook(scriptPath, { prompt: 'cancelomd', session_id: 'kd_2' }, homeDir);
 
       expect(existsSync(globalState('ultrawork'))).toBe(false);
     });
@@ -119,7 +119,7 @@ describe('hooks handle a missing cwd', () => {
 
       it('ignores code and keeps cancellation ahead of reasoning guidance', () => {
         expect(runHook(keywordScript, { prompt: '`ultrathink`' }, homeDir)).toEqual({ continue: true });
-        const output = runHook(keywordScript, { prompt: 'cancelomc ultrathink' }, homeDir);
+        const output = runHook(keywordScript, { prompt: 'cancelomd ultrathink' }, homeDir);
         const guidance = (output.hookSpecificOutput as { additionalContext: string }).additionalContext;
         expect(guidance).toContain('Skill: cancel');
         expect(guidance).not.toContain('<reasoning-guidance>');

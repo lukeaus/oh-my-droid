@@ -60,10 +60,10 @@ describe('Ralph PRD Module', () => {
       const rootPath = join(testDir, PRD_FILENAME);
       const omdDir = join(testDir, '.omd');
       mkdirSync(omdDir, { recursive: true });
-      const omcPath = join(omdDir, PRD_FILENAME);
+      const omdPath = join(omdDir, PRD_FILENAME);
 
       writeFileSync(rootPath, '{"source": "root"}');
-      writeFileSync(omcPath, '{"source": "omd"}');
+      writeFileSync(omdPath, '{"source": "omd"}');
 
       expect(findPrdPath(testDir)).toBe(rootPath);
     });

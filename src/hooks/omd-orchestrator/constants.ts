@@ -1,5 +1,5 @@
 /**
- * OMC Orchestrator Constants
+ * OMD Orchestrator Constants
  *
  * Message templates and configuration for orchestrator behavior enforcement.
  *

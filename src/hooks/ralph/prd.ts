@@ -83,7 +83,7 @@ export function getPrdPath(directory: string): string {
 /**
  * Get the path to the prd.json in .omd subdirectory
  */
-export function getOmcPrdPath(directory: string): string {
+export function getOmdPrdPath(directory: string): string {
   return join(directory, '.omd', PRD_FILENAME);
 }
 
@@ -96,9 +96,9 @@ export function findPrdPath(directory: string): string | null {
     return rootPath;
   }
 
-  const omcPath = getOmcPrdPath(directory);
-  if (existsSync(omcPath)) {
-    return omcPath;
+  const omdPath = getOmdPrdPath(directory);
+  if (existsSync(omdPath)) {
+    return omdPath;
   }
 
   return null;
@@ -144,7 +144,7 @@ export function writePrd(directory: string, prd: PRD): boolean {
         return false;
       }
     }
-    prdPath = getOmcPrdPath(directory);
+    prdPath = getOmdPrdPath(directory);
   }
 
   try {

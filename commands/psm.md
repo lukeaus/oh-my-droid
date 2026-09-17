@@ -29,7 +29,7 @@ First, parse the command to determine what action to take:
 | `status` | Show current session |
 
 Reference formats:
-- `omc#123` - alias + number
+- `omd#123` - alias + number
 - `owner/repo#123` - full repo + number
 - `https://github.com/.../pull/123` - full URL
 - `#123` - number only (use current repo)
@@ -158,15 +158,15 @@ After executing, provide clear output:
 ```
 Session Ready!
 
-  ID:       omc:pr-123
+  ID:       omd:pr-123
   Type:     review
   PR:       #123 - Add webhook support
   Worktree: ~/.psm/worktrees/omd/pr-123
-  Tmux:     psm:omc:pr-123
+  Tmux:     psm:omd:pr-123
 
 Commands:
-  Attach:  tmux attach -t psm:omc:pr-123
-  Kill:    /psm kill omc:pr-123
+  Attach:  tmux attach -t psm:omd:pr-123
+  Kill:    /psm kill omd:pr-123
   Cleanup: /psm cleanup
 ```
 

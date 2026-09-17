@@ -68,7 +68,7 @@ export function getProgressPath(directory: string): string {
 /**
  * Get the path to progress.txt in .omd subdirectory
  */
-export function getOmcProgressPath(directory: string): string {
+export function getOmdProgressPath(directory: string): string {
   return join(directory, '.omd', PROGRESS_FILENAME);
 }
 
@@ -81,9 +81,9 @@ export function findProgressPath(directory: string): string | null {
     return rootPath;
   }
 
-  const omcPath = getOmcProgressPath(directory);
-  if (existsSync(omcPath)) {
-    return omcPath;
+  const omdPath = getOmdProgressPath(directory);
+  if (existsSync(omdPath)) {
+    return omdPath;
   }
 
   return null;
@@ -234,7 +234,7 @@ export function initProgress(directory: string): boolean {
     }
   }
 
-  const progressPath = getOmcProgressPath(directory);
+  const progressPath = getOmdProgressPath(directory);
   const now = new Date().toISOString();
 
   const content = `# Ralph Progress Log
@@ -269,7 +269,7 @@ export function appendProgress(
     if (!initProgress(directory)) {
       return false;
     }
-    progressPath = getOmcProgressPath(directory);
+    progressPath = getOmdProgressPath(directory);
   }
 
   const now = new Date().toISOString();

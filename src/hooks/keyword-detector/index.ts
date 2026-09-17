@@ -56,7 +56,7 @@ const AUTOPILOT_PHRASE_PATTERNS = [
  * Keyword patterns for each mode
  */
 const KEYWORD_PATTERNS: Record<KeywordType, RegExp> = {
-  cancel: /\b(cancelomc|stopomc)\b/i,
+  cancel: /\b(cancelomd|stopomd)\b/i,
   ralph: /\b(ralph|don't stop|must complete|until done)\b/i,
   autopilot: /\b(autopilot|auto pilot|auto-pilot|autonomous|full auto|fullsend)\b/i,
   ultrapilot: /\b(ultrapilot|ultra-pilot)\b|\bparallel\s+build\b|\bswarm\s+build\b/i,

@@ -41,7 +41,6 @@ var USER_SKILLS_DIR = (0, import_path.join)(AGENTS_SKILLS_DIR, "droid-learned");
 var PROJECT_SKILLS_SUBDIR = (0, import_path.join)(".agents", "skills", "droid-learned");
 var LEGACY_USER_SKILLS_DIRS = [
   (0, import_path.join)((0, import_os.homedir)(), ".factory", "skills", "droid-learned"),
-  (0, import_path.join)((0, import_os.homedir)(), ".factory", "skills", "omc-learned"),
   (0, import_path.join)((0, import_os.homedir)(), ".omd", "skills")
 ];
 var LEGACY_PROJECT_SKILLS_SUBDIR = (0, import_path.join)(".omd", "skills");

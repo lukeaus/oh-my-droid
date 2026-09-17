@@ -8,7 +8,7 @@
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'fs';
 import { join } from 'path';
 import { homedir } from 'os';
-import type { OmcHudState, BackgroundTask, HudConfig, HudElementConfig, ReasoningFormat } from './types.js';
+import type { OmdHudState, BackgroundTask, HudConfig, HudElementConfig, ReasoningFormat } from './types.js';
 import { DEFAULT_HUD_CONFIG, PRESET_CONFIGS } from './types.js';
 import { cleanupStaleBackgroundTasks, markOrphanedTasksAsStale } from './background-cleanup.js';
 
@@ -45,7 +45,7 @@ function ensureStateDir(directory?: string): void {
 }
 
 /**
- * Ensure the ~/.factory/.omc directory exists
+ * Ensure the ~/.factory/.omd directory exists
  */
 function ensureGlobalConfigDir(): void {
   const configDir = join(homedir(), '.factory', '.omd');
@@ -62,7 +62,7 @@ function ensureGlobalConfigDir(): void {
 /**
  * Read HUD state from disk (checks new local and legacy local only)
  */
-export function readHudState(directory?: string): OmcHudState | null {
+export function readHudState(directory?: string): OmdHudState | null {
   // Check new local state first (.omd/state/hud-state.json)
   const localStateFile = getLocalStateFilePath(directory);
   if (existsSync(localStateFile)) {
@@ -93,7 +93,7 @@ export function readHudState(directory?: string): OmcHudState | null {
  * Write HUD state to disk (local only)
  */
 export function writeHudState(
-  state: OmcHudState,
+  state: OmdHudState,
   directory?: string
 ): boolean {
   try {
@@ -111,7 +111,7 @@ export function writeHudState(
 /**
  * Create a new empty HUD state
  */
-export function createEmptyHudState(): OmcHudState {
+export function createEmptyHudState(): OmdHudState {
   return {
     timestamp: new Date().toISOString(),
     backgroundTasks: [],
@@ -121,7 +121,7 @@ export function createEmptyHudState(): OmcHudState {
 /**
  * Get running background tasks from state
  */
-export function getRunningTasks(state: OmcHudState | null): BackgroundTask[] {
+export function getRunningTasks(state: OmdHudState | null): BackgroundTask[] {
   if (!state) return [];
   return state.backgroundTasks.filter((task) => task.status === 'running');
 }
@@ -129,7 +129,7 @@ export function getRunningTasks(state: OmcHudState | null): BackgroundTask[] {
 /**
  * Get background task count string (e.g., "3/5")
  */
-export function getBackgroundTaskCount(state: OmcHudState | null): {
+export function getBackgroundTaskCount(state: OmdHudState | null): {
   running: number;
   max: number;
 } {

@@ -112,12 +112,12 @@ describe('Debug Logging for Silent Catch Blocks', () => {
       expect(sourceCode).toMatch(/}\s*catch\s*\(\s*error\s*\)\s*{[\s\S]*?Cost calculation failed/);
     });
 
-    it('logs cost calculation errors when OMC_DEBUG is set', async () => {
+    it('logs cost calculation errors when OMD_DEBUG is set', async () => {
       const indexPath = path.join(process.cwd(), 'src/hud/index.ts');
       const sourceCode = await fs.readFile(indexPath, 'utf-8');
 
-      // Should check process.env.OMC_DEBUG before logging
-      expect(sourceCode).toContain('if (process.env.OMC_DEBUG)');
+      // Should check process.env.OMD_DEBUG before logging
+      expect(sourceCode).toContain('if (process.env.OMD_DEBUG)');
 
       // Should log the error with a clear prefix
       expect(sourceCode).toMatch(/console\.error\(['"]\[HUD\] Cost calculation failed:/);
@@ -142,13 +142,13 @@ describe('Debug Logging for Silent Catch Blocks', () => {
       expect(sourceCode).toMatch(/}\s*catch\s*\(\s*error\s*\)\s*{[\s\S]*?Top agents fetch failed/);
     });
 
-    it('logs top agents fetch errors when OMC_DEBUG is set', async () => {
+    it('logs top agents fetch errors when OMD_DEBUG is set', async () => {
       const indexPath = path.join(process.cwd(), 'src/hud/index.ts');
       const sourceCode = await fs.readFile(indexPath, 'utf-8');
 
-      // Should check process.env.OMC_DEBUG before logging
+      // Should check process.env.OMD_DEBUG before logging
       // This will match the existing debug checks in the file
-      expect(sourceCode).toContain('if (process.env.OMC_DEBUG)');
+      expect(sourceCode).toContain('if (process.env.OMD_DEBUG)');
 
       // Should log the error with a clear prefix
       expect(sourceCode).toMatch(/console\.error\(['"]\[HUD\] Top agents fetch failed:/);

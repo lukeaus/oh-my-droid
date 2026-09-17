@@ -43,7 +43,7 @@ export {
   writePrd,
   findPrdPath,
   getPrdPath,
-  getOmcPrdPath,
+  getOmdPrdPath,
   getPrdStatus,
   markStoryComplete,
   markStoryIncomplete,
@@ -64,7 +64,7 @@ export {
   parseProgress,
   findProgressPath,
   getProgressPath,
-  getOmcProgressPath,
+  getOmdProgressPath,
   initProgress,
   appendProgress,
   addPattern,
@@ -149,7 +149,7 @@ export {
 } from './rules-injector/index.js';
 
 export {
-  // OMC Orchestrator
+  // OMD Orchestrator
   createOmdOrchestratorHook,
   isAllowedPath,
   isWriteEditTool,
@@ -161,7 +161,7 @@ export {
   checkBoulderContinuation,
   processOrchestratorPreTool,
   processOrchestratorPostTool,
-  HOOK_NAME as OMC_ORCHESTRATOR_HOOK_NAME,
+  HOOK_NAME as OMD_ORCHESTRATOR_HOOK_NAME,
   ALLOWED_PATH_PREFIX,
   WRITE_EDIT_TOOLS,
   DIRECT_WORK_REMINDER,

@@ -6,7 +6,7 @@
  */
 
 import { readHudState, writeHudState, createEmptyHudState } from './state.js';
-import type { BackgroundTask, OmcHudState } from './types.js';
+import type { BackgroundTask, OmdHudState } from './types.js';
 
 const MAX_TASK_HISTORY = 20;
 const TASK_EXPIRY_MS = 30 * 60 * 1000; // 30 minutes
@@ -78,7 +78,7 @@ export function completeBackgroundTask(
 /**
  * Clean up old and expired tasks from state.
  */
-function cleanupTasks(state: OmcHudState): OmcHudState {
+function cleanupTasks(state: OmdHudState): OmdHudState {
   const now = Date.now();
 
   // Filter out expired completed/failed tasks

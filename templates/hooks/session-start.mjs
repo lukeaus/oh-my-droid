@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// OMC Session Start Hook (Node.js)
+// OMD Session Start Hook (Node.js)
 // Restores persistent mode states when session starts
 // Cross-platform: Windows, macOS, Linux
 
@@ -131,7 +131,7 @@ async function main() {
     if (updateInfo) {
       messages.push(`<session-restore>
 
-[OMC UPDATE AVAILABLE]
+[OMD UPDATE AVAILABLE]
 
 A new version of oh-my-droid is available: v${updateInfo.latestVersion} (current: ${updateInfo.currentVersion})
 

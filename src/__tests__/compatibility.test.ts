@@ -46,7 +46,7 @@ import {
 } from '../compatibility/permission-adapter.js';
 
 // Test fixtures
-const TEST_DIR = join(tmpdir(), 'omc-compat-test-' + Date.now());
+const TEST_DIR = join(tmpdir(), 'omd-compat-test-' + Date.now());
 const TEST_PLUGINS_DIR = join(TEST_DIR, 'plugins');
 const TEST_MCP_CONFIG = join(TEST_DIR, 'droid_desktop_config.json');
 const TEST_SETTINGS = join(TEST_DIR, 'settings.json');
@@ -160,8 +160,8 @@ describe('Discovery System', () => {
       });
 
       const plugins = discoverPlugins({ pluginPaths: [TEST_PLUGINS_DIR] });
-      const omcPlugin = plugins.find(p => p.name === 'oh-my-droid');
-      expect(omcPlugin).toBeUndefined();
+      const omdPlugin = plugins.find(p => p.name === 'oh-my-droid');
+      expect(omdPlugin).toBeUndefined();
     });
   });
 

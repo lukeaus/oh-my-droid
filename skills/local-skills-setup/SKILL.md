@@ -77,7 +77,6 @@ scan_skill_dir() {
 echo "=== USER-LEVEL SKILLS ==="
 scan_skill_dir user "$HOME/.agents/skills/droid-learned"
 scan_skill_dir user "$HOME/.factory/skills/droid-learned"
-scan_skill_dir user "$HOME/.factory/skills/omc-learned"
 scan_skill_dir user "$HOME/.omd/skills"
 
 echo "=== PROJECT-LEVEL SKILLS ==="
@@ -173,7 +172,6 @@ show_scope() {
 
 show_scope user "user-level" "$HOME/.agents/skills/droid-learned"
 show_scope user "user-level (legacy)" "$HOME/.factory/skills/droid-learned"
-show_scope user "user-level (legacy)" "$HOME/.factory/skills/omc-learned"
 show_scope user "user-level (legacy)" "$HOME/.omd/skills"
 show_scope project "project-level" ".agents/skills/droid-learned"
 show_scope project "project-level (legacy)" ".omd/skills"

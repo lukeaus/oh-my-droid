@@ -7,8 +7,8 @@ This is a major release because it removes the Claude Agent SDK integration and 
 ### Use the standalone MCP bridge
 
 - `@anthropic-ai/claude-agent-sdk` is no longer a dependency. The existing standalone bridge uses `@modelcontextprotocol/sdk` and stdio instead.
-- Remove imports of `omdToolsServer` and integrations relying on the old `sdkTools` adapter. `src/mcp/omc-tools-server.ts` remains as the shared tool registry, without the in-process server.
-- `omcToolNames` and `getOmcToolNames` remain available; their implementation moves to `src/mcp/tool-names.ts`.
+- Remove imports of `omdToolsServer` and integrations relying on the old `sdkTools` adapter. `src/mcp/omd-tools-server.ts` remains as the shared tool registry, without the in-process server.
+- `omdToolNames` and `getOmdToolNames` remain available; their implementation moves to `src/mcp/tool-names.ts`.
 - `createDroidSession()` no longer injects an in-process `t` server. Its allowed tool names retain the `mcp__t__` prefix; permission entries alone do not register a server.
 - Plugin installs use the `t` entry in `.mcp.json`, which launches `bridge/mcp-server.cjs` with Node. Programmatic consumers must configure that standalone stdio bridge in their MCP client, using an absolute path to the installed bundle. Keep the server ID `t` so tool names match.
 
@@ -22,8 +22,9 @@ See [MCP Tools](REFERENCE.md#mcp-tools) for registration and the tool inventory.
 | `isClaudeInstalled` | `isDroidInstalled` |
 | `skipClaudeCheck` | `skipDroidCheck` |
 | `PaneAnalysisResult.hasClaudeCode` | `PaneAnalysisResult.hasDroid` |
-
 Update imports, option objects, and pane-result consumers to the new names.
+
+Learned skills are read from `~/.agents/skills/droid-learned/` (user) and `.agents/skills/droid-learned/` (project); `~/.factory/skills/droid-learned/` and `~/.omd/skills/` remain as read-only fallbacks.
 
 ### Removed unsupported behavior
 

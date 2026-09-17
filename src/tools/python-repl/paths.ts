@@ -68,7 +68,7 @@ function isSecureRuntimeDir(dir: string): boolean {
  * Uses OS-appropriate temp directories.
  *
  * Priority:
- * 1. XDG_RUNTIME_DIR/omc (Linux standard, usually /run/user/{uid})
+ * 1. XDG_RUNTIME_DIR/omd (Linux standard, usually /run/user/{uid})
  * 2. Platform-specific user cache directory
  * 3. os.tmpdir() fallback
  *
@@ -76,7 +76,7 @@ function isSecureRuntimeDir(dir: string): boolean {
  *
  * @example
  * getRuntimeDir();
- * // Linux with XDG: '/run/user/1000/omc'
+ * // Linux with XDG: '/run/user/1000/omd'
  * // macOS: '~/Library/Caches/omd/runtime'
  * // Fallback: '/tmp/omd/runtime'
  */

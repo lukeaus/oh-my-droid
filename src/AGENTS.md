@@ -55,7 +55,7 @@ This directory contains all TypeScript source code organized into modules:
    // Main export in index.ts
    export { createDroidSession } from './session';
    export { lspTools, astTools, allCustomTools } from './tools';
-   export { getAgentDefinitions, omcSystemPrompt } from './droids/definitions';
+   export { getAgentDefinitions, omdSystemPrompt } from './droids/definitions';
    ```
 
 3. **Tool Registration**: Custom tools are registered in `tools/index.ts`:
@@ -151,7 +151,7 @@ index.ts
 │   ├── verification/
 │   └── ...
 ├── config/loader.ts
-└── mcp/tool-names.ts → mcp/omc-tools-server.ts (shared 19-tool registry)
+└── mcp/tool-names.ts → mcp/omd-tools-server.ts (shared 19-tool registry)
     └── also consumed by mcp/standalone-server.ts (stdio, server id t)
 ```
 

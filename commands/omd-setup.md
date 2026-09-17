@@ -400,11 +400,11 @@ else
 fi
 
 # Verify installation
-if command -v omc &> /dev/null; then
+if command -v omd &> /dev/null; then
   echo "✓ OMD CLI installed successfully!"
   echo "  Try: omd stats, omd agents, omd backfill"
 else
-  echo "⚠ CLI installed but 'omc' not in PATH."
+  echo "⚠ CLI installed but 'omd' not in PATH."
   echo "  You may need to restart your terminal or add npm/bun global bin to PATH."
 fi
 ```
@@ -532,7 +532,7 @@ HUD STATUSLINE:
 The status bar now shows OMD state. Restart Factory Droid to see it.
 
 CLI ANALYTICS (if installed):
-- omc           - Full dashboard (stats + agents + cost)
+- omd           - Full dashboard (stats + agents + cost)
 - omd stats     - View token usage and costs
 - omd agents    - See agent breakdown by cost
 - omd tui       - Launch interactive TUI dashboard
@@ -572,7 +572,7 @@ HUD STATUSLINE:
 The status bar now shows OMD state. Restart Factory Droid to see it.
 
 CLI ANALYTICS (if installed):
-- omc           - Full dashboard (stats + agents + cost)
+- omd           - Full dashboard (stats + agents + cost)
 - omd stats     - View token usage and costs
 - omd agents    - See agent breakdown by cost
 - omd tui       - Launch interactive TUI dashboard

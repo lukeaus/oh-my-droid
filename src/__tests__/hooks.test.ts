@@ -216,14 +216,14 @@ describe('Keyword Detector', () => {
 
     // New keyword types tests
     it('should detect cancel keyword', () => {
-      const detected = detectKeywordsWithType('cancelomc this task');
+      const detected = detectKeywordsWithType('cancelomd this task');
       expect(detected).toHaveLength(1);
       expect(detected[0].type).toBe('cancel');
-      expect(detected[0].keyword).toBe('cancelomc');
+      expect(detected[0].keyword).toBe('cancelomd');
     });
 
     it('should detect cancel keyword variations', () => {
-      const cancelTerms = ['cancelomc', 'stopomc'];
+      const cancelTerms = ['cancelomd', 'stopomd'];
       for (const term of cancelTerms) {
         const detected = detectKeywordsWithType(`Please ${term} the process`);
         expect(detected).toHaveLength(1);
@@ -504,19 +504,19 @@ describe('Keyword Detector', () => {
 
     // New priority tests for new keywords
     it('should give cancel highest priority', () => {
-      const primary = getPrimaryKeyword('stopomc searching for files');
+      const primary = getPrimaryKeyword('stopomd searching for files');
       expect(primary).not.toBeNull();
       expect(primary!.type).toBe('cancel');
     });
 
     it('should give cancel priority over analyze', () => {
-      const primary = getPrimaryKeyword('cancelomc this investigation');
+      const primary = getPrimaryKeyword('cancelomd this investigation');
       expect(primary).not.toBeNull();
       expect(primary!.type).toBe('cancel');
     });
 
     it('should prioritize cancel over all other keywords', () => {
-      const primary = getPrimaryKeyword('stopomc ultrawork and search');
+      const primary = getPrimaryKeyword('stopomd ultrawork and search');
       expect(primary).not.toBeNull();
       expect(primary!.type).toBe('cancel');
     });
@@ -1204,7 +1204,7 @@ describe('Mutual Exclusion - UltraQA and Ralph', () => {
 
   beforeEach(() => {
     // Create a unique temp directory for each test
-    testDir = join(tmpdir(), `omc-test-${Date.now()}-${Math.random().toString(36).slice(2)}`);
+    testDir = join(tmpdir(), `omd-test-${Date.now()}-${Math.random().toString(36).slice(2)}`);
     mkdirSync(testDir, { recursive: true });
     mkdirSync(join(testDir, '.omd'), { recursive: true });
     mkdirSync(join(testDir, '.omd', 'state'), { recursive: true });

@@ -1,7 +1,7 @@
 /**
  * Permission Adapter for External Tools
  *
- * Integrates external plugins and MCP tools with OMC's permission system.
+ * Integrates external plugins and MCP tools with OMD's permission system.
  * Provides:
  * - Safe command pattern registration from plugins
  * - Permission inheritance for known-safe tools
@@ -295,7 +295,7 @@ export function removeSafePatternsFromSource(source: string): void {
 }
 
 /**
- * Check if tool should be delegated (not handled directly by OMC)
+ * Check if tool should be delegated (not handled directly by OMD)
  */
 export function shouldDelegate(toolName: string): boolean {
   const registry = getRegistry();
@@ -358,7 +358,7 @@ export function getDelegationTarget(toolName: string): {
 }
 
 /**
- * Integrate permission adapter with OMC's permission system
+ * Integrate permission adapter with OMD's permission system
  * Call this during initialization to register patterns from discovered plugins
  */
 export function integrateWithPermissionSystem(): void {

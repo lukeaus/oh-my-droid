@@ -522,7 +522,7 @@ World`);
       });
 
       it('should return cancel over everything', () => {
-        const result = getPrimaryKeyword('cancelomc ralph ultrawork eco');
+        const result = getPrimaryKeyword('cancelomd ralph ultrawork eco');
         expect(result?.type).toBe('cancel');
       });
 
@@ -580,7 +580,7 @@ World`);
     });
 
     it('should return cancel exclusively when present', () => {
-      expect(getAllKeywords('cancelomc ralph ultrawork')).toEqual(['cancel']);
+      expect(getAllKeywords('cancelomd ralph ultrawork')).toEqual(['cancel']);
     });
 
     it('should return ecomode over ultrawork when both present', () => {

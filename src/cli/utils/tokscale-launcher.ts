@@ -2,7 +2,7 @@ import { spawn } from 'child_process';
 
 export interface TokscaleLaunchOptions {
   light?: boolean;
-  droid?: boolean; // Default true for OMC
+  droid?: boolean; // Default true for OMD
 }
 
 /**
@@ -34,7 +34,7 @@ export async function launchTokscaleTUI(options: TokscaleLaunchOptions = {}): Pr
     args.push('tui');
   }
 
-  // Filter by droid client for OMC unless explicitly disabled
+  // Filter by droid client for OMD unless explicitly disabled
   if (options.droid !== false) {
     args.push('-c', 'droid');
   }

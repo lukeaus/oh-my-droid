@@ -15,10 +15,10 @@
 
 /**
  * Debug logging for task/todo operations.
- * Set OMC_DEBUG=1 or OMC_DEBUG=todo-continuation for verbose output.
+ * Set OMD_DEBUG=1 or OMD_DEBUG=todo-continuation for verbose output.
  */
 function debugLog(message: string, ...args: unknown[]): void {
-  const debug = process.env.OMC_DEBUG;
+  const debug = process.env.OMD_DEBUG;
   if (debug === '1' || debug === 'todo-continuation' || debug === 'true') {
     console.error('[todo-continuation]', message, ...args);
   }

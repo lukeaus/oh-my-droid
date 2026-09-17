@@ -12,19 +12,19 @@ Automate isolated development environments using git worktrees and tmux sessions
 
 | Command | Description | Example |
 |---------|-------------|---------|
-| `review <ref>` | PR review session | `/psm review omc#123` |
-| `fix <ref>` | Issue fix session | `/psm fix omc#42` |
-| `feature <proj> <name>` | Feature development | `/psm feature omc add-webhooks` |
+| `review <ref>` | PR review session | `/psm review omd#123` |
+| `fix <ref>` | Issue fix session | `/psm fix omd#42` |
+| `feature <proj> <name>` | Feature development | `/psm feature omd add-webhooks` |
 | `list [project]` | List active sessions | `/psm list` |
-| `attach <session>` | Attach to session | `/psm attach omc:pr-123` |
-| `kill <session>` | Kill session | `/psm kill omc:pr-123` |
+| `attach <session>` | Attach to session | `/psm attach omd:pr-123` |
+| `kill <session>` | Kill session | `/psm kill omd:pr-123` |
 | `cleanup` | Clean merged/closed | `/psm cleanup` |
 | `status` | Current session info | `/psm status` |
 
 ## Project References
 
 Supported formats:
-- **Alias**: `omc#123` (requires `~/.psm/projects.json`)
+- **Alias**: `omd#123` (requires `~/.psm/projects.json`)
 - **Full**: `owner/repo#123`
 - **URL**: `https://github.com/owner/repo/pull/123`
 - **Current**: `#123` (uses current directory's repo)
@@ -64,9 +64,9 @@ Supported formats:
 
 | Type | Tmux Session | Worktree Dir |
 |------|--------------|--------------|
-| PR Review | `psm:omc:pr-123` | `~/.psm/worktrees/omd/pr-123` |
-| Issue Fix | `psm:omc:issue-42` | `~/.psm/worktrees/omd/issue-42` |
-| Feature | `psm:omc:feat-auth` | `~/.psm/worktrees/omd/feat-auth` |
+| PR Review | `psm:omd:pr-123` | `~/.psm/worktrees/omd/pr-123` |
+| Issue Fix | `psm:omd:issue-42` | `~/.psm/worktrees/omd/issue-42` |
+| Feature | `psm:omd:feat-auth` | `~/.psm/worktrees/omd/feat-auth` |
 
 ---
 
@@ -165,11 +165,11 @@ Parse `$ARGUMENTS` to determine:
    ```
    Session ready!
 
-     ID: omc:pr-123
+     ID: omd:pr-123
      Worktree: ~/.psm/worktrees/omd/pr-123
-     Tmux: psm:omc:pr-123
+     Tmux: psm:omd:pr-123
 
-   To attach: tmux attach -t psm:omc:pr-123
+   To attach: tmux attach -t psm:omd:pr-123
    ```
 
 ### Subcommand: `fix <ref>`
@@ -254,8 +254,8 @@ Parse `$ARGUMENTS` to determine:
 
    ID                 | Type    | Status   | Worktree
    -------------------|---------|----------|---------------------------
-   omc:pr-123        | review  | active   | ~/.psm/worktrees/omd/pr-123
-   omc:issue-42      | fix     | detached | ~/.psm/worktrees/omd/issue-42
+   omd:pr-123        | review  | active   | ~/.psm/worktrees/omd/pr-123
+   omd:issue-42      | fix     | detached | ~/.psm/worktrees/omd/issue-42
    ```
 
 ### Subcommand: `attach <session>`
@@ -327,9 +327,9 @@ Parse `$ARGUMENTS` to determine:
 5. **Report**:
    ```
    Cleanup complete:
-     Removed: omc:pr-123 (merged)
-     Removed: omc:issue-42 (closed)
-     Kept: omc:feat-auth (active)
+     Removed: omd:pr-123 (merged)
+     Removed: omd:issue-42 (closed)
+     Kept: omd:feat-auth (active)
    ```
 
 ### Subcommand: `status`
@@ -351,7 +351,7 @@ Parse `$ARGUMENTS` to determine:
 
 3. **Show status**:
    ```
-   Current Session: omc:pr-123
+   Current Session: omd:pr-123
    Type: review
    PR: #123 - Add webhook support
    Branch: feature/webhooks

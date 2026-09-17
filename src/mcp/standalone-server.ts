@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Standalone MCP Server for OMC Tools
+ * Standalone MCP Server for OMD Tools
  *
  * This server exposes 19 LSP, AST, Python REPL, skills, and swarm tools via stdio transport
  * for discovery by Factory Droid's MCP management system.
@@ -14,7 +14,7 @@ import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js';
-import { allTools } from './omc-tools-server.js';
+import { allTools } from './omd-tools-server.js';
 import { z } from 'zod';
 
 // JSON Schema from a Zod schema (native in zod 4)
@@ -88,7 +88,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  console.error('OMC Tools MCP Server running on stdio');
+  console.error('OMD Tools MCP Server running on stdio');
 }
 
 main().catch((error) => {

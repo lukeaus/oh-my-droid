@@ -60,7 +60,7 @@ const DEFAULT_CONFIG: LearnerConfig = {
   },
 };
 
-const CONFIG_PATH = join(homedir(), '.factory', 'omc', 'learner.json');
+const CONFIG_PATH = join(homedir(), '.factory', 'omd', 'learner.json');
 
 /**
  * Load configuration from disk.
@@ -89,7 +89,7 @@ export function saveConfig(config: Partial<LearnerConfig>): boolean {
   const merged = mergeConfig(DEFAULT_CONFIG, config);
 
   try {
-    const dir = join(homedir(), '.factory', 'omc');
+    const dir = join(homedir(), '.factory', 'omd');
     if (!existsSync(dir)) {
       mkdirSync(dir, { recursive: true });
     }

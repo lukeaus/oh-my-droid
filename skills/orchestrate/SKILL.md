@@ -44,10 +44,10 @@ Before assuming a codebase is undisciplined, verify: different patterns may be i
 
 ## Phase 2A — Exploration & Research
 
-Before every `omc_task` call, declare your reasoning:
+Before every `omd_task` call, declare your reasoning:
 
 ```
-I will use omc_task with:
+I will use omd_task with:
 - Category/Agent: [name]
 - Reason: [why this choice fits]
 - Skills (if any): [skill names]

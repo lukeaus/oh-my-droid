@@ -428,5 +428,4 @@ Potential improvements for future versions:
 ## References
 
 - [Droid Hooks Reference](./droid/hooks-reference.md)
-- [oh-my-claudecode Implementation](../oh-my-claudecode/src/hooks/)
 - [Factory.ai Documentation](https://docs.factory.ai/)

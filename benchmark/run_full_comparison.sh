@@ -40,7 +40,7 @@ SKIP=""
 MODEL="claude-sonnet-4.5-20250929"
 TIMEOUT="300"
 SKIP_VANILLA=false
-SKIP_OMC=false
+SKIP_OMD=false
 SKIP_EVAL=false
 
 while [[ $# -gt 0 ]]; do
@@ -65,8 +65,8 @@ while [[ $# -gt 0 ]]; do
             SKIP_VANILLA=true
             shift
             ;;
-        --skip-omc)
-            SKIP_OMC=true
+        --skip-omd)
+            SKIP_OMD=true
             shift
             ;;
         --skip-eval)
@@ -84,7 +84,7 @@ while [[ $# -gt 0 ]]; do
             echo "  --model MODEL     Model to use (default: claude-sonnet-4.5-20250929)"
             echo "  --timeout SECS    Timeout per instance (default: 300)"
             echo "  --skip-vanilla    Skip vanilla benchmark run"
-            echo "  --skip-omc        Skip OMC benchmark run"
+            echo "  --skip-omd        Skip OMD benchmark run"
             echo "  --skip-eval       Skip evaluation step"
             echo "  -h, --help        Show this help message"
             exit 0
@@ -127,18 +127,18 @@ else
     echo ""
 fi
 
-# Step 2: Run OMC benchmark
-if [ "$SKIP_OMC" = false ]; then
-    log_step "Step 2/4: Running OMC-enhanced benchmark..."
+# Step 2: Run OMD benchmark
+if [ "$SKIP_OMD" = false ]; then
+    log_step "Step 2/4: Running OMD-enhanced benchmark..."
     echo ""
-    "$SCRIPT_DIR/run_omc.sh" $ARGS
+    "$SCRIPT_DIR/run_omd.sh" $ARGS
     if [ $? -ne 0 ]; then
-        log_error "OMC benchmark failed. Aborting."
+        log_error "OMD benchmark failed. Aborting."
         exit 1
     fi
     echo ""
 else
-    log_warn "Skipping OMC benchmark (--skip-omc)"
+    log_warn "Skipping OMD benchmark (--skip-omd)"
     echo ""
 fi
 
@@ -158,14 +158,14 @@ if [ "$SKIP_EVAL" = false ]; then
     fi
     echo ""
 
-    log_step "Step 4/4: Evaluating OMC predictions..."
+    log_step "Step 4/4: Evaluating OMD predictions..."
     echo ""
     if [ -f "$SCRIPT_DIR/evaluate.py" ]; then
         python3 "$SCRIPT_DIR/evaluate.py" \
-            --predictions "$SCRIPT_DIR/predictions/omc" \
-            --output "$SCRIPT_DIR/results/omc_results.json"
+            --predictions "$SCRIPT_DIR/predictions/omd" \
+            --output "$SCRIPT_DIR/results/omd_results.json"
         if [ $? -ne 0 ]; then
-            log_warn "OMC evaluation had issues (continuing...)"
+            log_warn "OMD evaluation had issues (continuing...)"
         fi
     else
         log_warn "evaluate.py not found, skipping evaluation"
@@ -190,7 +190,7 @@ echo ""
 if [ -f "$SCRIPT_DIR/compare_results.py" ]; then
     python3 "$SCRIPT_DIR/compare_results.py" \
         --vanilla "$SCRIPT_DIR/predictions/vanilla/predictions.jsonl" \
-        --omc "$SCRIPT_DIR/predictions/omd/predictions.jsonl" \
+        --omd "$SCRIPT_DIR/predictions/omd/predictions.jsonl" \
         --output "$SCRIPT_DIR/results/comparison_report.md"
 else
     log_warn "compare_results.py not found, generating basic report..."
@@ -212,9 +212,9 @@ $([ -n "$SKIP" ] && echo "- Skip: $SKIP instances")
 Location: \`predictions/vanilla/\`
 Results: \`results/vanilla_results.json\`
 
-### OMC-Enhanced
+### OMD-Enhanced
 Location: \`predictions/omd/\`
-Results: \`results/omc_results.json\`
+Results: \`results/omd_results.json\`
 
 ## Elapsed Time
 Total runtime: ${HOURS}h ${MINUTES}m ${SECONDS}s
@@ -231,7 +231,7 @@ log_info "Total runtime: ${HOURS}h ${MINUTES}m ${SECONDS}s"
 echo ""
 log_info "Results:"
 log_info "  Vanilla predictions: $SCRIPT_DIR/predictions/vanilla/"
-log_info "  OMC predictions:     $SCRIPT_DIR/predictions/omd/"
+log_info "  OMD predictions:     $SCRIPT_DIR/predictions/omd/"
 log_info "  Comparison report:   $SCRIPT_DIR/results/comparison_report.md"
 echo ""
 log_info "Review the comparison report for detailed analysis."

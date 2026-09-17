@@ -1,7 +1,7 @@
 /**
  * OMD HUD - State Readers
  *
- * Read ralph, ultrawork, and PRD state from existing OMC files.
+ * Read ralph, ultrawork, and PRD state from existing OMD files.
  * These are read-only functions that don't modify the state files.
  */
 
@@ -156,7 +156,7 @@ export function readPrdStateForHud(directory: string): PrdStateForHud | null {
   let prdPath = join(directory, 'prd.json');
 
   if (!existsSync(prdPath)) {
-    // Check .omc
+    // Check .omd
     prdPath = join(directory, '.omd', 'prd.json');
 
     if (!existsSync(prdPath)) {

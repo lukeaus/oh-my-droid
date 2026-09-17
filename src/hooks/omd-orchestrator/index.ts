@@ -1,5 +1,5 @@
 /**
- * OMC Orchestrator Hook
+ * OMD Orchestrator Hook
  *
  * Enforces orchestrator behavior - delegation over direct implementation.
  * When an orchestrator agent tries to directly modify files outside .omd/,
@@ -504,7 +504,7 @@ export function checkBoulderContinuation(directory: string): {
 }
 
 /**
- * Create omc orchestrator hook handlers
+ * Create omd orchestrator hook handlers
  */
 export function createOmdOrchestratorHook(directory: string) {
   return {

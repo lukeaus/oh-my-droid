@@ -1,4 +1,4 @@
-# OMC Analytics CLI
+# OMD Analytics CLI
 
 Command-line interface for Oh-My-Droid analytics, token tracking, cost reports, and session management.
 

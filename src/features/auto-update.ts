@@ -27,7 +27,7 @@ export const VERSION_FILE = join(FACTORY_CONFIG_DIR, '.omd-version.json');
 export const CONFIG_FILE = join(FACTORY_CONFIG_DIR, '.omd-config.json');
 
 /**
- * OMC configuration (stored in .omd-config.json)
+ * OMD configuration (stored in .omd-config.json)
  */
 export interface DroidConfig {
   /** Whether silent auto-updates are enabled (opt-in for security) */
@@ -295,7 +295,7 @@ export async function performUpdate(options?: {
 
     // Save to a temporary file
     const tempDir = tmpdir();
-    const tempScript = join(tempDir, `omc-update-${Date.now()}.sh`);
+    const tempScript = join(tempDir, `omd-update-${Date.now()}.sh`);
 
     writeFileSync(tempScript, scriptContent, { mode: 0o755 });
 
@@ -457,7 +457,7 @@ export function backgroundUpdateCheck(callback?: (result: UpdateCheckResult) => 
     })
     .catch(error => {
       // Silently ignore errors in background checks
-      if (process.env.OMC_DEBUG) {
+      if (process.env.OMD_DEBUG) {
         console.error('Background update check failed:', error);
       }
     });

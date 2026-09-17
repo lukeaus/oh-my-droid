@@ -373,7 +373,7 @@ cat > ".omd/state/setup-state.json" << EOF
 EOF
 ```
 
-**OMC Project Configuration Complete**
+**OMD Project Configuration Complete**
 - FACTORY.md: Updated with latest configuration from GitHub at ./.factory/FACTORY.md
 - Backup: Previous FACTORY.md backed up to `.factory/FACTORY.md.backup.YYYY-MM-DD` (if existed)
 - Scope: **PROJECT** - applies only to this project
@@ -463,7 +463,7 @@ cat > ".omd/state/setup-state.json" << EOF
 EOF
 ```
 
-**OMC Global Configuration Complete**
+**OMD Global Configuration Complete**
 - FACTORY.md: Updated with latest configuration from GitHub at ~/.factory/FACTORY.md
 - Backup: Previous FACTORY.md backed up to `~/.factory/FACTORY.md.backup.YYYY-MM-DD` (if existed)
 - Scope: **GLOBAL** - applies to all Factory Droid sessions
@@ -682,7 +682,7 @@ Ask user: "Would you like to install the OMD CLI for standalone analytics? (Reco
 
 ### CLI Installation Note
 
-The CLI (`omc` command) is **no longer supported** via npm/bun global install.
+The CLI (`omd` command) is **no longer supported** via npm/bun global install.
 
 All functionality is available through the plugin system:
 - Use `/help` for guidance
@@ -754,7 +754,7 @@ HUD STATUSLINE:
 The status bar now shows OMD state. Restart Factory Droid to see it.
 
 CLI ANALYTICS (if installed):
-- omc           - Full dashboard (stats + agents + cost)
+- omd           - Full dashboard (stats + agents + cost)
 - omd stats     - View token usage and costs
 - omd agents    - See agent breakdown by cost
 - omd tui       - Launch interactive TUI dashboard
@@ -790,7 +790,7 @@ HUD STATUSLINE:
 The status bar now shows OMD state. Restart Factory Droid to see it.
 
 CLI ANALYTICS (if installed):
-- omc           - Full dashboard (stats + agents + cost)
+- omd           - Full dashboard (stats + agents + cost)
 - omd stats     - View token usage and costs
 - omd agents    - See agent breakdown by cost
 - omd tui       - Launch interactive TUI dashboard
@@ -876,14 +876,14 @@ MODES:
     - Downloads fresh FACTORY.md to ./.factory/
     - Backs up existing FACTORY.md to .factory/FACTORY.md.backup.YYYY-MM-DD
     - Project-specific settings
-    - Use this to update project config after OMC upgrades
+    - Use this to update project config after OMD upgrades
 
   Global Configuration (--global)
     - Downloads fresh FACTORY.md to ~/.factory/
     - Backs up existing FACTORY.md to ~/.factory/FACTORY.md.backup.YYYY-MM-DD
     - Applies to all Factory Droid sessions
     - Cleans up legacy hooks
-    - Use this to update global config after OMC upgrades
+    - Use this to update global config after OMD upgrades
 
 EXAMPLES:
   /omd-setup           # First time setup

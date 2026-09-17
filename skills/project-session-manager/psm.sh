@@ -74,18 +74,18 @@ Commands:
   status                 Show current session info
 
 Reference formats:
-  omc#123               Project alias + number
+  omd#123               Project alias + number
   owner/repo#123        Full GitHub reference
   https://...           GitHub URL
   #123                  Number only (uses current repo)
 
 Examples:
-  psm review omc#123
+  psm review omd#123
   psm fix lukeaus/oh-my-droid#42
-  psm feature omc add-webhooks
+  psm feature omd add-webhooks
   psm list
-  psm attach omc:pr-123
-  psm kill omc:pr-123
+  psm attach omd:pr-123
+  psm kill omd:pr-123
   psm cleanup
 EOF
 }
