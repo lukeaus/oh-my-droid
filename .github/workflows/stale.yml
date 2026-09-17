@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Mark and close stale issues
-        uses: actions/stale@v9
+        uses: actions/stale@v11
         with:
           # Issue configuration
           stale-issue-message: |
