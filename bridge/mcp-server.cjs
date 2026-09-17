@@ -33475,7 +33475,6 @@ var USER_SKILLS_DIR = (0, import_path7.join)(AGENTS_SKILLS_DIR, "droid-learned")
 var PROJECT_SKILLS_SUBDIR = (0, import_path7.join)(".agents", "skills", "droid-learned");
 var LEGACY_USER_SKILLS_DIRS = [
   (0, import_path7.join)((0, import_os.homedir)(), ".factory", "skills", "droid-learned"),
-  (0, import_path7.join)((0, import_os.homedir)(), ".factory", "skills", "omc-learned"),
   (0, import_path7.join)((0, import_os.homedir)(), ".omd", "skills")
 ];
 var LEGACY_PROJECT_SKILLS_SUBDIR = (0, import_path7.join)(".omd", "skills");
@@ -33798,7 +33797,7 @@ ${formatSkillOutput(projectSkills)}`
 };
 var loadGlobalTool = {
   name: "load_omd_skills_global",
-  description: "Load and list global user skills from ~/.agents/skills/droid-learned/ with ~/.factory/skills/{droid,omc}-learned/ and ~/.omd/skills/ as legacy fallbacks. Returns skill metadata for all discovered user-scoped skills.",
+  description: "Load and list global user skills from ~/.agents/skills/droid-learned/ with ~/.factory/skills/droid-learned/ and ~/.omd/skills/ as legacy fallbacks. Returns skill metadata for all discovered user-scoped skills.",
   schema: loadGlobalSchema,
   handler: async (_args) => {
     const allSkills = loadAllSkills(null);
@@ -33837,7 +33836,7 @@ ${formatSkillOutput(projectSkills)}
 ${formatSkillOutput(userSkills)}`;
     }
     if (skills.length === 0) {
-      output2 = "## No Skills Found\n\nNo skill files were discovered in any searched directories.\n\nSearched:\n- Project: .agents/skills/droid-learned/\n- User: ~/.agents/skills/droid-learned/\n- Legacy project: .omd/skills/\n- Legacy user: ~/.factory/skills/{droid,omc}-learned/ and ~/.omd/skills/";
+      output2 = "## No Skills Found\n\nNo skill files were discovered in any searched directories.\n\nSearched:\n- Project: .agents/skills/droid-learned/\n- User: ~/.agents/skills/droid-learned/\n- Legacy project: .omd/skills/\n- Legacy user: ~/.factory/skills/droid-learned/ and ~/.omd/skills/";
     }
     return {
       content: [{

@@ -24,11 +24,10 @@ export const PROJECT_SKILLS_SUBDIR = join('.agents', 'skills', 'droid-learned');
 /**
  * Legacy learned-skills locations (read-only fallback for installs that haven't
  * migrated to ~/.agents yet). Kept so existing learned skills keep loading.
- * Covers both historical names (droid-learned and omc-learned).
+ * Covers the historical `droid-learned` user dir and the `~/.omd/skills` location.
  */
 export const LEGACY_USER_SKILLS_DIRS = [
   join(homedir(), '.factory', 'skills', 'droid-learned'),
-  join(homedir(), '.factory', 'skills', 'omc-learned'),
   join(homedir(), '.omd', 'skills'),
 ];
 

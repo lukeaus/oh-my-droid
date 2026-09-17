@@ -41,7 +41,7 @@ describe('skills-tools', () => {
       expect(loadGlobalTool.name).toBe('load_omd_skills_global');
       expect(loadGlobalTool.description).toContain('global');
       expect(loadGlobalTool.description).toContain('~/.agents/skills/droid-learned');
-      expect(loadGlobalTool.description).toContain('~/.factory/skills/{droid,omc}-learned');
+      expect(loadGlobalTool.description).toContain('~/.factory/skills/droid-learned');
     });
 
     it('should return content array from handler', async () => {

@@ -14,7 +14,6 @@ Planned release: **4.0.0**. See [migration instructions](docs/MIGRATION.md).
 - **Standalone MCP Integration** (#33, breaking) — Replaced the Claude Agent SDK dependency and in-process server with the existing `@modelcontextprotocol/sdk` stdio bridge. Server ID `t` and `mcp__t__` tool names remain unchanged; the standalone server exposes all 19 tools, including swarm and three skill tools. `createDroidSession()` consumers must configure the bridge separately; tool-name helpers move to `src/mcp/tool-names.ts`.
 - **Factory/Droid Public Names** (#33, breaking) — Renamed `getClaudeConfigDir` to `getFactoryConfigDir`, `isClaudeInstalled` to `isDroidInstalled`, `skipClaudeCheck` to `skipDroidCheck`, and `PaneAnalysisResult.hasClaudeCode` to `hasDroid`. The internal tmux pattern constant is now `DROID_PATTERNS`.
 - **Historical Materials** (#33) — Marked the upstream benchmark harness and seminar slides/demos as unsupported and not packaged; preserved them without porting.
-- **OMC to OMD Naming** — Renamed the remaining `OMC` identifiers to `OMD`: environment variables (`OMC_DEBUG` → `OMD_DEBUG`, `OMC_BRIDGE_SCRIPT` → `OMD_BRIDGE_SCRIPT`, and the other `OMC_*` options), public exports (`omdToolNames`, `getOmdToolNames`, `getOmdSystemPrompt`), MCP skill tools (`load_omd_skills_local`, `load_omd_skills_global`, `list_omd_skills`), the `src/mcp/omd-tools-server.ts` module, the `cancelomd`/`stopomd` magic keywords, and the repo assets. Legacy paths (`~/.factory/skills/omc-learned/`, `.omc/`) and upstream `oh-my-claudecode` references are unchanged.
 
 ### Removed
 
@@ -58,7 +57,7 @@ Planned release: **4.0.0**. See [migration instructions](docs/MIGRATION.md).
 
 ### Fixed
 
-- **MCP Tool Name Length** (PR #252, fixes #241, #232, #235) - Shortened MCP server name from `omc-tools` to `t` to fix tool names exceeding the 64-character API limit. The longest tool name (`lsp_diagnostics_directory`) now uses 57 characters instead of 65.
+- **MCP Tool Name Length** (PR #252, fixes #241, #232, #235) - Shortened MCP server name from `omd-tools` to `t` to fix tool names exceeding the 64-character API limit. The longest tool name (`lsp_diagnostics_directory`) now uses 57 characters instead of 65.
 
 ---
 
@@ -66,7 +65,7 @@ Planned release: **4.0.0**. See [migration instructions](docs/MIGRATION.md).
 
 ### Changed
 
-- **Local-Only State Management** - All execution mode state (ralph, ultrawork, ecomode) is now stored exclusively in `.omd/state/` per project/worktree. Global state in `~/.factory/` and `~/.omd/state/` is no longer written for mode state, enabling multiple git worktrees to run OMC simultaneously without state conflicts. Existing global state is migrated on first read.
+- **Local-Only State Management** - All execution mode state (ralph, ultrawork, ecomode) is now stored exclusively in `.omd/state/` per project/worktree. Global state in `~/.factory/` and `~/.omd/state/` is no longer written for mode state, enabling multiple git worktrees to run OMD simultaneously without state conflicts. Existing global state is migrated on first read.
 - **Promise Pattern Removal** - Fully removed `<promise>` completion pattern from ralph and verification workflows. Completion now uses architect verification + `/oh-my-droid:cancel` for clean exit.
 
 ### Added
@@ -98,8 +97,8 @@ Planned release: **4.0.0**. See [migration instructions](docs/MIGRATION.md).
 
 ### Added
 
-- **Bun Package Manager Support** (PR #219) - OMC setup now prefers Bun over npm when available, with automatic fallback. Includes duplicate cleanup logic and per-manager verification.
-- **MCP Skill Loading Tools** (PR #225) - Three new MCP tools (`load_omc_skills_local`, `load_omc_skills_global`, `list_omc_skills`) with 5-layer security hardening: path validation, symlink boundary checks, depth limits, content sanitization, and relative path output.
+- **Bun Package Manager Support** (PR #219) - OMD setup now prefers Bun over npm when available, with automatic fallback. Includes duplicate cleanup logic and per-manager verification.
+- **MCP Skill Loading Tools** (PR #225) - Three new MCP tools (`load_omd_skills_local`, `load_omd_skills_global`, `list_omd_skills`) with 5-layer security hardening: path validation, symlink boundary checks, depth limits, content sanitization, and relative path output.
 
 ### Fixed
 
@@ -175,7 +174,7 @@ Fixed MCP server not working in Factory Droid plugin cache.
 ### Added
 
 #### Plugin-Scoped MCP Server Discovery
-Standalone MCP server for Factory Droid plugin discovery, making omc-tools visible in the `/mcp` management UI.
+Standalone MCP server for Factory Droid plugin discovery, making omd-tools visible in the `/mcp` management UI.
 
 - **Standalone MCP Server** (`src/mcp/standalone-server.ts`)
   - Stdio-based MCP server using `@modelcontextprotocol/sdk`
@@ -184,7 +183,7 @@ Standalone MCP server for Factory Droid plugin discovery, making omc-tools visib
   - Compatible with Factory Droid's plugin MCP discovery
 
 - **Plugin MCP Configuration** (`.mcp.json`)
-  - Declares `omc-tools` server for plugin-scoped discovery
+  - Declares `omd-tools` server for plugin-scoped discovery
   - Uses `${DROID_PLUGIN_ROOT}` for portable paths
   - Server auto-starts when plugin is enabled
 
@@ -205,9 +204,9 @@ Standalone MCP server for Factory Droid plugin discovery, making omc-tools visib
 #### SDK MCP Server for Custom Tools (Major Feature)
 In-process MCP server exposing 15 custom tools to Factory Droid subagents via the Claude Agent SDK.
 
-- **OMC Tools Server** (`src/mcp/omc-tools-server.ts`)
+- **OMD Tools Server** (`src/mcp/omd-tools-server.ts`)
   - Uses `createSdkMcpServer` and `tool` helpers from `@anthropic-ai/claude-agent-sdk`
-  - Exposes tools in MCP format as `mcp__omc-tools__<tool_name>`
+  - Exposes tools in MCP format as `mcp__omd-tools__<tool_name>`
   - Zero external process overhead - runs in-process
   - Configurable tool filtering via `getOmcToolNames()`
 
@@ -230,16 +229,16 @@ In-process MCP server exposing 15 custom tools to Factory Droid subagents via th
 ### Technical Details
 
 **New Files:**
-- `src/mcp/omc-tools-server.ts` - SDK MCP server implementation
-- `src/__tests__/omc-tools-server.test.ts` - 10 tests for tool exposure
+- `src/mcp/omd-tools-server.ts` - SDK MCP server implementation
+- `src/__tests__/omd-tools-server.test.ts` - 10 tests for tool exposure
 
 **Usage:**
 ```typescript
 // Tools available to subagents as:
-mcp__omc-tools__lsp_hover
-mcp__omc-tools__lsp_definition
-mcp__omc-tools__ast_query
-mcp__omc-tools__python_repl
+mcp__omd-tools__lsp_hover
+mcp__omd-tools__lsp_definition
+mcp__omd-tools__ast_query
+mcp__omd-tools__python_repl
 // ... etc
 ```
 
@@ -274,7 +273,7 @@ mcp__omc-tools__python_repl
 
 #### MCP/Plugin Compatibility Layer (Major Feature)
 
-A comprehensive compatibility layer enabling OMC to discover, register, and use external plugins, MCP servers, and tools. This makes OMC a good citizen in the Claude ecosystem by resolving inter-plugin conflicts.
+A comprehensive compatibility layer enabling OMD to discover, register, and use external plugins, MCP servers, and tools. This makes OMD a good citizen in the Claude ecosystem by resolving inter-plugin conflicts.
 
 - **Plugin Discovery** (`src/compatibility/discovery.ts`)
   - Auto-discovery of installed plugins and MCP servers
@@ -301,8 +300,8 @@ A comprehensive compatibility layer enabling OMC to discover, register, and use 
   - 1,000+ line comprehensive documentation covering architecture, usage, and security
 
 - **CLI Tools**
-  - `omc tools list` - List all discovered tools
-  - `omc tools enable/disable` - Manage tool availability
+  - `omd tools list` - List all discovered tools
+  - `omd tools enable/disable` - Manage tool availability
 
 ### Fixed
 
@@ -766,7 +765,7 @@ After:  Assistant entries → correctly attributed to "(main session)"
 - **Skill/Command Discrepancies**:
   - Fixed 13 mismatches between skills/ and commands/ directories
   - All user-invocable skills now have matching command files
-  - Documented 5 internal/silent skills (frontend-ui-ux, git-master, orchestrate, omc-default, omc-default-global)
+  - Documented 5 internal/silent skills (frontend-ui-ux, git-master, orchestrate, omd-default, omd-default-global)
 
 - **GitHub Metadata**:
   - Updated repository description to highlight all 5 execution modes
@@ -849,7 +848,7 @@ After:  Assistant entries → correctly attributed to "(main session)"
 - **Delegation Enforcer Middleware**
   - Automatic model injection from agent definitions
   - Explicit model preservation (user-specified models never overwritten)
-  - Debug mode warnings when `OMC_DEBUG=true`
+  - Debug mode warnings when `OMD_DEBUG=true`
 
 ### Changed
 
@@ -879,7 +878,7 @@ After:  Assistant entries → correctly attributed to "(main session)"
 - **Setup Skills**: Consolidated into omd-setup
   - `--local` flag for direct local configuration
   - `--global` flag for direct global configuration
-  - Integrated omc-default and omc-default-global functionality
+  - Integrated omd-default and omd-default-global functionality
 
 - **Ralph-Init**: Merged into ralph skill with `--init` flag support
 
@@ -1128,7 +1127,7 @@ python_repl(action="execute", researchSessionID="analysis",
 - **Commands folder populated**: All user-facing commands now have full content (copied from skills)
 - **Separated commands vs skills**:
   - 20 commands (user-facing): analyze, cancel-ralph, cancel-ultraqa, cancel-ultrawork, deepinit, deepsearch, doctor, help, hud, learner, note, omd-setup, plan, ralph, ralph-init, ralplan, release, review, ultraqa, ultrawork
-  - 6 skills-only (internal): orchestrate, frontend-ui-ux, git-master, omc-default, omc-default-global, planner
+  - 6 skills-only (internal): orchestrate, frontend-ui-ux, git-master, omd-default, omd-default-global, planner
 - **Consolidated planner into plan**: `planner` is now skill-only; users invoke via `/oh-my-droid:plan`
 
 ---
@@ -1163,7 +1162,7 @@ This is a **breaking release** that renames the entire project and all agent nam
   - Runtime plans in `.omd/plans/`
   - Session notes in `.omd/notepads/`
 
-- **Environment Variables**: `SISYPHUS_*` → `OMC_*`
+- **Environment Variables**: `SISYPHUS_*` → `OMD_*`
   - All environment variable prefixes updated for consistency
 
 - **Slash Commands Updated**: Agent-referencing commands now use new names
@@ -1178,7 +1177,7 @@ For existing users upgrading from 2.x:
 1. **Reinstall**: Run `npx oh-my-droid install` to update hooks and configs
 2. **State Migration**: Old `.sisyphus/` directories will continue to work, but new state saves to `.omd/`
 3. **Agent References**: Update any custom scripts/configs that referenced old agent names
-4. **Environment Variables**: Rename any `SISYPHUS_*` variables to `OMC_*`
+4. **Environment Variables**: Rename any `SISYPHUS_*` variables to `OMD_*`
 
 ### Rationale
 

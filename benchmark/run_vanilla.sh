@@ -127,7 +127,7 @@ if [ $EXIT_CODE -eq 0 ]; then
     log_info ""
     log_info "Next steps:"
     log_info "  1. Run evaluation: python3 evaluate.py --predictions $PREDICTIONS_DIR"
-    log_info "  2. Compare with OMC: ./run_omc.sh"
+    log_info "  2. Compare with OMD: ./run_omd.sh"
     log_info ""
 else
     log_error "=========================================="

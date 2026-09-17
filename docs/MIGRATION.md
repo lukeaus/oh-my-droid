@@ -22,15 +22,9 @@ See [MCP Tools](REFERENCE.md#mcp-tools) for registration and the tool inventory.
 | `isClaudeInstalled` | `isDroidInstalled` |
 | `skipClaudeCheck` | `skipDroidCheck` |
 | `PaneAnalysisResult.hasClaudeCode` | `PaneAnalysisResult.hasDroid` |
-| `omcToolNames`, `getOmcToolNames`, `getOmcSystemPrompt` | `omdToolNames`, `getOmdToolNames`, `getOmdSystemPrompt` |
-| `src/mcp/omc-tools-server.ts` | `src/mcp/omd-tools-server.ts` |
-| `load_omc_skills_local`, `load_omc_skills_global`, `list_omc_skills` MCP tools | `load_omd_skills_local`, `load_omd_skills_global`, `list_omd_skills` |
-| `OMC_*` environment variables | `OMD_*` environment variables |
-| `cancelomc`, `stopomc` magic keywords | `cancelomd`, `stopomd` |
-
 Update imports, option objects, and pane-result consumers to the new names.
 
-Legacy paths are intentionally unchanged: `~/.factory/skills/omc-learned/` and `.omc/` keep their original names.
+Learned skills are read from `~/.agents/skills/droid-learned/` (user) and `.agents/skills/droid-learned/` (project); `~/.factory/skills/droid-learned/` and `~/.omd/skills/` remain as read-only fallbacks.
 
 ### Removed unsupported behavior
 

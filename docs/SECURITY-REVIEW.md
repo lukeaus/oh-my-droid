@@ -35,12 +35,12 @@ oh-my-droid v3.8.17 has **solid security foundations** following the hardening w
 - `brace-expansion` - zero-step sequence causes process hang
 
 **Fix Applied:**
-1. Updated `@modelcontextprotocol/sdk` from `^1.25.3` to `^1.26.0` (aligns with oh-my-claudecode v4.11.5)
+1. Updated `@modelcontextprotocol/sdk` from `^1.25.3` to `^1.26.0`
 2. Ran `npm audit fix` to update transitive dependencies to patched versions
 
 **Result:** `npm audit` now shows **0 vulnerabilities**
 
-**Approach:** Same as oh-my-claudecode - direct dependency updates without overrides. This is cleaner than using `overrides` which can mask underlying issues.
+**Approach:** Direct dependency updates without overrides. This is cleaner than using `overrides` which can mask underlying issues.
 
 ### H2: JSON State File Race Conditions
 

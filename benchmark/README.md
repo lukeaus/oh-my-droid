@@ -2,7 +2,7 @@
 
 > **Historical / unsupported:** This upstream harness is preserved for reference only. It is not packaged with oh-my-droid and has not been ported to Factory Droid. The instructions below are historical, not supported setup or test commands. Do not port this harness as part of runtime maintenance.
 
-Automated benchmark comparison between vanilla Factory Droid and OMC-enhanced Factory Droid.
+Automated benchmark comparison between vanilla Factory Droid and OMD-enhanced Factory Droid.
 
 ## Quick Start
 
@@ -25,7 +25,7 @@ One-time setup and verification:
 - Builds Docker image for SWE-bench
 - Downloads and caches dataset
 - Verifies API key
-- Builds OMC project
+- Builds OMD project
 - Runs sanity checks
 
 **Usage:**
@@ -53,7 +53,7 @@ Quick sanity test with limited instances (default: 5):
 
 ### run_vanilla.sh
 Run vanilla Factory Droid benchmark:
-- Standard Factory Droid without OMC
+- Standard Factory Droid without OMD
 - Saves predictions to `predictions/vanilla/`
 - Logs to `logs/vanilla_*.log`
 
@@ -76,29 +76,29 @@ Run vanilla Factory Droid benchmark:
 ./run_vanilla.sh --timeout 600             # 10 minutes per instance
 ```
 
-### run_omc.sh
-Run OMC-enhanced benchmark:
+### run_omd.sh
+Run OMD-enhanced benchmark:
 - Factory Droid with oh-my-droid orchestration
 - Saves predictions to `predictions/omd/`
-- Logs to `logs/omc_*.log`
+- Logs to `logs/omd_*.log`
 
 **Usage:**
 ```bash
-./run_omc.sh [OPTIONS]
+./run_omd.sh [OPTIONS]
 ```
 
 **Options:** Same as `run_vanilla.sh`
 
 **Examples:**
 ```bash
-./run_omc.sh                    # Full benchmark
-./run_omc.sh --limit 100        # First 100 instances
+./run_omd.sh                    # Full benchmark
+./run_omd.sh --limit 100        # First 100 instances
 ```
 
 ### run_full_comparison.sh
 Complete benchmark suite:
 - Runs vanilla benchmark
-- Runs OMC benchmark
+- Runs OMD benchmark
 - Evaluates both runs
 - Generates comparison report
 
@@ -113,14 +113,14 @@ Complete benchmark suite:
 - `--model MODEL` - Model to use
 - `--timeout SECS` - Timeout per instance
 - `--skip-vanilla` - Skip vanilla benchmark run
-- `--skip-omc` - Skip OMC benchmark run
+- `--skip-omd` - Skip OMD benchmark run
 - `--skip-eval` - Skip evaluation step
 
 **Examples:**
 ```bash
 ./run_full_comparison.sh                    # Full comparison
 ./run_full_comparison.sh --limit 100        # Test 100 instances
-./run_full_comparison.sh --skip-vanilla     # Only run OMC (reuse vanilla results)
+./run_full_comparison.sh --skip-vanilla     # Only run OMD (reuse vanilla results)
 ```
 
 ## Directory Structure
@@ -130,7 +130,7 @@ benchmark/
 ├── setup.sh                    # One-time setup
 ├── quick_test.sh              # Quick sanity test
 ├── run_vanilla.sh             # Run vanilla benchmark
-├── run_omc.sh                 # Run OMC benchmark
+├── run_omd.sh                 # Run OMD benchmark
 ├── run_full_comparison.sh     # Full comparison suite
 ├── run_benchmark.py           # Main Python benchmark runner
 ├── Dockerfile                 # Docker image for SWE-bench
@@ -138,13 +138,13 @@ benchmark/
 ├── requirements.txt           # Python dependencies
 ├── predictions/
 │   ├── vanilla/              # Vanilla predictions
-│   └── omc/                  # OMC predictions
+│   └── omd/                  # OMD predictions
 ├── logs/
 │   ├── vanilla_*.log         # Vanilla run logs
-│   └── omc_*.log            # OMC run logs
+│   └── omd_*.log            # OMD run logs
 ├── results/
 │   ├── vanilla_results.json  # Vanilla evaluation
-│   ├── omc_results.json      # OMC evaluation
+│   ├── omd_results.json      # OMD evaluation
 │   └── comparison_report.md  # Comparison report
 ├── data/                      # Test data
 └── cache/                     # Dataset cache
@@ -180,7 +180,7 @@ export ANTHROPIC_API_KEY=your_key_here
 
    # Option B: Run individually
    ./run_vanilla.sh
-   ./run_omc.sh
+   ./run_omd.sh
    ```
 
 4. **Review Results**:
@@ -225,7 +225,7 @@ pip install -r requirements.txt
 ### Custom Model
 ```bash
 ./run_vanilla.sh --model claude-opus-4.5-20251101
-./run_omc.sh --model claude-opus-4.5-20251101
+./run_omd.sh --model claude-opus-4.5-20251101
 ```
 
 ### Longer Timeout
@@ -249,7 +249,7 @@ pip install -r requirements.txt
 ## Performance Tips
 
 1. **Start Small**: Use `quick_test.sh` to verify setup
-2. **Parallel Runs**: Don't run vanilla and OMC in parallel (share API rate limits)
+2. **Parallel Runs**: Don't run vanilla and OMD in parallel (share API rate limits)
 3. **Monitor Logs**: Use `tail -f logs/vanilla_*.log` to watch progress
 4. **Timeout Tuning**: Increase timeout for complex instances
 5. **Disk Space**: Ensure sufficient space for predictions and Docker containers

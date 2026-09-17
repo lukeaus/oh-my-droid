@@ -382,7 +382,7 @@ Examples:
     python evaluate.py --predictions results/vanilla_predictions.json
 
     # With custom output and workers
-    python evaluate.py --predictions results/omc_predictions.json \\
+    python evaluate.py --predictions results/omd_predictions.json \\
         --output results/ --max-workers 8
 
     # Validate predictions only

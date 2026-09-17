@@ -1,6 +1,6 @@
 # State Management System
 
-Complete state management implementation for the oh-my-droid plugin, adapted from oh-my-claudecode.
+Complete state management implementation for the oh-my-droid plugin.
 
 ## Overview
 
@@ -352,13 +352,6 @@ const state = manager.get();
 // state is typed as DroidState | undefined
 console.log(state?.taskCount); // ✓ Type-safe access
 ```
-
-## Differences from oh-my-claudecode
-
-1. **Path structure**: Uses `.omd` and `.factory/omd` instead of `.omd`
-2. **Config naming**: Uses `omd.config.json` instead of multiple config files
-3. **Legacy support**: Simplified, no legacy location migration
-4. **Simpler API**: Focused on essential features for oh-my-droid
 
 ## Files Created
 

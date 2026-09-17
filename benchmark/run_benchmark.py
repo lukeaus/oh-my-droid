@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """
-SWE-bench Benchmark Runner for Claude Code (Vanilla vs OMC)
+SWE-bench Benchmark Runner for Claude Code (Vanilla vs OMD)
 
-This script evaluates Claude Code with and without oh-my-claudecode orchestration
+This script evaluates Claude Code with and without oh-my-droid orchestration
 on the SWE-bench Verified dataset.
 
 Usage:
     python run_benchmark.py --mode vanilla --limit 10
-    python run_benchmark.py --mode omc --output-dir ./predictions/omc
+    python run_benchmark.py --mode omd --output-dir ./predictions/omd
     python run_benchmark.py --mode vanilla --resume checkpoint.json
 """
 
@@ -50,7 +50,7 @@ class BenchmarkConfig:
     """Configuration for benchmark run."""
 
     dataset: str = "princeton-nlp/SWE-bench_Verified"
-    mode: str = "vanilla"  # vanilla or omc
+    mode: str = "vanilla"  # vanilla or omd
     output_dir: Path = field(default_factory=lambda: Path("./predictions"))
     max_workers: int = 1
     timeout: int = 1800  # 30 minutes default
@@ -272,13 +272,13 @@ Instructions:
                 "--allowedTools",
                 "Edit,Bash,Read,Write,Glob,Grep",
             ]
-        else:  # omc mode
+        else:  # omd mode
             cmd = [
                 "claude",
                 "--print",
                 "--model",
                 self.config.model,
-                f"/oh-my-claudecode:autopilot Fix this issue:\n\n{problem}",
+                f"/oh-my-droid:autopilot Fix this issue:\n\n{problem}",
             ]
 
         token_usage = {}
@@ -521,14 +521,14 @@ Examples:
   # Run vanilla Claude Code on first 10 instances
   python run_benchmark.py --mode vanilla --limit 10
 
-  # Run OMC mode with 2 parallel workers
-  python run_benchmark.py --mode omc --max-workers 2
+  # Run OMD mode with 2 parallel workers
+  python run_benchmark.py --mode omd --max-workers 2
 
   # Resume from checkpoint
   python run_benchmark.py --mode vanilla --resume predictions/checkpoint.json
 
   # Custom timeout (45 minutes per instance)
-  python run_benchmark.py --mode omc --timeout 2700
+  python run_benchmark.py --mode omd --timeout 2700
         """,
     )
 
@@ -539,9 +539,9 @@ Examples:
     )
     parser.add_argument(
         "--mode",
-        choices=["vanilla", "omc"],
+        choices=["vanilla", "omd"],
         default=os.environ.get("RUN_MODE", "vanilla"),
-        help="Run mode: vanilla (bare Claude) or omc (with orchestration)",
+        help="Run mode: vanilla (bare Claude) or omd (with orchestration)",
     )
     parser.add_argument(
         "--output-dir",

@@ -18,7 +18,6 @@ Show all local skills organized by scope.
 1. Scan user skills in canonical-first order:
    - `~/.agents/skills/droid-learned/`
    - `~/.factory/skills/droid-learned/`
-   - `~/.factory/skills/omc-learned/`
    - `~/.omd/skills/`
 2. Scan project skills in canonical-first order:
    - `.agents/skills/droid-learned/`

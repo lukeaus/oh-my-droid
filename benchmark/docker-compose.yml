@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: swe-bench-omc
+    container_name: swe-bench-omd
 
     # Environment configuration
     environment:
@@ -27,8 +27,8 @@ services:
       - ./repos:/workspace/repos
       # Execution logs
       - ./logs:/workspace/logs
-      # Mount OMC source for development (optional)
-      - ../:/workspace/omc-source:ro
+      # Mount OMD source for development (optional)
+      - ../:/workspace/omd-source:ro
       # Docker socket for SWE-bench container operations
       - /var/run/docker.sock:/var/run/docker.sock
       # Claude config persistence

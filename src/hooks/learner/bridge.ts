@@ -19,7 +19,6 @@ export const USER_SKILLS_DIR = join(AGENTS_SKILLS_DIR, 'droid-learned');
 export const PROJECT_SKILLS_SUBDIR = join('.agents', 'skills', 'droid-learned');
 export const LEGACY_USER_SKILLS_DIRS = [
   join(homedir(), '.factory', 'skills', 'droid-learned'),
-  join(homedir(), '.factory', 'skills', 'omc-learned'),
   join(homedir(), '.omd', 'skills'),
 ];
 export const LEGACY_PROJECT_SKILLS_SUBDIR = join('.omd', 'skills');

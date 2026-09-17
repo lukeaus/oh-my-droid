@@ -1,5 +1,5 @@
-# SWE-bench Evaluation Container for oh-my-claudecode
-# Supports both vanilla Claude Code and OMC-enhanced modes
+# SWE-bench Evaluation Container for oh-my-droid
+# Supports both vanilla Claude Code and OMD-enhanced modes
 
 FROM python:3.11-slim
 
@@ -50,10 +50,10 @@ RUN mkdir -p /workspace/results \
 ENV PYTHONUNBUFFERED=1
 ENV NODE_ENV=production
 
-# Default run mode (vanilla or omc)
+# Default run mode (vanilla or omd)
 ENV RUN_MODE=vanilla
 
-# For OMC mode: install oh-my-claudecode globally
+# For OMD mode: install oh-my-droid globally
 # This is done conditionally at runtime via entrypoint
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
