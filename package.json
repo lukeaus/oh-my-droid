@@ -64,7 +64,7 @@
     "@ast-grep/lang-swift": "^0.0.8",
     "@ast-grep/lang-yaml": "^0.0.6",
     "@ast-grep/napi": "^0.45.3",
-    "@modelcontextprotocol/sdk": "^1.26.0",
+    "@modelcontextprotocol/sdk": "^1.31.0",
     "@tokscale/core": "^1.0.25",
     "ajv": "^8.17.1",
     "chalk": "^6.0.0",
